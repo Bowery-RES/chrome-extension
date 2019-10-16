@@ -5,36 +5,34 @@ import get from 'lodash/get'
 const BOWERY_APP_URL = "https://bowery-staging.herokuapp.com"
 
 async function getBoweryToken({ url }) {
-    const window = await chrome.windows.create({
-        url,
-        type: "popup",
-        focused: false,
-    })
-
-    const tabId = get(window, 'tabs[0].id');
-    const [token] = await chrome.tabs.executeScript(tabId,
-        { code: "localStorage.getItem('jwToken')" });
-    await chrome.windows.remove(window.id);
+  const { token } = await chrome.storage.sync.get('token')
+  if (token) {
     return token
+  }
+
+  const window = await chrome.windows.create({
+    url,
+    type: "popup",
+    focused: false,
+  })
+
+  const tabId = get(window, 'tabs[0].id');
+  const [jwToken] = await chrome.tabs.executeScript(tabId, { code: "localStorage.getItem('jwToken')" });
+  await chrome.windows.remove(window.id);
+  await chrome.storage.sync.set({ token: jwToken })
+  return jwToken
+}
+function onRequest({type, data}){
+  console.log(type, data);
 }
 
-chrome.webNavigation.onCompleted.addListener(async function ({ tabId }) {
-    const { token } = await chrome.storage.sync.get('token')
-    if (!token) {
-        chrome.storage.sync.set({ token: await getBoweryToken({ url: BOWERY_APP_URL }) })
-    }
-   
+chrome.extension.onRequest.addListener(onRequest);
 
+chrome.webNavigation.onCompleted.addListener(async function ({ tabId, ...other }) {
+  const token = await getBoweryToken({ url: BOWERY_APP_URL })
 
-
-    chrome.extension.onRequest.addListener(function (parsedData) {
-        debugger;
-
-        console.log(parsedData);
-    });
-
-    chrome.tabs.executeScript(tabId, {
-        file: "parse-comp.bundle.js"
-    });
+  const a = await chrome.tabs.executeScript(tabId, {
+    file: "parse-comp.bundle.js"
+  });
 
 }, { url: [{ urlMatches: 'https://streeteasy.com/building/' }] });

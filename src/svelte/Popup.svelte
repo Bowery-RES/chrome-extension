@@ -8,11 +8,6 @@
 
   $: initialized = token;
 
-  onMount(async () => {
-    token = await getBoweryAppToken({
-      url: "https://bowery-staging.herokuapp.com"
-	});
-  });
 </script>
 
 <style>

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "chrome-extension-async": "^3.3.2",
+    "jquery": "^3.4.1",
     "lodash": "^4.17.15"
   }
 }
