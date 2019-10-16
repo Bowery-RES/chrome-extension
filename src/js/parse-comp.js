@@ -236,8 +236,8 @@ export const getLocationInfoFromAddress = addressInfo => {
   const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text').text().trim()
   const zip =  get(compData, 'listZip');
   const address = $('.backend_data.BuildingInfo-item').text()
-  const addressInfo = await $.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address},${zip}&key=AIzaSyBMcoRFOW2rxAGxURCpA4gk10MROVVflLs`)
-  console.log(getLocationInfoFromAddress(addressInfo.results[0]))
+  //const addressInfo = await $.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address},${zip}&key=${process.env.GOOGLE_API_KEY}`)
+  //console.log(getLocationInfoFromAddress(addressInfo.results[0]))
   const result = {
     state: '',
     dateOfValue,
