@@ -22,17 +22,27 @@ async function getBoweryToken({ url }) {
   await chrome.storage.sync.set({ token: jwToken })
   return jwToken
 }
-function onRequest({type, data}){
+
+async function onRequest({type, data}){
+  
+  await chrome.storage.sync.set({ unitComp: data })
   console.log(type, data);
 }
 
 chrome.extension.onRequest.addListener(onRequest);
+chrome.tabs.onActivated.addListener(async function ({ tabId, ...other }) {
+  console.log(other)
+  // const token = await getBoweryToken({ url: BOWERY_APP_URL })
+
+  // await chrome.tabs.executeScript(tabId, {
+  //   file: "parse-comp.bundle.js"
+  // });
+})
 
 chrome.webNavigation.onCompleted.addListener(async function ({ tabId, ...other }) {
-  const token = await getBoweryToken({ url: BOWERY_APP_URL })
+  // const token = await getBoweryToken({ url: BOWERY_APP_URL })
 
-  const a = await chrome.tabs.executeScript(tabId, {
+  await chrome.tabs.executeScript(tabId, {
     file: "parse-comp.bundle.js"
   });
-
 }, { url: [{ urlMatches: 'https://streeteasy.com/building/' }] });

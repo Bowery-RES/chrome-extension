@@ -1,40 +1,28 @@
 <script>
+  import "chrome-extension-async";
   import { onMount } from "svelte";
-  import { getBoweryAppToken } from "./utils";
   import RentComp from "./RentComp.svelte";
 
-  let token = null;
-  let correctLocation = false;
-
-  $: initialized = token;
+  const rentCompPromise = chrome.storage.sync
+    .get("unitComp")
+    .then(({ unitComp }) => unitComp);
 
 </script>
 
 <style>
-.loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-main {
-	width: 400px;
-	height: 600px;
-}
+  main {
+    width: 400px;
+    height: 600px;
+  }
 </style>
+
 <main>
 
-  {#if initialized}
-    <RentComp />
-  {:else}
-    <div class="loader"/>
-  {/if}
+  {#await rentCompPromise}
+    <p>...waiting</p>
+  {:then comp}
+    <pre>{JSON.stringify(comp, null, 2)}</pre>
+  {:catch error}
+    <p style="color: red">{error.message}</p>
+  {/await}
 </main>

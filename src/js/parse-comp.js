@@ -2,145 +2,9 @@ import get from 'lodash/get'
 import includes from 'lodash/includes'
 import findLastIndex from 'lodash/findLastIndex'
 import lowerCase from 'lodash/lowerCase'
+import words from 'lodash/words'
+import secrets from 'secrets'
 import $ from 'jquery'
-
-const ROAD_TYPES = [
-  'st',
-  'str',
-  'av',
-  'ave',
-  'pl',
-  'blvd',
-  'pkwy',
-  'rd',
-  'cir',
-  'ct',
-  'dr',
-  'hwy',
-  'fwy',
-  'jct',
-  'ln',
-  'ter',
-  'tpk',
-]
-
-
-export const STATE_NAMES_SHORT = {
-  NY: 'NY',
-  AL: 'AL',
-  AK: 'AK',
-  AZ: 'AZ',
-  AR: 'AR',
-  CA: 'CA',
-  CO: 'CO',
-  CT: 'CT',
-  DE: 'DE',
-  DC: 'DC',
-  FL: 'FL',
-  GA: 'GA',
-  HI: 'HI',
-  ID: 'ID',
-  IL: 'IL',
-  IN: 'IN',
-  IA: 'IA',
-  KS: 'KS',
-  KY: 'KY',
-  LA: 'LA',
-  ME: 'ME',
-  MD: 'MD',
-  MA: 'MA',
-  MI: 'MI',
-  MN: 'MN',
-  MS: 'MS',
-  MO: 'MO',
-  MT: 'MT',
-  NE: 'NE',
-  NV: 'NV',
-  NH: 'NH',
-  NJ: 'NJ',
-  NM: 'NM',
-  NC: 'NC',
-  ND: 'ND',
-  OH: 'OH',
-  OK: 'OK',
-  OR: 'OR',
-  PA: 'PA',
-  PR: 'PR',
-  RI: 'RI',
-  SC: 'SC',
-  SD: 'SD',
-  TN: 'TN',
-  TX: 'TX',
-  UT: 'UT',
-  VT: 'VT',
-  VA: 'VA',
-  WA: 'WA',
-  WV: 'WV',
-  WI: 'WI',
-  WY: 'WY',
-}
-
-export const STATE_NAMES = {
-  NY: 'New York',
-  AL: 'Alabama',
-  AK: 'Alaska',
-  AZ: 'Arizona',
-  AR: 'Arkansas',
-  CA: 'California',
-  CO: 'Colorado',
-  CT: 'Connecticut',
-  DE: 'Delaware',
-  DC: 'District Of Columbia',
-  FL: 'Florida',
-  GA: 'Georgia',
-  HI: 'Hawaii',
-  ID: 'Idaho',
-  IL: 'Illinois',
-  IN: 'Indiana',
-  IA: 'Iowa',
-  KS: 'Kansas',
-  KY: 'Kentucky',
-  LA: 'Louisiana',
-  ME: 'Maine',
-  MD: 'Maryland',
-  MA: 'Massachusetts',
-  MI: 'Michigan',
-  MN: 'Minnesota',
-  MS: 'Mississippi',
-  MO: 'Missouri',
-  MT: 'Montana',
-  NE: 'Nebraska',
-  NV: 'Nevada',
-  NH: 'New Hampshire',
-  NJ: 'New Jersey',
-  NM: 'New Mexico',
-  NC: 'North Carolina',
-  ND: 'North Dakota',
-  OH: 'Ohio',
-  OK: 'Oklahoma',
-  OR: 'Oregon',
-  PA: 'Pennsylvania',
-  PR: 'Puerto Rico',
-  RI: 'Rhode Island',
-  SC: 'South Carolina',
-  SD: 'South Dakota',
-  TN: 'Tennessee',
-  TX: 'Texas',
-  UT: 'Utah',
-  VT: 'Vermont',
-  VA: 'Virginia',
-  WA: 'Washington',
-  WV: 'West Virginia',
-  WI: 'Wisconsin',
-  WY: 'Wyoming',
-}
- const GOOGLE_ADDRESS_BOROUGH = {
-  Manhattan: 'Manhattan',
-  Brooklyn: 'Brooklyn',
-  'The Bronx': 'Bronx',
-  Queens: 'Queens',
-  'Staten Island': 'Staten Island',
-}
 
 const BUILDING_AMENITIES = {
   bike_room: 'Bike Room',
@@ -171,16 +35,9 @@ const getListsOfAmenities = (amenitiesList, amenitiesMap) => {
   return amenities
 };
 
-const formatStreetAddress = streetName => {
-  const streetParts = streetName.split(' ')
-  const streetTypeIndex = findLastIndex(streetParts, part => ROAD_TYPES.includes(lowerCase(part)))
-  if (streetTypeIndex !== -1) {
-    streetParts[streetTypeIndex] = `${streetParts[streetTypeIndex]}.`
-  }
-  return streetParts.join(' ')
-}
-
-export const getLocationInfoFromAddress = addressInfo => {
+const getLocationInfoFromAddress = async ({ address, zip }) => {
+  const response = await $.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address},${zip}&key=${secrets.GOOGLE_API_KEY}`)
+  const addressInfo = get(response, 'results.0')
   const location = {}
 
   const addressComponents = get(addressInfo, 'address_components') || []
@@ -189,41 +46,33 @@ export const getLocationInfoFromAddress = addressInfo => {
       location[type] = { short: part.short_name, long: part.long_name }
     })
   }
-  let address = get(addressInfo, 'formatted_address')
-  const state = get(location, 'administrative_area_level_1.short')
-  const county = get(location, 'administrative_area_level_2.short')
-  let borough = {}
-  const streetNumber = get(location, 'street_number.short')
-  let city = location.locality || addressInfo.sublocality || addressInfo.neighborhood
-  const route = get(location, 'route', {})
-  const streetName = formatStreetAddress(route.short)
-  const country = get(location.country, 'short', '')
 
-  if (state === STATE_NAMES_SHORT.NJ) {
+  const state = get(location, 'administrative_area_level_1.short')
+  let city = location.locality || addressInfo.sublocality || addressInfo.neighborhood
+
+  if (state === 'NJ') {
     city = get(location, 'administrative_area_level_3') || get(location, 'locality')
-  } else if (state === STATE_NAMES_SHORT.NY) {
+  } else if (state === 'NY') {
     city = location.sublocality || location.locality || {}
-    borough = {
-      short: GOOGLE_ADDRESS_BOROUGH[city.short],
-      long: GOOGLE_ADDRESS_BOROUGH[city.long],
-    }
-    // New York does a pluto lookup without the zip code, therefore, we pass address to it that was used to search by
-    address = addressInfo.googlePlace
+  }
+
+  const coords = {
+    longitude: get(addressInfo, 'geometry.location.lng'),
+    latitude: get(addressInfo, 'geometry.location.lat'),
   }
 
   return {
-    address,
-    streetNumber,
-    streetName,
-    route,
-    shortAddress: `${streetNumber} ${streetName}`,
+    address: get(addressInfo, 'formatted_address'),
     city: city ? city.short : '',
-    borough,
-    county,
     zip: location.postal_code ? location.postal_code.short : '',
     state,
-    country,
+    coords
   }
+}
+
+const getTextContent = (selector) => {
+  const text = $(selector).text()
+  return words(text).join(' ')
 }
 
 (async function parseComp() {
@@ -234,22 +83,18 @@ export const getLocationInfoFromAddress = addressInfo => {
   const buildingTitle = $('.building-title .incognito').text()
   const [, , unitNumber] = buildingTitle.match(/(.*) #(.*)/)
   const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text').text().trim()
-  const zip =  get(compData, 'listZip');
-  const address = $('.backend_data.BuildingInfo-item').text()
-  //const addressInfo = await $.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address},${zip}&key=${process.env.GOOGLE_API_KEY}`)
-  //console.log(getLocationInfoFromAddress(addressInfo.results[0]))
-  const result = {
-    state: '',
-    dateOfValue,
-    coords: {},
-    city: get(compData, 'listBoro'),
-    unitNumber,
-    address,
-    zip,
-    sourceOfInformation: 'externalDatabase',
-    sourceUrl: document.location.toString(),
-    sourceName: 'Streeteasy',
+  const zip = get(compData, 'listZip');
+  const address = getTextContent('.backend_data.BuildingInfo-item')
+  const location = await getLocationInfoFromAddress({ zip, address })
 
+  const result = {
+    state: location.state,
+    dateOfValue,
+    coords: location.coords,
+    city: location.city,
+    unitNumber,
+    address: location.address,
+    zip,
     rooms: get(compData, 'listRoom'),
     bedrooms: get(compData, 'listBed'),
     bathrooms: get(compData, 'listBath'),
@@ -257,7 +102,10 @@ export const getLocationInfoFromAddress = addressInfo => {
     rent: get(compData, 'listPrice'),
     buildingAmenities: getListsOfAmenities(amenities, BUILDING_AMENITIES),
     unitAmenities: getListsOfAmenities(amenities, UNIT_AMENITIES),
+    sourceOfInformation: 'externalDatabase',
+    sourceUrl: document.location.toString(),
+    sourceName: 'StreetEasy',
   }
 
-  chrome.extension.sendRequest({ type: 'comp-parsed', data: result });
+  chrome.extension.sendRequest({ type: 'comp-parsed', data: result, key: buildingTitle });
 })()
