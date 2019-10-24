@@ -3,9 +3,10 @@ import '../img/icon-34.png'
 import 'chrome-extension-async'
 import get from 'lodash/get'
 const BOWERY_APP_URL = "https://bowery-staging.herokuapp.com"
+const STREET_EASY_FILTER = { url: [{ urlMatches: 'https://streeteasy.com/building/'}, { urlMatches: 'https://streeteasy.com/rental/'}] }
 
 async function getBoweryToken({ url }) {
-  const { token } = await chrome.storage.sync.get('token')
+  const { token } = await chrome.storage.local.get('token')
   if (token) {
     return token
   }
@@ -19,30 +20,22 @@ async function getBoweryToken({ url }) {
   const tabId = get(window, 'tabs[0].id');
   const [jwToken] = await chrome.tabs.executeScript(tabId, { code: "localStorage.getItem('jwToken')" });
   await chrome.windows.remove(window.id);
-  await chrome.storage.sync.set({ token: jwToken })
+  await chrome.storage.local.set({ token: jwToken })
   return jwToken
 }
 
-async function onRequest({type, data}){
-  
-  await chrome.storage.sync.set({ unitComp: data })
-  console.log(type, data);
-}
+chrome.extension.onRequest.addListener(({type, data})=>{
+  if(type === 'comp-parsed'){
+    chrome.storage.local.set({ unitComp: data })
+  }
+});
 
-chrome.extension.onRequest.addListener(onRequest);
-chrome.tabs.onActivated.addListener(async function ({ tabId, ...other }) {
-  console.log(other)
-  // const token = await getBoweryToken({ url: BOWERY_APP_URL })
-
-  // await chrome.tabs.executeScript(tabId, {
-  //   file: "parse-comp.bundle.js"
-  // });
-})
-
-chrome.webNavigation.onCompleted.addListener(async function ({ tabId, ...other }) {
-  // const token = await getBoweryToken({ url: BOWERY_APP_URL })
-
-  await chrome.tabs.executeScript(tabId, {
-    file: "parse-comp.bundle.js"
-  });
-}, { url: [{ urlMatches: 'https://streeteasy.com/building/' }] });
+chrome.webNavigation.onCompleted.addListener(({ tabId })=> {
+  chrome.tabs.executeScript(tabId, {file: "parse-comp.bundle.js"});
+  chrome.tabs.onActivated.addListener((params)=>{
+    if(tabId !== params.tabId){
+      return 
+    }
+    chrome.tabs.executeScript(tabId, {file: "parse-comp.bundle.js"});
+  })
+}, STREET_EASY_FILTER);

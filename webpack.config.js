@@ -5,9 +5,12 @@ var webpack = require("webpack"),
     CleanWebpackPlugin = require("clean-webpack-plugin"),
     CopyWebpackPlugin = require("copy-webpack-plugin"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
-    WriteFilePlugin = require("write-file-webpack-plugin");
+    WriteFilePlugin = require("write-file-webpack-plugin"),
+    MiniCssExtractPlugin = require('mini-css-extract-plugin'),
+    OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-// load the secrets
+    // load the secrets
+
 var alias = {};
 
 var secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
@@ -19,6 +22,7 @@ if (fileSystem.existsSync(secretsPath)) {
 }
 
 var options = {
+  mode: 'development',
   entry: {
     popup: path.join(__dirname, "src", "js", "popup.js"),
     options: path.join(__dirname, "src", "js", "options.js"),
@@ -32,11 +36,6 @@ var options = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        loader: "style-loader!css-loader",
-        exclude: /node_modules/
-      },
-      {
         test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
         loader: "file-loader?name=[name].[ext]",
         exclude: /node_modules/
@@ -48,7 +47,6 @@ var options = {
       },
       {
         test: /\.svelte$/,
-				exclude: /node_modules/,
 				use: {
 					loader: 'svelte-loader',
 					options: {
@@ -56,6 +54,25 @@ var options = {
 						hotReload: false
 					}
 				}
+      },
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          'style-loader',
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                includePaths: [
+                  './src/theme',
+                  './node_modules'
+                ]
+              }
+            }
+          }
+        ]
       }
     ]
   },
@@ -94,6 +111,18 @@ var options = {
       template: path.join(__dirname, "src", "background.html"),
       filename: "background.html",
       chunks: ["background"]
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[name].[id].css'
+    }),
+    new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      cssProcessor: require('cssnano'),
+      cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }]
+      },
+      canPrint: true
     }),
     new WriteFilePlugin()
   ]

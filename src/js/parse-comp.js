@@ -105,6 +105,7 @@ const getTextContent = (selector) => {
     sourceOfInformation: 'externalDatabase',
     sourceUrl: document.location.toString(),
     sourceName: 'StreetEasy',
+    title: document.title
   }
 
   chrome.extension.sendRequest({ type: 'comp-parsed', data: result, key: buildingTitle });

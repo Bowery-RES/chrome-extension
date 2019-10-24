@@ -14,16 +14,21 @@
     "fs-extra": "7.0.1",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
+    "mini-css-extract-plugin": "^0.7.0",
     "style-loader": "^0.23.1",
     "svelte": "^3.5.1",
     "svelte-loader": "^2.13.4",
+    "svelte-material-ui": "^1.0.0-beta.15",
     "webpack": "4.33.0",
     "webpack-dev-server": "3.7.1",
-    "write-file-webpack-plugin": "4.5.0"
+    "write-file-webpack-plugin": "4.5.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0"
   },
   "dependencies": {
     "chrome-extension-async": "^3.3.2",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "optimize-css-assets-webpack-plugin": "^5.0.3"
   }
 }
