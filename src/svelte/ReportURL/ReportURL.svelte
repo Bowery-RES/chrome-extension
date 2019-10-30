@@ -1,22 +1,14 @@
 <script>
   import axios from "axios";
   import get from "lodash/get";
-  import { targetReport } from './../stores.js';
+  import { targetReport } from "./../stores.js";
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text/index";
   import LastReportUsed from "./LastReportUsed.svelte";
+  import { getReportAddress } from "@utils";
   let checked;
 
-  $: address = chrome.storage.local
-    .get("token")
-    .then(({ token }) =>
-      axios.get($targetReport, {
-        headers: { Authorization: token ? `Bearer ${token}` : "" }
-      })
-    )
-    .then(({ data }) => {
-      return get(data, "new.address");
-    });
+  $: address = getReportAddress($targetReport);
 </script>
 
 <style>

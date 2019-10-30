@@ -1,6 +1,5 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { targetReport } from './../stores.js';
   import Button from "@smui/button";
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text/index";
@@ -122,6 +121,8 @@
     </HelperText>
   </div>
   <footer>
-    <Button style="color: white;" variant="raised" disabled={!$targetReport} type="submit">Submit</Button>
+    <Button style="color: white;" variant="raised" {disabled} type="submit">
+      Submit
+    </Button>
   </footer>
 </form>
