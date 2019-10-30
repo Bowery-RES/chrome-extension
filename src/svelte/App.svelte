@@ -1,6 +1,8 @@
 <script>
-  import RentComp from "./RentComp.svelte";
-  import Loading from './Loading.svelte'
+  import UnitRentComp from "./UnitRentComp/UnitRentComp.svelte";
+  import Loading from './components/Loading.svelte'
+  import ReportUrl from './ReportURL/ReportURL.svelte'
+  
   const initialValues = new Promise((resolve, reject) => {
     function extensionListener({ type, data, error }) {
       if (error) {
@@ -15,6 +17,7 @@
     chrome.extension.onRequest.addListener(extensionListener);
     chrome.extension.sendRequest({ type: "popup-opened" });
   });
+
 </script>
 
 <style>
@@ -29,7 +32,8 @@
   {#await initialValues}
     <Loading/>
   {:then value}
-    <RentComp initialValues={value} />
+    <ReportUrl />
+    <UnitRentComp initialValues={value} />
   {:catch error}
     <p>Something went wrong: {error.message}</p>
   {/await}

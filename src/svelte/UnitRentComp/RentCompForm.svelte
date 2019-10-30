@@ -1,11 +1,11 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { targetReport } from './../stores.js';
   import Button from "@smui/button";
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text/index";
-  import DatePicker from "./fields/DatePicker.svelte";
-  import Select from "./fields/MultiSelect.svelte";
-  
+  import DatePicker from "./../components/DatePicker.svelte";
+  import Select from "./../components/MultiSelect.svelte";
   import { UNIT_AMENITIES_LIST } from "constants";
   export let initialValues;
   export let disabled;
@@ -122,6 +122,6 @@
     </HelperText>
   </div>
   <footer>
-    <Button style="color: white;" variant="raised" {disabled} type="submit">Submit</Button>
+    <Button style="color: white;" variant="raised" disabled={!$targetReport} type="submit">Submit</Button>
   </footer>
 </form>

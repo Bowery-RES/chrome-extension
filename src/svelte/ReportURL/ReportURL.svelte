@@ -1,16 +1,16 @@
 <script>
   import axios from "axios";
   import get from "lodash/get";
+  import { targetReport } from './../stores.js';
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text/index";
   import LastReportUsed from "./LastReportUsed.svelte";
   let checked;
-  export let value = "";
 
   $: address = chrome.storage.local
     .get("token")
     .then(({ token }) =>
-      axios.get(value, {
+      axios.get($targetReport, {
         headers: { Authorization: token ? `Bearer ${token}` : "" }
       })
     )
@@ -36,7 +36,7 @@
       style="width: 350px;"
       dense
       disabled={checked}
-      bind:value
+      bind:value={$targetReport}
       label="Report URL" />
 
     <HelperText class="mdc-typography--headline6" persistent>
@@ -49,5 +49,5 @@
       {/await}
     </HelperText>
   </div>
-  <LastReportUsed bind:value={value} bind:checked />
+  <LastReportUsed bind:value={$targetReport} bind:checked />
 </section>

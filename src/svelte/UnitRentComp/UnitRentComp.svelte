@@ -2,25 +2,20 @@
   import "chrome-extension-async";
   import axios from "axios";
   import get from "lodash/get";
+  import { targetReport } from './../stores.js';
   import { BOWERY_APP_DOMAIN } from "secrets";
   import RentCompForm from "./RentCompForm.svelte";
-  import ReportUrl from "./ReportUrl.svelte";
-import Loading from './Loading.svelte'
-  let targetReport = "";
+  import Loading from "./../components/Loading.svelte";
 
   export let initialValues;
 
   let promise = Promise.resolve();
 
   async function submitRentComp(values) {
-    try {
-      const { token } = await chrome.storage.local.get("token");
-      await axios.post(`${targetReport}/addUnitComp`, values, {
-        headers: { Authorization: token ? `Bearer ${token}` : "" }
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const { token } = await chrome.storage.local.get("token");
+    await axios.post(`${$targetReport}/addUnitComp`, values, {
+      headers: { Authorization: token ? `Bearer ${token}` : "" }
+    });
   }
 
   function handleSubmit(event) {
@@ -28,13 +23,11 @@ import Loading from './Loading.svelte'
   }
 </script>
 
-<ReportUrl bind:value={targetReport} />
 {#await promise}
-  <Loading/>
+  <Loading />
 {:then value}
   <RentCompForm
     {initialValues}
-    disabled={!targetReport}
     on:submit={handleSubmit} />
 {:catch error}
   <p>Something went wrong: {error.message}</p>

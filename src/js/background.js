@@ -18,7 +18,7 @@ async function getBoweryToken() {
     await chrome.windows.remove(window.id);
     await chrome.storage.local.set({ token: jwToken });
     if (!jwToken) {
-        throw new Error('You have to be logged in to bowery application.');
+        throw new Error('You have to be logged in to the Bowery application.');
     }
 }
 
@@ -27,9 +27,8 @@ chrome.extension.onRequest.addListener(async ({ type, data }) => {
         try {
             const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!activeTab.url.match(/https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\//)) {
-                throw new Error('Extension pull data only from Streeteasy.');
+                throw new Error('The extension pulls data only from Streeteasy.');
             }
-            console.log(activeTab);
             await getBoweryToken();
             await chrome.tabs.executeScript({ file: 'parse-comp.bundle.js' });
         } catch (error) {
