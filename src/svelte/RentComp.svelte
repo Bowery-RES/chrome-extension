@@ -1,91 +1,41 @@
 <script>
-  import Button from "@smui/button";
-  import Textfield from "@smui/textfield";
+  import "chrome-extension-async";
+  import axios from "axios";
+  import get from "lodash/get";
+  import { BOWERY_APP_DOMAIN } from "secrets";
+  import RentCompForm from "./RentCompForm.svelte";
+  import ReportUrl from "./ReportUrl.svelte";
+
+  let targetReport = "";
+
   export let initialValues;
 
-  let values = {
-    ...initialValues
+  let promise = Promise.resolve();
+
+  async function submitRentComp(values) {
+    try {
+      const { token } = await chrome.storage.local.get("token");
+      await axios.post(`${targetReport}/addUnitComp`, values, {
+        headers: { Authorization: token ? `Bearer ${token}` : "" }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  $: pricePerSqft = values.rent / values.sqft;
+  function handleSubmit(event) {
+    promise = submitRentComp(event.detail);
+  }
 </script>
 
-<style>
-  section {
-    width: 750px;
-    height: 520px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-  }
-  section :global(.textfield) {
-    margin: 8px 10px;
-  }
-</style>
-
-<section>
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.address}
-    label="Address" />
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.city}
-    label="City" />
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.state}
-    label="State" />
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.zip}
-    label="Zip Code" />
-
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.unitNumber}
-    label="Unit Number" />
-
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.rent}
-    label="Monthly Rent" />
-
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.bedrooms}
-    label="Number of Bedrooms" />
-
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.bathrooms}
-    label="Number of Bathrooms" />
-  <Textfield
-    class="textfield"
-    variant="outlined"
-    dense
-    bind:value={values.sqft}
-    label="Unit Square Footage" />
-
-  <p>{pricePerSqft}</p>
-  <footer>
-    <Button>Cancel</Button>
-    <Button>Submit</Button>
-  </footer>
-</section>
+<ReportUrl bind:value={targetReport} />
+{#await promise}
+  <p>loading...</p>
+{:then value}
+  <RentCompForm
+    {initialValues}
+    disabled={!targetReport}
+    on:submit={handleSubmit} />
+{:catch error}
+  <p>Something went wrong: {error.message}</p>
+{/await}

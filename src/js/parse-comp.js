@@ -5,34 +5,13 @@ import lowerCase from 'lodash/lowerCase'
 import words from 'lodash/words'
 import secrets from 'secrets'
 import $ from 'jquery'
+import { UNIT_AMENITIES } from 'constants'
 
-const BUILDING_AMENITIES = {
-  bike_room: 'Bike Room',
-  elevator: 'Elevator',
-  parking: 'Parking',
-  virtual_doorman: 'Virtual Doorman',
-  full_time_doorman: 'Full-time Doorman',
-  laundry: 'Laundry Room',
-  storage: 'Storage Units',
-  gym: 'Fitness Center',
-  live_in_super: 'Live-in Super',
-  garden: 'Garden',
-  roofdeck: 'Roof Deck',
-  deck: 'Deck',
-  pool: 'Swimming Pool'
-}
-
-const UNIT_AMENITIES = {
-  dishwasher: 'Dishwasher',
-  washer_dryer: 'Washer/Dryer In-Units',
-  central_ac: 'Central Air Conditioning'
-};
-
-const getListsOfAmenities = (amenitiesList, amenitiesMap) => {
-  const amenities = Object.entries(amenitiesMap)
+const getListsOfAmenities = (amenitiesList) => {
+  const amenities = Object.entries(UNIT_AMENITIES)
     .filter(([key]) => includes(amenitiesList, key)).map(([, value]) => value)
 
-  return amenities
+  return amenities || []
 };
 
 const getLocationInfoFromAddress = async ({ address, zip }) => {
@@ -76,6 +55,7 @@ const getTextContent = (selector) => {
 }
 
 (async function parseComp() {
+  
   const [, data = "[]"] = document.body.textContent.match(/dataLayer = (\[.*\]);/) || []
   const [compData] = JSON.parse(data)
 
@@ -89,7 +69,7 @@ const getTextContent = (selector) => {
 
   const result = {
     state: location.state,
-    dateOfValue,
+    dateOfValue: new Date(dateOfValue).toISOString(),
     coords: location.coords,
     city: location.city,
     unitNumber,
@@ -98,14 +78,12 @@ const getTextContent = (selector) => {
     rooms: get(compData, 'listRoom'),
     bedrooms: get(compData, 'listBed'),
     bathrooms: get(compData, 'listBath'),
-    sqft: get(compData, 'listSqFt'),
-    rent: get(compData, 'listPrice'),
-    buildingAmenities: getListsOfAmenities(amenities, BUILDING_AMENITIES),
-    unitAmenities: getListsOfAmenities(amenities, UNIT_AMENITIES),
+    sqft: get(compData, 'listSqFt', ''),
+    rent: get(compData, 'listPrice', ''),
+    unitAmenities: getListsOfAmenities(amenities),
     sourceOfInformation: 'externalDatabase',
     sourceUrl: document.location.toString(),
     sourceName: 'StreetEasy',
-    title: document.title
   }
 
   chrome.extension.sendRequest({ type: 'comp-parsed', data: result, key: buildingTitle });

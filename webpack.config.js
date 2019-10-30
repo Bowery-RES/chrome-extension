@@ -9,9 +9,9 @@ var webpack = require("webpack"),
     MiniCssExtractPlugin = require('mini-css-extract-plugin'),
     OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-    // load the secrets
-
-var alias = {};
+var alias = {
+  constants: path.join(__dirname, "src", "constants.js"),
+};
 
 var secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
 
@@ -77,7 +77,7 @@ var options = {
     ]
   },
   resolve: {
-    alias: alias
+    alias: alias,
   },
   plugins: [
     // clean the build folder

@@ -26,6 +26,8 @@ var compiler = webpack(config);
 
 var server =
   new WebpackDevServer(compiler, {
+    disableHostCheck: true,
+    port: env.PORT,
     hot: true,
     contentBase: path.join(__dirname, "../build"),
     headers: { "Access-Control-Allow-Origin": "*" }

@@ -1,19 +1,32 @@
 <script>
-  import "chrome-extension-async";
-  import { onMount } from "svelte";
   import RentComp from "./RentComp.svelte";
 
-  let rentCompPromise = chrome.storage.local
-    .get("unitComp")
-    .then(({ unitComp }) => unitComp);
+  const initialValues = new Promise((resolve, reject) => {
+    function extensionListener({ type, data }) {
+      if (type === "comp-parsed") {
+        resolve(data);
+        chrome.extension.onRequest.removeListener(extensionListener);
+      }
+    }
+    chrome.extension.onRequest.addListener(extensionListener);
+    chrome.extension.sendRequest({ type: "popup-opened" });
+  });
 </script>
 
+<style>
+  main {
+    padding: 16px;
+    width: 750px;
+    height: 527px;
+  }
+</style>
+
 <main>
-  {#await rentCompPromise}
-    <p>...waiting</p>
-  {:then comp}
-    <RentComp initialValues={comp} />
+  {#await initialValues}
+    <p>loading...</p>
+  {:then value}
+    <RentComp initialValues={value} />
   {:catch error}
-    <p style="color: red">{error.message}</p>
+    <p>Something went wrong: {error.message}</p>
   {/await}
 </main>
