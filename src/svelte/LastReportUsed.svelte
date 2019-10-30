@@ -1,12 +1,9 @@
 <script>
   import { onMount } from "svelte";
-  import axios from "axios";
   import get from "lodash/get";
   import uniqBy from "lodash/uniqBy";
   import { BOWERY_APP_DOMAIN } from "secrets";
   import Select, { Option } from "@smui/select";
-  import Textfield from "@smui/textfield";
-  import HelperText from "@smui/textfield/helper-text/index";
   import Switch from "@smui/switch";
   import FormField from "@smui/form-field";
   export let value;

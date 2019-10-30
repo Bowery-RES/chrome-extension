@@ -1,6 +1,6 @@
 <script>
   import RentComp from "./RentComp.svelte";
-
+  import Loading from './Loading.svelte'
   const initialValues = new Promise((resolve, reject) => {
     function extensionListener({ type, data, error }) {
       if (error) {
@@ -27,7 +27,7 @@
 
 <main>
   {#await initialValues}
-    <p>loading...</p>
+    <Loading/>
   {:then value}
     <RentComp initialValues={value} />
   {:catch error}

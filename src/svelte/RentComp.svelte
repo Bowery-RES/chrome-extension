@@ -5,7 +5,7 @@
   import { BOWERY_APP_DOMAIN } from "secrets";
   import RentCompForm from "./RentCompForm.svelte";
   import ReportUrl from "./ReportUrl.svelte";
-
+import Loading from './Loading.svelte'
   let targetReport = "";
 
   export let initialValues;
@@ -30,7 +30,7 @@
 
 <ReportUrl bind:value={targetReport} />
 {#await promise}
-  <p>loading...</p>
+  <Loading/>
 {:then value}
   <RentCompForm
     {initialValues}
