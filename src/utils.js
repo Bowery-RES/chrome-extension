@@ -4,8 +4,8 @@ import axios from 'axios';
 import { BOWERY_APP_DOMAIN } from 'secrets';
 
 export const getReportAddress = async reportUrl => {
-    const { token } = chrome.storage.local.get('token');
-    const response = axios.get(reportUrl, {
+    const { token } = await chrome.storage.local.get('token');
+    const response = await axios.get(reportUrl, {
         headers: { Authorization: token ? `Bearer ${token}` : '' },
     });
     return get(response, 'data.new.address');
@@ -56,3 +56,14 @@ export const getInitialRentCompValues = () =>
         chrome.extension.onRequest.addListener(extensionListener);
         chrome.extension.sendRequest({ type: 'popup-opened' });
     });
+
+export const validateToken = async token => {
+    try {
+        const response = await axios.get(`${BOWERY_APP_DOMAIN}/user/authenticated-user`, {
+            headers: { Authorization: token ? `Bearer ${token}` : '' },
+        });
+        return response.status === 200;
+    } catch (error) {
+        return false;
+    }
+};

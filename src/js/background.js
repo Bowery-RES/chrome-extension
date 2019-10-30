@@ -1,13 +1,17 @@
 import '../img/bowery_icon.png';
 import 'chrome-extension-async';
 import get from 'lodash/get';
+import { validateToken } from '@utils';
 import { BOWERY_APP_DOMAIN } from 'secrets';
 
 async function getBoweryToken() {
     const { token } = await chrome.storage.local.get('token');
-    if (token) {
+
+    const valid = await validateToken(token)
+    if (valid) {
         return;
     }
+
     const window = await chrome.windows.create({
         url: BOWERY_APP_DOMAIN,
         type: 'popup',

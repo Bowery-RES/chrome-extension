@@ -20,7 +20,7 @@
 {#await promise}
   <Loading />
 {:then value}
-  <RentCompForm {initialValues} on:submit={handleSubmit} />
+  <RentCompForm {initialValues} disabled={!$targetReport} on:submit={handleSubmit} />
 {:catch error}
   <p>Something went wrong: {error.message}</p>
 {/await}
