@@ -20,7 +20,7 @@
     });
     const reportsVisited = history.filter(
       page =>
-        page.url.match(/(\/report\/(\d|\w){24})/) && page.title !== "Bowery"
+        page.url.match(/(\/report\/(\d|\w){24})/) && page.title !== "Bowery" && !BOWERY_APP_DOMAIN.includes(page.title)
     );
     const reports = reportsVisited.map(page => {
       const [reportUrl] = get(page, "url", "").match(/(\/report\/(\d|\w){24})/);

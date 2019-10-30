@@ -2,9 +2,6 @@ import '../img/bowery_icon.png';
 import 'chrome-extension-async';
 import get from 'lodash/get';
 import { BOWERY_APP_DOMAIN } from 'secrets';
-const STREET_EASY_FILTER = {
-    url: [{ urlMatches: 'https://streeteasy.com/building/' }, { urlMatches: 'https://streeteasy.com/rental/' }],
-};
 
 async function getBoweryToken() {
     const { token } = await chrome.storage.local.get('token');
@@ -27,10 +24,9 @@ async function getBoweryToken() {
     }
 }
 
-chrome.extension.onRequest.addListener(({ type, data }) => {
+chrome.extension.onRequest.addListener(async ({ type, data }) => {
     if (type === 'popup-opened') {
-      chrome.tabs.executeScript({ file: 'parse-comp.bundle.js' });
+      await getBoweryToken()
+      await chrome.tabs.executeScript({ file: 'parse-comp.bundle.js' });
     }
 });
-
-chrome.webNavigation.onCompleted.addListener(getBoweryToken, STREET_EASY_FILTER);
