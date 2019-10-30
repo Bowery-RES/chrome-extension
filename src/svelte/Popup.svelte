@@ -2,7 +2,11 @@
   import RentComp from "./RentComp.svelte";
 
   const initialValues = new Promise((resolve, reject) => {
-    function extensionListener({ type, data }) {
+    function extensionListener({ type, data, error }) {
+      if (error) {
+        reject(new Error(error));
+      }
+
       if (type === "comp-parsed") {
         resolve(data);
         chrome.extension.onRequest.removeListener(extensionListener);

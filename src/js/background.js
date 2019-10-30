@@ -8,25 +8,28 @@ async function getBoweryToken() {
     if (token) {
         return token;
     }
-    try {
-      const window = await chrome.windows.create({
-          url: BOWERY_APP_DOMAIN,
-          type: 'popup',
-          focused: false,
-      });
-      const tabId = get(window, 'tabs[0].id');
-      const [jwToken] = await chrome.tabs.executeScript(tabId, { code: "localStorage.getItem('jwToken')" });
-      await chrome.windows.remove(window.id);
-      await chrome.storage.local.set({ token: jwToken });
-      return jwToken;
-    } catch (error) {
-      console.log(error)
+    const window = await chrome.windows.create({
+        url: BOWERY_APP_DOMAIN,
+        type: 'popup',
+        focused: false,
+    });
+    const tabId = get(window, 'tabs[0].id');
+    const [jwToken] = await chrome.tabs.executeScript(tabId, { code: "localStorage.getItem('jwToken')" });
+    await chrome.windows.remove(window.id);
+    await chrome.storage.local.set({ token: jwToken });
+    if (!jwToken) {
+        throw new Error('You have to be logged in to bowery application.');
     }
+    return jwToken;
 }
 
 chrome.extension.onRequest.addListener(async ({ type, data }) => {
     if (type === 'popup-opened') {
-      await getBoweryToken()
-      await chrome.tabs.executeScript({ file: 'parse-comp.bundle.js' });
+        try {
+            await getBoweryToken();
+            await chrome.tabs.executeScript({ file: 'parse-comp.bundle.js' });
+        } catch (error) {
+            chrome.extension.sendRequest({ error: error.message });
+        }
     }
 });
