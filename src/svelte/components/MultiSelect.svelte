@@ -1,8 +1,5 @@
 <script>
   import Select from "svelte-select/src/Select.svelte";
-  export let selectedValue;
-  export let items;
-  export let placeholder;
   let className = "";
   export { className as class };
 </script>
@@ -17,14 +14,13 @@
     --multiItemBG: #e0e0e0;
     --multiItemActiveBG: rgb(206, 206, 206);
     --multiItemActiveColor: -internal-root-color;
-    --multiClearHoverBG: #52616F;
-    --multiClearHoverFill: #EBEDEF;
+    --multiClearHoverBG: #52616f;
+    --multiClearHoverFill: #ebedef;
     --placeholderColor: -internal-root-color;
     --listMaxHeight: 200px;
   }
-
 </style>
 
 <div class={`select ${className}`}>
-  <Select bind:selectedValue {items} {placeholder} isMulti={true} />
+  <Select {...$$props} isMulti={true} />
 </div>

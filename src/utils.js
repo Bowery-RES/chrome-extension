@@ -1,5 +1,6 @@
 import get from 'lodash/get';
 import uniqBy from 'lodash/uniqBy';
+import map from 'lodash/map'
 import axios from 'axios';
 import { BOWERY_APP_DOMAIN } from 'secrets';
 
@@ -36,7 +37,11 @@ export const getLastVisitedReports = async () => {
 
 export const submitRentComp = async (url, values) => {
     const { token } = await chrome.storage.local.get('token');
-    await axios.post(`${url}/addUnitComp`, values, {
+    const unitComp = {
+        ...values,
+        amenities: map(values.unitAmenities, 'value'),
+    };
+    await axios.post(`${url}/addUnitComp`, unitComp, {
         headers: { Authorization: token ? `Bearer ${token}` : '' },
     });
 };

@@ -4,8 +4,9 @@
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text/index";
   import DatePicker from "./../components/DatePicker.svelte";
+
   import Select from "./../components/MultiSelect.svelte";
-  import { UNIT_AMENITIES_LIST } from "constants";
+  import { UNIT_AMENITIES_LIST } from "@constants";
   export let initialValues;
   export let disabled;
   const dispatch = createEventDispatcher();
@@ -13,6 +14,7 @@
   let values = {
     ...initialValues
   };
+  let validation = {};
 
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN;
 </script>
@@ -50,6 +52,7 @@
       class="formField"
       variant="outlined"
       dense
+      input$required
       bind:value={values.address}
       label="Address" />
     <Select
@@ -57,7 +60,9 @@
       items={UNIT_AMENITIES_LIST}
       placeholder="Select Unit Amenities"
       bind:selectedValue={values.unitAmenities} />
+
     <Textfield
+      input$required
       class="formField"
       variant="outlined"
       dense
@@ -80,6 +85,7 @@
       class="formField"
       variant="outlined"
       dense
+      input$required
       bind:value={values.unitNumber}
       label="Unit Number" />
 
@@ -89,6 +95,7 @@
       class="formField"
       variant="outlined"
       dense
+      input$required
       type="number"
       bind:value={values.bedrooms}
       label="Number of Bedrooms" />
@@ -97,6 +104,7 @@
       class="formField"
       variant="outlined"
       dense
+      input$required
       type="number"
       bind:value={values.bathrooms}
       label="Number of Bathrooms" />
@@ -105,6 +113,7 @@
       class="formField"
       variant="outlined"
       dense
+      input$required
       type="number"
       bind:value={values.rent}
       label="Monthly Rent" />

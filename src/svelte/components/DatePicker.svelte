@@ -7,12 +7,12 @@
   export let label;
   const flatpickrOptions = {
     element: "#picker",
-    dateFormat: 'm-d-Y'
+    dateFormat: "m-d-Y"
   };
 </script>
 
 <Flatpickr
-  bind:value={value}
+  bind:value
   options={flatpickrOptions}
   placeholder="optional placeholder"
   element="#picker">
@@ -20,7 +20,7 @@
     class="mdc-text-field formField flatpickr mdc-text-field--outlined
     mdc-text-field--dense"
     id="picker">
-    <input class="mdc-text-field__input " data-input />
+    <input class="mdc-text-field__input" data-input />
     <div
       class="mdc-notched-outline mdc-notched-outline--upgraded
       mdc-notched-outline--notched">

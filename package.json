@@ -1,7 +1,7 @@
 {
-  "name": "chrome-extension-svelte-webpack",
-  "version": "0.0.2",
-  "description": "A boilerplate to chrome extension with svelte and webpack",
+  "name": "bowery-chrome-extension",
+  "version": "1.0.0",
+  "description": "Bowery chrome extension for Streeteasy",
   "scripts": {
     "build": "node utils/build.js",
     "start": "node utils/webserver.js"
@@ -22,16 +22,16 @@
     "webpack": "4.33.0",
     "webpack-dev-server": "3.7.1",
     "write-file-webpack-plugin": "4.5.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "node-sass": "^4.13.0",
-    "sass-loader": "^8.0.0"
+    "sass-loader": "^8.0.0",
+    "svelte-flatpickr": "^2.3.1",
+    "svelte-select": "^3.1.1"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "chrome-extension-async": "^3.3.2",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "svelte-flatpickr": "^2.3.1",
-    "svelte-select": "^3.1.1"
+    "lodash": "^4.17.15"
   }
 }
