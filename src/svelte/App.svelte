@@ -21,6 +21,6 @@
     <ReportUrl />
     <UnitRentComp initialValues={value} />
   {:catch error}
-    <p>Something went wrong: {error.message}</p>
+    <p></p>
   {/await}
 </main>
