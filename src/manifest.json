@@ -1,0 +1,26 @@
+{
+  "name": "Bowery Comp Tool",
+  "background": {
+    "page": "background.html"
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "bowery_icon.png"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "history",
+    "tabs",
+    "http://*/*",
+    "https://*/*",
+    "chrome://favicon/",
+    "sessions",
+    "webNavigation"
+  ],
+  "icons": {
+    "128": "bowery_icon.png"
+  },
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
