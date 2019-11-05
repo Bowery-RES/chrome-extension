@@ -6,7 +6,7 @@
   import DatePicker from "./../components/DatePicker.svelte";
 
   import Select from "./../components/MultiSelect.svelte";
-  import { UNIT_AMENITIES_LIST } from "@constants";
+  import { UNIT_AMENITIES_LIST } from "@lib/constants";
   export let initialValues;
   export let disabled;
   const dispatch = createEventDispatcher();
@@ -14,7 +14,6 @@
   let values = {
     ...initialValues
   };
-  let validation = {};
 
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN;
 </script>

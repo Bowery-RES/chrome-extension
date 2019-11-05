@@ -3,7 +3,7 @@
   import Select, { Option } from "@smui/select";
   import Switch from "@smui/switch";
   import FormField from "@smui/form-field";
-  import { getLastVisitedReports } from "../../utils";
+  import { getLastVisitedReports } from "@lib/utils";
   export let value;
   export let checked = false;
   let lastReports = [];

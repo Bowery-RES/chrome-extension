@@ -2,15 +2,9 @@ import get from 'lodash/get';
 import intersection from 'lodash/intersection';
 import words from 'lodash/words';
 import secrets from 'secrets';
+import { geocodeByAddress } from '@lib/api';
 import $ from 'jquery';
-import { UNIT_AMENITIES_LIST } from '@constants';
-
-export const STREET_EASY_AMENITIES_MAP = {
-    washer_dryer: 'unitLaundry',
-    laundry: 'buildingLaundry',
-    terrace: 'terrace',
-    backyard: 'backyard',
-};
+import { UNIT_AMENITIES_LIST, STREET_EASY_AMENITIES_MAP } from '@lib/constants';
 
 const getListsOfAmenities = amenitiesList => {
     const unitAmenities = intersection(Object.keys(STREET_EASY_AMENITIES_MAP), amenitiesList);
@@ -20,10 +14,7 @@ const getListsOfAmenities = amenitiesList => {
 };
 
 const getLocationInfoFromAddress = async ({ address, zip }) => {
-    const response = await $.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${address},${zip}&key=${secrets.GOOGLE_API_KEY}`,
-    );
-    const addressInfo = get(response, 'results.0');
+    const addressInfo = await geocodeByAddress({ address, zip });
     const location = {};
 
     const addressComponents = get(addressInfo, 'address_components') || [];
