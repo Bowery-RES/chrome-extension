@@ -5,10 +5,10 @@
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text/index";
   import LastReportUsed from "./LastReportUsed.svelte";
-  import { getReportAddress } from "@utils";
+  import { fetchReport } from "@lib/api";
   let checked;
 
-  $: address = getReportAddress($targetReport);
+  $: report = fetchReport($targetReport);
 </script>
 
 <style>
@@ -32,10 +32,10 @@
       label="Report URL" />
 
     <HelperText class="mdc-typography--headline6" persistent>
-      {#await address}
+      {#await report}
         loading...
-      {:then value}
-        {value || ''}
+      {:then reportData}
+        {get(reportData, 'new.address', '')}
       {:catch error}
         Error: {error.message}
       {/await}

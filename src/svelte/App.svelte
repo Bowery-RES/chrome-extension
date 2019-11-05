@@ -2,7 +2,7 @@
   import UnitRentComp from "./UnitRentComp/UnitRentComp.svelte";
   import Loading from "./components/Loading.svelte";
   import ReportUrl from "./ReportURL/ReportURL.svelte";
-  import { getInitialRentCompValues } from "@utils";
+  import { getInitialRentCompValues } from "@lib/utils";
   const initialValues = getInitialRentCompValues();
 </script>
 

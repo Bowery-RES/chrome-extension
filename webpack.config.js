@@ -10,8 +10,7 @@ var webpack = require("webpack"),
     OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 var alias = {
-  '@constants': path.join(__dirname, "src", "constants.js"),
-  '@utils': path.join(__dirname, "src", "utils.js"),
+  '@lib': path.join(__dirname, "src", "lib"),
 };
 
 var secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
