@@ -12,7 +12,7 @@
   const dispatch = createEventDispatcher();
 
   let values = {
-    ...initialValues
+    ...initialValues,
   };
 
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN;
@@ -58,7 +58,7 @@
       class="formField"
       items={UNIT_AMENITIES_LIST}
       placeholder="Select Unit Amenities"
-      bind:selectedValue={values.unitAmenities} />
+      bind:selectedValue={values.amenities} />
 
     <Textfield
       input$required

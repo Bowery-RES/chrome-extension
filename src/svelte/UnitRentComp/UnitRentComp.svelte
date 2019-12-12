@@ -16,9 +16,9 @@
   function handleSubmit(event) {
     const unitComp = {
         ...event.detail,
-        amenities: map(event.detail.unitAmenities, 'value'),
+        amenities: map(event.detail.amenities, 'value'),
     }
-    promise = addUnitComp($targetReport, event.detail).then(window.close);
+    promise = addUnitComp($targetReport, unitComp).then(window.close);
   }
 
 </script>
