@@ -67,7 +67,7 @@ const getTextContent = selector => {
     const [, data = '[]'] = document.body.textContent.match(/dataLayer = (\[.*\]);/) || [];
     const [compData] = JSON.parse(data);
 
-    const amenitiesList = compData.listAmen.split('|');
+    const amenitiesList = get(compData, 'listAmen', '').split('|');
     const buildingTitle = $('.building-title .incognito').text();
     const [, , unitNumber] = buildingTitle.match(/(.*) #(.*)/);
     const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text')

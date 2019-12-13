@@ -7,8 +7,9 @@ var webpack = require("webpack"),
     HtmlWebpackPlugin = require("html-webpack-plugin"),
     WriteFilePlugin = require("write-file-webpack-plugin"),
     MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-    OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-
+    OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
+    FileManagerPlugin = require('filemanager-webpack-plugin');
+const packageInfo = require('./package.json')
 var alias = {
   '@lib': path.join(__dirname, "src", "lib"),
 };
@@ -124,8 +125,15 @@ var options = {
       },
       canPrint: true
     }),
-    new WriteFilePlugin()
-  ]
+    new WriteFilePlugin(),
+    new FileManagerPlugin({
+      onEnd: {
+        archive: [
+          { source:  path.join(__dirname, "build"), destination:  path.join(__dirname, "packages", `${env.NODE_ENV}-v${packageInfo.version}.zip`) },
+        ]
+      }
+    })
+  ].filter(Boolean)
 };
 
 if (env.NODE_ENV === "development") {

@@ -1,6 +1,6 @@
 {
   "name": "bowery-chrome-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bowery chrome extension for Streeteasy",
   "scripts": {
     "build": "node utils/build.js",
@@ -31,6 +31,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "chrome-extension-async": "^3.3.2",
+    "filemanager-webpack-plugin": "^2.0.5",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15"
   }
