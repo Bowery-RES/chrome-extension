@@ -85,7 +85,8 @@ var options = {
     new CleanWebpackPlugin(["build"]),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV)
+      "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
+      "process.env.VERSION": JSON.stringify(process.env.npm_package_version)
     }),
     new CopyWebpackPlugin([{
       from: "src/manifest.json",
@@ -129,7 +130,7 @@ var options = {
     new FileManagerPlugin({
       onEnd: {
         archive: [
-          { source:  path.join(__dirname, "build"), destination:  path.join(__dirname, "packages", `${env.NODE_ENV}-v${packageInfo.version}.zip`) },
+          { source:  path.join(__dirname, "build"), destination:  path.join(__dirname, "packages", `${env.NODE_ENV}-v${process.env.npm_package_version}.zip`) },
         ]
       }
     })

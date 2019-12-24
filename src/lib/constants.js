@@ -39,3 +39,9 @@ export const GOOGLE_ADDRESS_BOROUGH = {
   Queens: 'Queens',
   'Staten Island': 'Staten Island',
 }
+
+export const EVENTS = {
+  INITIALIZE: 'INITIALIZE',
+  COMP_PARSED: 'COMP_PARSED',
+  COMP_ADDED: 'COMP_ADDED'
+}

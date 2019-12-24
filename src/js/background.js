@@ -1,40 +1,42 @@
 import '../img/bowery_icon.png';
+import '../img/bowery_icon_disabled.png';
 import 'chrome-extension-async';
-import get from 'lodash/get';
-import { validateToken } from '@lib/api';
-import { BOWERY_APP_DOMAIN } from 'secrets';
+import AuthService from '../lib/AuthService'
+import TrackingService from '../lib/TrackingService'
+import { EVENTS } from '../lib/constants'
 
-async function getBoweryToken() {
-    const valid = await validateToken()
-    if (valid) {
-        return;
-    }
-
-    const window = await chrome.windows.create({
-        url: BOWERY_APP_DOMAIN,
-        type: 'popup',
-        focused: false,
-    });
-    const tabId = get(window, 'tabs[0].id');
-    const [jwToken] = await chrome.tabs.executeScript(tabId, { code: "localStorage.getItem('jwToken')" });
-    await chrome.windows.remove(window.id);
-    await chrome.storage.local.set({ token: jwToken });
-    if (!jwToken) {
-        throw new Error('You have to be logged in to the Bowery application.');
-    }
+async function activationHandler({ tabId }) {
+  const tab = await chrome.tabs.get(tabId);
+  const url = tab.url || tab.pendingUrl;
+  if (url.match(/https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\//)) {
+    await chrome.browserAction.setIcon({ path: 'bowery_icon.png' });
+    chrome.browserAction.enable();
+  } else {
+    await chrome.browserAction.setIcon({ path: 'bowery_icon_disabled.png' });
+    chrome.browserAction.disable();
+  }
 }
 
-chrome.extension.onRequest.addListener(async ({ type, data }) => {
-    if (type === 'popup-opened') {
-        try {
-            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (!activeTab.url.match(/https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\//)) {
-                throw new Error('The extension pulls data only from Streeteasy.');
-            }
-            await getBoweryToken();
-            await chrome.tabs.executeScript({ file: 'parse-comp.bundle.js' });
-        } catch (error) {
-            chrome.extension.sendRequest({ error: error.message });
-        }
+chrome.tabs.onActivated.addListener(activationHandler);
+chrome.webNavigation.onBeforeNavigate.addListener(activationHandler);
+
+chrome.runtime.onMessage.addListener(async ({ type }) => {
+  try {
+    switch (type) {
+      case EVENTS.INITIALIZE:
+        const authInfo = await AuthService.authenticate();
+        const user = authInfo.user;
+        TrackingService.identify(user)
+        TrackingService.logEvent('Chrome Extension Clicked');
+        chrome.tabs.executeScript({ file: 'parse-comp.bundle.js' });
+        break;
+      case EVENTS.COMP_ADDED:
+        TrackingService.logEvent('Chrome Extension Comp Added');
+        break;
+      default:
+        break;
     }
+  } catch (error) {
+    chrome.runtime.sendMessage({ error: error });
+  }
 });
