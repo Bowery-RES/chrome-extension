@@ -2,6 +2,7 @@
   import Select from "svelte-select/src/Select.svelte";
   let className = "";
   export { className as class };
+
 </script>
 
 <style>
@@ -16,7 +17,8 @@
     --multiItemActiveColor: -internal-root-color;
     --multiClearHoverBG: #52616f;
     --multiClearHoverFill: #ebedef;
-    --placeholderColor: -internal-root-color;
+    --placeholderColor: rgba(0,0,0,.6);
+    --inputFontSize: 0.8rem;
     --listMaxHeight: 200px;
   }
 </style>

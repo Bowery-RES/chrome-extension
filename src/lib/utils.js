@@ -1,7 +1,6 @@
-import get from 'lodash/get';
 import uniqBy from 'lodash/uniqBy';
-import map from 'lodash/map';
 import { BOWERY_APP_DOMAIN } from 'secrets';
+import { fetchProperty } from '@lib/api';
 
 const normalizeReportUrl = (url = '') => {
     const [reportUrl] = url.match(/((\d|\w){24})/);
@@ -36,7 +35,15 @@ export const getInitialRentCompValues = () =>
             }
 
             if (type === 'comp-parsed') {
-                resolve(data);
+                fetchProperty({ address: data.address, city: data.city, zip: data.zip })
+                    .then(property => {
+                        resolve({ ...data, block: property.block, lot: property.lot, borough: property.borough });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        resolve(data);
+                    });
+
                 chrome.extension.onRequest.removeListener(extensionListener);
             }
         }

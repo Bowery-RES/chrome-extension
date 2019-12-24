@@ -1,10 +1,10 @@
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty'
 import intersection from 'lodash/intersection';
 import words from 'lodash/words';
-import secrets from 'secrets';
 import { geocodeByAddress } from '@lib/api';
 import $ from 'jquery';
-import { UNIT_AMENITIES_LIST, STREET_EASY_AMENITIES_MAP } from '@lib/constants';
+import { UNIT_AMENITIES_LIST, STREET_EASY_AMENITIES_MAP, GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH } from '@lib/constants';
 
 const getListsOfAmenities = amenitiesList => {
     const unitAmenities = intersection(Object.keys(STREET_EASY_AMENITIES_MAP), amenitiesList);
@@ -23,6 +23,7 @@ const getLocationInfoFromAddress = async ({ address, zip }) => {
             location[type] = { short: part.short_name, long: part.long_name };
         });
     }
+    let borough = {}
 
     const state = get(location, 'administrative_area_level_1.short');
     let city = location.locality || addressInfo.sublocality || addressInfo.neighborhood;
@@ -31,18 +32,28 @@ const getLocationInfoFromAddress = async ({ address, zip }) => {
         city = get(location, 'administrative_area_level_3') || get(location, 'locality');
     } else if (state === 'NY') {
         city = location.sublocality || location.locality || {};
+        borough = {
+          short: GOOGLE_ADDRESS_BOROUGH[city.short],
+          long: GOOGLE_ADDRESS_BOROUGH[city.long],
+        }
     }
 
+    let locationIdentifier = GEOGRAPHY_OPTIONS[state] || GEOGRAPHY_OPTIONS.OTHER
+
+    if (state === 'NY' && !borough.long) {
+      locationIdentifier = GEOGRAPHY_OPTIONS.OTHER
+    }
     const coords = {
         longitude: get(addressInfo, 'geometry.location.lng'),
         latitude: get(addressInfo, 'geometry.location.lat'),
     };
 
     return {
-        address: get(addressInfo, 'formatted_address'),
+        address:`${get(location, 'street_number.long')} ${get(location, 'route.long')}`,
         city: city ? city.short : '',
         zip: location.postal_code ? location.postal_code.short : '',
         state,
+        locationIdentifier,
         coords,
     };
 };
@@ -56,7 +67,7 @@ const getTextContent = selector => {
     const [, data = '[]'] = document.body.textContent.match(/dataLayer = (\[.*\]);/) || [];
     const [compData] = JSON.parse(data);
 
-    const amenities = compData.listAmen.split('|');
+    const amenitiesList = get(compData, 'listAmen', '').split('|');
     const buildingTitle = $('.building-title .incognito').text();
     const [, , unitNumber] = buildingTitle.match(/(.*) #(.*)/);
     const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text')
@@ -65,7 +76,7 @@ const getTextContent = selector => {
     const zip = get(compData, 'listZip');
     const address = getTextContent('.backend_data.BuildingInfo-item');
     const location = await getLocationInfoFromAddress({ zip, address });
-
+    const amenities = getListsOfAmenities(amenitiesList)
     const result = {
         state: location.state,
         dateOfValue: new Date(dateOfValue).toISOString(),
@@ -73,13 +84,14 @@ const getTextContent = selector => {
         city: location.city,
         unitNumber,
         address: location.address,
+        locationIdentifier: location.locationIdentifier,
         zip,
         rooms: get(compData, 'listRoom'),
         bedrooms: get(compData, 'listBed'),
         bathrooms: get(compData, 'listBath'),
         sqft: get(compData, 'listSqFt', ''),
         rent: get(compData, 'listPrice', ''),
-        unitAmenities: getListsOfAmenities(amenities),
+        amenities: isEmpty(amenities) ? null : amenities,
         sourceOfInformation: 'externalDatabase',
         sourceUrl: document.location.toString(),
         sourceName: 'StreetEasy',

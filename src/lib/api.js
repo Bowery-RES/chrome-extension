@@ -1,5 +1,6 @@
 import axios from 'axios';
-import get from 'lodash/get'
+import get from 'lodash/get';
+import 'chrome-extension-async';
 import { GOOGLE_API } from './constants';
 import { GOOGLE_API_KEY, BOWERY_APP_DOMAIN } from 'secrets';
 
@@ -19,11 +20,11 @@ export const fetchReport = async url => {
     if (!url) {
         return null;
     }
-    const match = url.match(/((\d|\w){24})/)
-    if(!match) {
-      throw new Error('Not a valid URL')
+    const match = url.match(/((\d|\w){24})/);
+    if (!match) {
+        throw new Error('Not a valid URL');
     }
-    const [id] = match
+    const [id] = match;
     const headers = await getAuthHeaders();
     const response = await axios.get(`${BOWERY_APP_DOMAIN}/report/${id}`, {
         headers: headers,
@@ -50,4 +51,13 @@ export const validateToken = async () => {
     } catch (error) {
         return false;
     }
+};
+
+export const fetchProperty = async params => {
+  const headers = await getAuthHeaders();
+    const response = await axios.get(`${BOWERY_APP_DOMAIN}/api/propertySearch/ny/address`, {
+        params,
+        headers,
+    });
+    return get(response, 'data.0', {});
 };
