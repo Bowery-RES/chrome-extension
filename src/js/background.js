@@ -1,8 +1,8 @@
 import '../img/bowery_icon.png';
 import '../img/bowery_icon_disabled.png';
 import 'chrome-extension-async';
-import AuthService from '../lib/AuthService'
-import TrackingService from '../lib/TrackingService'
+import AuthService from '../services/AuthService'
+import TrackingService from '../services/TrackingService'
 import { EVENTS } from '../lib/constants'
 
 async function activationHandler({ tabId }) {
