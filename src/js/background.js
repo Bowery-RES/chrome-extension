@@ -7,6 +7,10 @@ import { EVENTS } from '../lib/constants'
 
 async function activationHandler({ tabId }) {
   const tab = await chrome.tabs.get(tabId);
+  if(!tab.active){
+    return
+  }
+
   const url = tab.url || tab.pendingUrl;
   if (url.match(/https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\//)) {
     await chrome.browserAction.setIcon({ path: 'bowery_icon.png' });
