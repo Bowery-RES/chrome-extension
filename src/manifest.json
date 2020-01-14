@@ -18,6 +18,9 @@
     "sessions",
     "webNavigation"
   ],
+  "web_accessible_resources": [
+    "*"
+],
   "icons": {
     "128": "bowery_icon.png"
   },

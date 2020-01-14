@@ -2,15 +2,21 @@
   import UnitRentComp from "./UnitRentComp/UnitRentComp.svelte";
   import Loading from "./components/Loading.svelte";
   import ReportUrl from "./ReportURL/ReportURL.svelte";
-  import { getInitialRentCompValues } from "@lib/utils";
+  import { getInitialRentCompValues } from "../lib/utils";
   const initialValues = getInitialRentCompValues();
 </script>
 
 <style>
   main {
-    padding: 16px;
-    width: 750px;
-    height: 527px;
+    width: 682px;
+    height: 842px;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    padding: 24px;
+    z-index: 2000;
+    background: #ffffff;
+    box-shadow: 0px 8px 32px rgba(0, 15, 68, 0.12);
   }
 </style>
 
@@ -21,6 +27,6 @@
     <ReportUrl />
     <UnitRentComp initialValues={value} />
   {:catch error}
-    <p></p>
+    <p>{error.message}</p>
   {/await}
 </main>

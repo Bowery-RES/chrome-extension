@@ -2,9 +2,9 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty'
 import intersection from 'lodash/intersection';
 import words from 'lodash/words';
-import { geocodeByAddress } from '@lib/api';
+import { geocodeByAddress } from '../app/lib/api';
 import $ from 'jquery';
-import { UNIT_AMENITIES_LIST, STREET_EASY_AMENITIES_MAP, GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '@lib/constants';
+import { UNIT_AMENITIES_LIST, STREET_EASY_AMENITIES_MAP, GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '../app/lib/constants';
 
 const getListsOfAmenities = amenitiesList => {
   const unitAmenities = intersection(Object.keys(STREET_EASY_AMENITIES_MAP), amenitiesList);

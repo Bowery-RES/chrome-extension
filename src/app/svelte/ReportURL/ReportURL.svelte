@@ -5,7 +5,7 @@
   import Textfield from "@smui/textfield";
   import HelperText from "@smui/textfield/helper-text/index";
   import LastReportUsed from "./LastReportUsed.svelte";
-  import { fetchReport } from "@lib/api";
+  import { fetchReport } from "../../lib/api";
   let checked;
 
   $: report = fetchReport($targetReport);

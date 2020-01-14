@@ -7,7 +7,7 @@
   import { BOWERY_APP_DOMAIN } from "secrets";
   import RentCompForm from "./RentCompForm.svelte";
   import Loading from "./../components/Loading.svelte";
-  import { addUnitComp } from "@lib/api";
+  import { addUnitComp } from "../../lib/api";
 
   export let initialValues = {};
 

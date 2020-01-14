@@ -6,7 +6,7 @@
   import DatePicker from "./../components/DatePicker.svelte";
 
   import Select from "./../components/MultiSelect.svelte";
-  import { UNIT_AMENITIES_LIST } from "@lib/constants";
+  import { UNIT_AMENITIES_LIST } from "../../lib/constants";
   export let initialValues;
   export let disabled;
   const dispatch = createEventDispatcher();

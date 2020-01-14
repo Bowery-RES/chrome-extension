@@ -1,13 +1,15 @@
 import uniqBy from 'lodash/uniqBy';
 import { BOWERY_APP_DOMAIN } from 'secrets';
-import { fetchProperty } from '@lib/api';
-import { EVENTS } from '../lib/constants'
+import { fetchProperty } from './api';
+import { EVENTS } from './constants'
+
 const normalizeReportUrl = (url = '') => {
   const [reportUrl] = url.match(/((\d|\w){24})/);
   return `${BOWERY_APP_DOMAIN}/report/${reportUrl}`;
 };
 
 export const getLastVisitedReports = async () => {
+  return [];
   const history = await chrome.history.search({
     text: `${BOWERY_APP_DOMAIN}/report/`,
     startTime: Date.now() - 1008000000,
@@ -28,26 +30,35 @@ export const getLastVisitedReports = async () => {
 };
 
 
-export const getInitialRentCompValues = () =>
-  new Promise((resolve, reject) => {
-    function extensionListener({ type, data, error }) {
+export const getInitialRentCompValues = () =>{
+console.log("ASDASDASDASd")
+  return new Promise((resolve, reject) => {
+
+    async function extensionListener({ type, data, error },sender, response) {
+      console.log(type, data)
       if (error) {
         reject(new Error(error));
       }
 
       if (type === EVENTS.COMP_PARSED) {
-        fetchProperty({ address: data.address, city: data.city, zip: data.zip })
-          .then(property => {
-            resolve({ ...data, block: property.block, lot: property.lot, borough: property.borough });
-          })
-          .catch((err) => {
-            console.log(err)
-            resolve(data);
-          });
-
         chrome.runtime.onMessage.removeListener(extensionListener);
+        resolve(data);
+        // fetchProperty({ address: data.address, city: data.city, zip: data.zip })
+        //   .then(property => {
+        //     resolve({ ...data, block: property.block, lot: property.lot, borough: property.borough });
+        //   })
+        //   .catch((err) => {
+        //     console.log(err)
+        //     resolve(data);
+        //   });
       }
+
     }
+    console.log(2)
     chrome.runtime.onMessage.addListener(extensionListener);
-    chrome.runtime.sendMessage({ type: EVENTS.INITIALIZE });
+    console.log(3)
+    chrome.runtime.sendMessage({ type: EVENTS.INITIALIZE }, console.log);
+    console.log(4)
+
   });
+}

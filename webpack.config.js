@@ -1,38 +1,43 @@
-var webpack = require("webpack"),
-    path = require("path"),
-    fileSystem = require("fs"),
-    env = require("./utils/env"),
-    CleanWebpackPlugin = require("clean-webpack-plugin"),
-    CopyWebpackPlugin = require("copy-webpack-plugin"),
-    HtmlWebpackPlugin = require("html-webpack-plugin"),
-    WriteFilePlugin = require("write-file-webpack-plugin"),
-    MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-    OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
-    FileManagerPlugin = require('filemanager-webpack-plugin');
-const packageInfo = require('./package.json')
-var alias = {
-  '@lib': path.join(__dirname, "src", "lib"),
+const webpack = require("webpack")
+const path = require("path");
+const fileSystem = require("fs");
+const env = require("./scripts/env");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WriteFilePlugin = require("write-file-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
+
+function resolvePath (destination) {
+  return path.join(__dirname, "src", destination)
+}
+
+const alias = {
+  '@lib': resolvePath("lib"),
 };
 
-var secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
+const secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
 
-var fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"];
+const fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"];
 
 if (fileSystem.existsSync(secretsPath)) {
   alias["secrets"] = secretsPath;
 }
 
-var options = {
+const options = {
   mode: 'development',
   entry: {
-    popup: path.join(__dirname, "src", "js", "popup.js"),
-    options: path.join(__dirname, "src", "js", "options.js"),
-    background: path.join(__dirname, "src", "js", "background.js"),
-    'parse-comp': path.join(__dirname, "src", "js", "parse-comp.js"),
+    popup: resolvePath("popup/popup.js"),
+    options: resolvePath("options/options.js"),
+    background: resolvePath("background/background.js"),
+    'parseStreetEasy': path.join(__dirname, "src", "content-scripts", "parseStreetEasy.js"),
+    widget: path.join(__dirname, "src", "content-scripts", "widget.js"),
   },
   output: {
     path: path.join(__dirname, "build"),
-    filename: "[name].bundle.js"
+    filename: "[name].js"
   },
   module: {
     rules: [
@@ -48,13 +53,13 @@ var options = {
       },
       {
         test: /\.svelte$/,
-				use: {
-					loader: 'svelte-loader',
-					options: {
-						emitCss: false,
-						hotReload: false
-					}
-				}
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            emitCss: false,
+            hotReload: false
+          }
+        }
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -81,9 +86,7 @@ var options = {
     alias: alias,
   },
   plugins: [
-    // clean the build folder
     new CleanWebpackPlugin(["build"]),
-    // expose and write the allowed env vars on the compiled bundle
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
       "process.env.VERSION": JSON.stringify(process.env.npm_package_version)
@@ -91,7 +94,6 @@ var options = {
     new CopyWebpackPlugin([{
       from: "src/manifest.json",
       transform: function (content, path) {
-        // generates the manifest file using the package.json informations
         return Buffer.from(JSON.stringify({
           description: process.env.npm_package_description,
           version: process.env.npm_package_version,
@@ -99,21 +101,11 @@ var options = {
         }))
       }
     }]),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "popup.html"),
-      filename: "popup.html",
-      chunks: ["popup"]
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "options.html"),
-      filename: "options.html",
-      chunks: ["options"]
-    }),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "background.html"),
-      filename: "background.html",
-      chunks: ["background"]
-    }),
+    ...['popup', 'options', 'background'].map(page => new HtmlWebpackPlugin({
+      template: resolvePath(`${page}/${page}.html`),
+      filename: `${page}.html`,
+      chunks: [page]
+    })),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name].[id].css'
@@ -130,11 +122,19 @@ var options = {
     new FileManagerPlugin({
       onEnd: {
         archive: [
-          { source:  path.join(__dirname, "build"), destination:  path.join(__dirname, "packages", `${env.NODE_ENV}-v${process.env.npm_package_version}.zip`) },
+          {
+            source: path.join(__dirname, "build"),
+            destination: path.join(__dirname, "packages", `${env.NODE_ENV}-v${process.env.npm_package_version}.zip`)
+          },
         ]
       }
     })
-  ].filter(Boolean)
+  ].filter(Boolean),
+  chromeExtensionBoilerplate: {
+    notHotReload: [
+      'widget',
+    ]
+  }
 };
 
 if (env.NODE_ENV === "development") {

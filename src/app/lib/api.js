@@ -10,6 +10,7 @@ const getAuthHeaders = async () => {
 };
 
 export const geocodeByAddress = async ({ address, zip }) => {
+  return {}
   const response = await axios.get(GOOGLE_API, {
     params: { address, zip, key: GOOGLE_API_KEY },
   });
@@ -17,6 +18,7 @@ export const geocodeByAddress = async ({ address, zip }) => {
 };
 
 export const fetchReport = async url => {
+  return {}
   if (!url) {
     return null;
   }
@@ -43,6 +45,7 @@ export const addUnitComp = async (url, unitComp) => {
 };
 
 export const fetchProperty = async params => {
+  return {}
   const headers = await getAuthHeaders();
   const response = await axios.get(`${BOWERY_APP_DOMAIN}/api/propertySearch/ny/address`, {
     params,
