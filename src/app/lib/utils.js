@@ -24,15 +24,13 @@ export const getInitialRentCompValues = () =>{
 
       if (type === EVENTS.COMP_PARSED) {
         chrome.runtime.onMessage.removeListener(extensionListener);
-        resolve(data);
-        // fetchProperty({ address: data.address, city: data.city, zip: data.zip })
-        //   .then(property => {
-        //     resolve({ ...data, block: property.block, lot: property.lot, borough: property.borough });
-        //   })
-        //   .catch((err) => {
-        //     console.log(err)
-        //     resolve(data);
-        //   });
+        fetchProperty({ address: data.address, city: data.city, zip: data.zip })
+          .then(property => {
+            resolve({ ...data, block: property.block, lot: property.lot, borough: property.borough });
+          })
+          .catch((err) => {
+            resolve(data);
+          });
       }
       sendResponse()
       return true

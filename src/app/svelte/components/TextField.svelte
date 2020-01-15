@@ -4,13 +4,13 @@
   export let label;
   export let required;
   export let variant;
+  export let disabled;
 </script>
 
 <style>
   div {
     padding-top: 16px;
-    margin: 8px 0;
-    width: 100%;
+    margin-top: 2px;
   }
   span {
     position: absolute !important;
@@ -27,10 +27,13 @@
   :global(.mdc-text-field) {
     width: 100%;
   }
+  :global(.mdc-text-field__input) {
+    padding: 12px 16px !important;
+  }
 </style>
 
 <div>
-  <Textfield bind:value input$required={required} variant="outlined" noLabel>
+  <Textfield bind:value input$required={required} disabled={disabled} variant="outlined" noLabel>
     <span class:required>{label}</span>
   </Textfield>
   <slot name="helperText" />

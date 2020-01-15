@@ -8,16 +8,14 @@
   import { fetchReport } from "../../lib/api";
   let checked;
 
-  $: report = fetchReport($targetReport);
+  $: report = fetchReport($targetReport.value);
 </script>
 
 <style>
   section {
-    display: flex;
-  }
-  div {
-    max-width: 300px;
-    width: 300px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 30px;
   }
 </style>
 
@@ -26,14 +24,16 @@
     <Textfield
       variant="outlined"
       disabled={checked}
-      bind:value={$targetReport}
+      bind:value={$targetReport.value}
       label="Report URL">
       <span slot="helperText">
         <HelperText class="mdc-typography--headline6" persistent>
           {#await report}
             loading...
           {:then reportData}
-            {get(reportData, 'new.address', '')}
+            <a href={`${$targetReport.value}/residential-rent-comps`} target="_blank">
+              {get(reportData, 'new.address', '')}
+            </a>
           {:catch error}
             Error: {error.message}
           {/await}
@@ -42,5 +42,5 @@
     </Textfield>
 
   </div>
-  <LastReportUsed bind:value={$targetReport} bind:checked />
+  <LastReportUsed bind:checked />
 </section>

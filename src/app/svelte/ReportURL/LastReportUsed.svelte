@@ -1,12 +1,18 @@
 <script>
   import { onMount } from "svelte";
-  import Select, { Option } from "@smui/select";
+  import { fade, fly } from "svelte/transition";
+  import get from "lodash/get";
+  import { targetReport } from "./../stores.js";
   import Checkbox from "@smui/checkbox";
   import FormField from "@smui/form-field";
   import { getLastVisitedReports } from "../../lib/utils";
-  export let value;
+  import Select from "../components/Select.svelte";
   export let checked = false;
+
   let lastReports = [];
+  $: if (checked) {
+    targetReport.set(get(lastReports, "0"));
+  }
 
   onMount(async () => {
     lastReports = await getLastVisitedReports();
@@ -15,12 +21,12 @@
 
 <style>
   .root {
-    height: 48px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
-    margin-top: 24px;
+    margin-top: 16px;
+    height: 78px;
   }
 </style>
 
@@ -31,18 +37,11 @@
   </FormField>
 
   {#if checked}
-    <Select
-      variant="outlined"
-      style="height: 36px"
-      class="dense"
-      bind:value
-      label="Last Reports">
-      <Option value="" />
-      {#each lastReports as report}
-        <Option value={report.value} selected={value === report}>
-          {report.address}
-        </Option>
-      {/each}
-    </Select>
+    <div transition:fly={{ x: 330, duration: 500 }}>
+      <Select
+        items={lastReports}
+        placeholder="Select Report"
+        bind:selectedValue={$targetReport} />
+    </div>
   {/if}
 </div>

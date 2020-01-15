@@ -17,8 +17,9 @@
     const unitComp = {
         ...event.detail,
         amenities: map(event.detail.amenities, 'value'),
+        unitType: get(event, 'detail.unitType.value')
     }
-    promise = addUnitComp($targetReport, unitComp).then(window.close);
+    promise = addUnitComp($targetReport.value, unitComp).then(window.close);
   }
 
 </script>

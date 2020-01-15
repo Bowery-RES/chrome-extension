@@ -73,6 +73,8 @@ const getTextContent = selector => {
   const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text')
     .text()
     .trim();
+  const description = $(".Description-block").text().trim()
+  const [unitType] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/)
   const zip = get(compData, 'listZip');
   const address = getTextContent('.backend_data.BuildingInfo-item');
   const location = await getLocationInfoFromAddress({ zip, address });
@@ -82,6 +84,7 @@ const getTextContent = selector => {
     dateOfValue: new Date(dateOfValue).toISOString(),
     coords: location.coords,
     city: location.city,
+    unitType,
     unitNumber,
     address: location.address,
     locationIdentifier: location.locationIdentifier,

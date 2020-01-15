@@ -11,28 +11,39 @@
   };
 </script>
 
-<Flatpickr
-  bind:value
-  options={flatpickrOptions}
-  placeholder="optional placeholder"
-  element="#picker">
-  <label
-    class="mdc-text-field formField flatpickr mdc-text-field--outlined
-    mdc-text-field--dense"
-    id="picker">
-    <input class="mdc-text-field__input" data-input />
-    <div
-      class="mdc-notched-outline mdc-notched-outline--upgraded
-      mdc-notched-outline--notched">
-      <div class="mdc-notched-outline__leading" />
-      <div class="mdc-notched-outline__notch" style="width: 155.68px;">
-        <span
-          class="mdc-floating-label mdc-floating-label--float-above"
-          style="">
-          {label}
-        </span>
+<style>
+  span {
+    position: absolute !important;
+    top: -24px !important;
+    font-weight: 600 !important;
+  }
+  :global(.mdc-notched-outline) {
+    height: 36px;
+  }
+  .root {
+    padding-top: 16px;
+    position: relative;
+    margin-top: 2px;
+  }
+  label {
+    height: 36px !important;
+  }
+</style>
+
+<Flatpickr bind:value options={flatpickrOptions} element="#picker">
+  <div class="root">
+    <label
+      id="picker"
+      class="mdc-text-field flatpickr mdc-text-field--outlined
+      mdc-text-field--dense">
+      <span>{label}</span>
+      <input class="mdc-text-field__input" data-input />
+      <div
+        class="mdc-notched-outline mdc-notched-outline--upgraded
+        mdc-notched-outline--notched">
+        <div class="mdc-notched-outline__leading" />
+        <div class="mdc-notched-outline__trailing" />
       </div>
-      <div class="mdc-notched-outline__trailing" />
-    </div>
-  </label>
+    </label>
+  </div>
 </Flatpickr>

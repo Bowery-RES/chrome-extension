@@ -5,7 +5,7 @@
     color: #2a4370;
     animation: rotate 0.75s linear infinite;
     margin: auto;
-    margin-top: calc(50vh - 40px);
+    margin-top: calc(50% - 40px);
   }
 
   .spinner_icon {

@@ -8,8 +8,6 @@ var options = (config.chromeExtensionBoilerplate || {});
 var excludeEntriesToHotReload = (options.notHotReload || []);
 
 for (var entryName in config.entry) {
-  console.log(entryName, excludeEntriesToHotReload)
-
   if (excludeEntriesToHotReload.indexOf(entryName) === -1) {
     config.entry[entryName] =
       [
@@ -30,7 +28,6 @@ var server =
   new WebpackDevServer(compiler, {
     disableHostCheck: true,
     port: env.PORT,
-    hot: true,
     contentBase: path.join(__dirname, "../build"),
     headers: { "Access-Control-Allow-Origin": "*" }
   });

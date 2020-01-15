@@ -66,7 +66,7 @@ chrome.runtime.onMessage.addListener(({ type, data }, sender, sendResponse) => {
       
         const reports = reportsVisited.map(page => ({
           value: normalizeReportUrl(page.url),
-          address: page.title,
+          label: page.title,
         }));
         sendResponse(uniqBy(reports, 'value').slice(0, 5));
       });
