@@ -9,35 +9,17 @@ const normalizeReportUrl = (url = '') => {
 };
 
 export const getLastVisitedReports = async () => {
-  return [];
-  const history = await chrome.history.search({
-    text: `${BOWERY_APP_DOMAIN}/report/`,
-    startTime: Date.now() - 1008000000,
-  });
-  const reportsVisited = history.filter(
-    page =>
-      page.url.match(/(\/report\/(\d|\w){24})/) &&
-      page.title !== 'Bowery' &&
-      !BOWERY_APP_DOMAIN.includes(page.title),
-  );
-
-  const reports = reportsVisited.map(page => ({
-    value: normalizeReportUrl(page.url),
-    address: page.title,
-  }));
-
-  return uniqBy(reports, 'value').slice(0, 5);
+  const response = await chrome.runtime.sendMessage({type: 'GET_LAST_REPORTS'})
+  return response
 };
 
 
 export const getInitialRentCompValues = () =>{
-console.log("ASDASDASDASd")
   return new Promise((resolve, reject) => {
 
-    async function extensionListener({ type, data, error },sender, response) {
-      console.log(type, data)
+    async function extensionListener({ type, data, error },sender, sendResponse) {
       if (error) {
-        reject(new Error(error));
+        return reject(new Error(error));
       }
 
       if (type === EVENTS.COMP_PARSED) {
@@ -52,13 +34,12 @@ console.log("ASDASDASDASd")
         //     resolve(data);
         //   });
       }
+      sendResponse()
+      return true
 
     }
-    console.log(2)
     chrome.runtime.onMessage.addListener(extensionListener);
-    console.log(3)
-    chrome.runtime.sendMessage({ type: EVENTS.INITIALIZE }, console.log);
-    console.log(4)
+    chrome.runtime.sendMessage({ type: EVENTS.INITIALIZE });
 
   });
 }

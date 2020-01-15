@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Select, { Option } from "@smui/select";
-  import Switch from "@smui/switch";
+  import Checkbox from "@smui/checkbox";
   import FormField from "@smui/form-field";
   import { getLastVisitedReports } from "../../lib/utils";
   export let value;
@@ -17,27 +17,23 @@
   .root {
     height: 48px;
     display: flex;
-    justify-content: space-between;
-    flex: 1;
-    margin: 8px 10px;
-  }
-  :global(.switch) {
     flex-direction: column;
     justify-content: space-between;
-    height: 48px;
+    flex: 1;
+    margin-top: 24px;
   }
 </style>
 
 <div class="root">
-  <FormField class="switch">
+  <FormField>
+    <Checkbox bind:checked />
     <span slot="label">Last Report Used</span>
-    <Switch bind:checked />
   </FormField>
 
   {#if checked}
     <Select
       variant="outlined"
-      style="height: 48px"
+      style="height: 36px"
       class="dense"
       bind:value
       label="Last Reports">

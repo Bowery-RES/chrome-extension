@@ -10,7 +10,6 @@ const getAuthHeaders = async () => {
 };
 
 export const geocodeByAddress = async ({ address, zip }) => {
-  return {}
   const response = await axios.get(GOOGLE_API, {
     params: { address, zip, key: GOOGLE_API_KEY },
   });
@@ -18,7 +17,6 @@ export const geocodeByAddress = async ({ address, zip }) => {
 };
 
 export const fetchReport = async url => {
-  return {}
   if (!url) {
     return null;
   }

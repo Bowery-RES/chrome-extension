@@ -24,6 +24,7 @@
   {#await initialValues}
     <Loading />
   {:then value}
+    <h1>Report</h1>
     <ReportUrl />
     <UnitRentComp initialValues={value} />
   {:catch error}

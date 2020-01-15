@@ -2,7 +2,7 @@
   import axios from "axios";
   import get from "lodash/get";
   import { targetReport } from "./../stores.js";
-  import Textfield from "@smui/textfield";
+  import Textfield from "../components/TextField.svelte";
   import HelperText from "@smui/textfield/helper-text/index";
   import LastReportUsed from "./LastReportUsed.svelte";
   import { fetchReport } from "../../lib/api";
@@ -16,8 +16,8 @@
     display: flex;
   }
   div {
-    max-width: 350px;
-    margin: 8px 10px;
+    max-width: 300px;
+    width: 300px;
   }
 </style>
 
@@ -25,21 +25,22 @@
   <div>
     <Textfield
       variant="outlined"
-      style="width: 350px;"
-      dense
       disabled={checked}
       bind:value={$targetReport}
-      label="Report URL" />
+      label="Report URL">
+      <span slot="helperText">
+        <HelperText class="mdc-typography--headline6" persistent>
+          {#await report}
+            loading...
+          {:then reportData}
+            {get(reportData, 'new.address', '')}
+          {:catch error}
+            Error: {error.message}
+          {/await}
+        </HelperText>
+      </span>
+    </Textfield>
 
-    <HelperText class="mdc-typography--headline6" persistent>
-      {#await report}
-        loading...
-      {:then reportData}
-        {get(reportData, 'new.address', '')}
-      {:catch error}
-        Error: {error.message}
-      {/await}
-    </HelperText>
   </div>
   <LastReportUsed bind:value={$targetReport} bind:checked />
 </section>

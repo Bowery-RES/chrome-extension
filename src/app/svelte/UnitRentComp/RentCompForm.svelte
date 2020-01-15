@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Button from "@smui/button";
-  import Textfield from "@smui/textfield";
+  import Textfield from "../components/TextField.svelte";
   import HelperText from "@smui/textfield/helper-text/index";
   import DatePicker from "./../components/DatePicker.svelte";
 
@@ -26,14 +26,9 @@
     padding-bottom: 8px;
   }
 
-  div[role="group"] :global(.formField) {
-    margin: 8px 10px;
-    width: calc(50% - 20px);
-  }
-
   h1 {
     width: 100%;
-    margin: 0px 10px 10px;
+    /* margin: 0px 10px 10px; */
   }
   footer {
     position: sticky;
@@ -48,78 +43,52 @@
 <form on:submit|preventDefault={e => dispatch('submit', values)}>
   <div role="group">
     <Textfield
-      class="formField"
-      variant="outlined"
-      dense
-      input$required
+      required
       bind:value={values.address}
       label="Address" />
     <Select
-      class="formField"
       items={UNIT_AMENITIES_LIST}
       placeholder="Select Unit Amenities"
       bind:selectedValue={values.amenities} />
 
     <Textfield
-      input$required
-      class="formField"
-      variant="outlined"
-      dense
+      required
       bind:value={values.city}
       label="City" />
     <Textfield
-      class="formField"
-      variant="outlined"
       dense
       bind:value={values.state}
       label="State" />
+
     <Textfield
-      class="formField"
-      variant="outlined"
-      dense
       bind:value={values.zip}
       label="Zip Code" />
 
     <Textfield
-      class="formField"
-      variant="outlined"
-      dense
-      input$required
+      required
       bind:value={values.unitNumber}
       label="Unit Number" />
 
     <DatePicker bind:value={values.dateOfValue} label="Date Of Value" />
 
     <Textfield
-      class="formField"
-      variant="outlined"
-      dense
-      input$required
+      required
       type="number"
       bind:value={values.bedrooms}
       label="Number of Bedrooms" />
 
     <Textfield
-      class="formField"
-      variant="outlined"
-      dense
-      input$required
+      required
       type="number"
       bind:value={values.bathrooms}
       label="Number of Bathrooms" />
 
     <Textfield
-      class="formField"
-      variant="outlined"
-      dense
-      input$required
+      required
       type="number"
       bind:value={values.rent}
       label="Monthly Rent" />
     <Textfield
-      class="formField"
-      variant="outlined"
-      dense
       type="number"
       bind:value={values.sqft}
       label="Unit Square Footage" />
