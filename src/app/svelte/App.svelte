@@ -1,5 +1,5 @@
 <script>
-  import { fade, fly } from "svelte/transition";
+  import { fade } from "svelte/transition";
   import Ripple from "@smui/ripple";
   import Close from "svelte-icons/md/MdClose.svelte";
   import UnitRentComp from "./UnitRentComp/UnitRentComp.svelte";
@@ -13,7 +13,7 @@
 <style>
   main {
     width: 682px;
-    min-height: 720px;
+    min-height: 780px;
     font-family: "Roboto";
     position: fixed;
     top: 0px;
@@ -48,11 +48,13 @@
   {#await initialValues}
     <Loading />
   {:then value}
-    <h1>Report</h1>
-    <ReportUrl />
-    <UnitRentComp initialValues={value} />
-    <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
+    <div transition:fade>
+      <h1>Report</h1>
+      <ReportUrl />
+      <UnitRentComp initialValues={value} />
+    </div>
   {:catch error}
     <span>{error.message}</span>
   {/await}
+    <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
 </main>
