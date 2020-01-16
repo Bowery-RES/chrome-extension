@@ -30,6 +30,12 @@
     top: 24px;
     right: 24px;
   }
+  .version-caption {
+    font-size: 12px;
+    color: #d0d0d0;
+    margin-right: 0;
+    text-align: center;
+  }
 </style>
 
 <main>
@@ -45,7 +51,8 @@
     <h1>Report</h1>
     <ReportUrl />
     <UnitRentComp initialValues={value} />
+    <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
   {:catch error}
-    <p>{error.message}</p>
+    <span>{error.message}</span>
   {/await}
 </main>
