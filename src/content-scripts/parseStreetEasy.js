@@ -70,7 +70,7 @@ const getTextContent = selector => {
 
   const amenitiesList = get(compData, 'listAmen', '').split('|');
   const buildingTitle = $('.building-title .incognito').text();
-  const [, , unitNumber] = buildingTitle.match(/(.*) #(.*)/) || [];
+  const [, , , unitNumber] = buildingTitle.match(/(.*) (#|UNIT-)(.*)/) || [];
   const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text')
     .text()
     .trim();
