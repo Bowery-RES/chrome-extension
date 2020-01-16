@@ -1,27 +1,21 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { form as formFactory } from "svelte-forms";
   import Button from "@smui/button";
   import Textfield from "../components/TextField.svelte";
   import HelperText from "@smui/textfield/helper-text/index";
   import DatePicker from "./../components/DatePicker.svelte";
-
   import Select from "./../components/Select.svelte";
-  import {
-    UNIT_AMENITIES_LIST,
-    UNIT_TYPES_LIST,
-  } from "../../lib/constants";
+  import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from "../../lib/constants";
+  import { validateRentComp } from "../../validation/index.js";
+
   export let initialValues;
-  export let disabled;
   const dispatch = createEventDispatcher();
 
-  let values = {
-    ...initialValues,
-    unitType: UNIT_TYPES_LIST.find(
-      unitType => unitType.value === initialValues.unitType
-    )
-  };
+  const values = { ...initialValues };
 
-  $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : 0;
+  $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN;
+  $: invalid = validateRentComp(values);
 </script>
 
 <style>
@@ -35,32 +29,46 @@
 
   footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     grid-column: 1 / 3;
   }
 </style>
 
 <h1 class="mdc-typography--headline1 ">Rent Comp</h1>
 <form on:submit|preventDefault={e => dispatch('submit', values)}>
-  <Textfield required bind:value={values.address} label="Address" />
+  <Textfield
+    name="address"
+    required
+    bind:value={values.address}
+    label="Address" />
   <Select
     isMulti
+    name="amenities"
     label="Amenities"
     items={UNIT_AMENITIES_LIST}
     placeholder="Select Unit Amenities"
     bind:selectedValue={values.amenities} />
-  <Textfield required bind:value={values.city} label="City" />
-  <Textfield bind:value={values.state} label="State" />
-  <Textfield bind:value={values.zip} label="Zip Code" />
-  <Textfield required bind:value={values.unitNumber} label="Unit Number" />
-  <DatePicker bind:value={values.dateOfValue} label="Date Of Value" />
+  <Textfield name="city" required bind:value={values.city} label="City" />
+  <Textfield name="state" bind:value={values.state} label="State" />
+  <Textfield name="zip" bind:value={values.zip} label="Zip Code" />
+  <Textfield
+    name="unitNumber"
+    required
+    bind:value={values.unitNumber}
+    label="Unit Number" />
+  <DatePicker
+    name="dateOfValue"
+    bind:value={values.dateOfValue}
+    label="Date Of Value" />
 
   <Select
+    name="unitLayout"
     label="Unit Type"
     items={UNIT_TYPES_LIST}
-    bind:selectedValue={values.unitType}
+    bind:selectedValue={values.unitLayout}
     placeholder="Select Unit Type" />
   <Textfield
+    name="bathrooms"
     required
     type="number"
     bind:value={values.bathrooms}
@@ -68,27 +76,36 @@
   <Textfield
     required
     type="number"
+    name="bedrooms"
     bind:value={values.bedrooms}
     label="Number of Bedrooms" />
   <Textfield
     type="number"
+    name="sqft"
     bind:value={values.sqft}
     label="Unit Square Footage" />
 
   <Textfield
     required
     type="number"
+    name="rent"
     bind:value={values.rent}
     label="Monthly Rent">
     <span slot="helperText">
       <HelperText persistent>
-        Rent per SF: ${values.pricePerSqft.toFixed(2)}
+        Rent per SF:
+        {#if isFinite(values.pricePerSqft)}
+          ${values.pricePerSqft.toFixed(2)}
+        {:else}N/A{/if}
       </HelperText>
     </span>
   </Textfield>
-
   <footer>
-    <Button style="color: white;" variant="raised" {disabled} type="submit">
+    <Button
+      style="color: white;"
+      variant="raised"
+      disabled={invalid}
+      type="submit">
       Submit
     </Button>
   </footer>

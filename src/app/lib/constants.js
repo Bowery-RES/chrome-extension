@@ -6,15 +6,15 @@ export const UNIT_AMENITIES_LIST = [
 ];
 
 export const UNIT_TYPES_LIST = [
-    { label: 'Duplex', value: 'duplex' },
-    { label: 'Triplex', value: 'triplex' },
-    { label: 'Simplex', value: 'simplex' },
-    { label: 'Penthouse', value: 'penthouse' },
-    { label: 'Loft', value: 'loft' },
-    { label: 'Garden Style', value: 'garden style' },
-    { label: 'Basement', value: 'basement' },
-    { label: 'Garage', value: 'garage' },
-];
+'Duplex',
+'Triplex',
+'Simplex',
+'Penthouse',
+'Loft',
+'Garden Style',
+'Basement',
+'Garage',
+]
 
 export const STREET_EASY_AMENITIES_MAP = {
     washer_dryer: 'unitLaundry',

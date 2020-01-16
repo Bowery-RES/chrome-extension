@@ -19,14 +19,15 @@
         amenities: map(event.detail.amenities, 'value'),
         unitType: get(event, 'detail.unitType.value')
     }
-    promise = addUnitComp($targetReport.value, unitComp).then(window.close);
+    console.log(unitComp)
+    // promise = addUnitComp($targetReport.value, unitComp).then(window.close);
   }
 
 </script>
 {#await promise}
   <Loading />
 {:then value}
-  <RentCompForm {initialValues} disabled={!$targetReport} on:submit={handleSubmit} />
+  <RentCompForm {initialValues} on:submit={handleSubmit} />
 {:catch error}
   <p>Something went wrong: {error.message}</p>
 {/await}

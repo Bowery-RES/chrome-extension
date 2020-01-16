@@ -4,7 +4,7 @@
   export let placeholder = "Select Option";
   export let items = [];
   export let isMulti;
-  export let label = '';
+  export let label = "";
 </script>
 
 <style>
@@ -13,18 +13,19 @@
     --borderFocusColor: #4160d3;
     --height: 34px;
     --borderRadius: 4px;
-    --multiItemMargin: 3px 4px 0 0;
+    --multiItemMargin: 4px 4px 0 0;
     --multiItemBG: #e0e0e0;
     --multiItemActiveBG: rgb(206, 206, 206);
     --multiItemActiveColor: -internal-root-color;
     --multiClearHoverBG: #52616f;
     --multiClearHoverFill: #ebedef;
     --placeholderColor: rgba(0, 0, 0, 0.6);
-    --inputFontSize: 1rem;
+    --inputFontSize: 16px;
     --listMaxHeight: 200px;
     --clearSelectTop: 8px;
-    --multiClearTop: 7px;
+    --multiClearTop: 6px;
     --multiItemHeight: 28px;
+    --multiSelectPadding: 0 35px 0 8px;
     padding-top: 16px;
     margin-top: 2px;
     position: relative;
@@ -35,7 +36,7 @@
     position: absolute;
   }
 
-  :global(.selectContainer){
+  :global(.selectContainer) {
     --height: 36px;
   }
 </style>

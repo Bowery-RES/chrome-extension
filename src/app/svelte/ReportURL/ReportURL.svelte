@@ -22,7 +22,6 @@
 <section>
   <div>
     <Textfield
-      variant="outlined"
       disabled={checked}
       bind:value={$targetReport.value}
       label="Report URL">

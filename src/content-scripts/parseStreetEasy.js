@@ -1,5 +1,6 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty'
+import startCase from 'lodash/startCase'
 import intersection from 'lodash/intersection';
 import words from 'lodash/words';
 import { geocodeByAddress } from '../app/lib/api';
@@ -69,12 +70,13 @@ const getTextContent = selector => {
 
   const amenitiesList = get(compData, 'listAmen', '').split('|');
   const buildingTitle = $('.building-title .incognito').text();
-  const [, , unitNumber] = buildingTitle.match(/(.*) #(.*)/);
+  const [, , unitNumber] = buildingTitle.match(/(.*) #(.*)/) || [];
   const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text')
     .text()
     .trim();
   const description = $(".Description-block").text().trim()
-  const [unitType] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/)
+  const [unitLayout] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/) || []
+
   const zip = get(compData, 'listZip');
   const address = getTextContent('.backend_data.BuildingInfo-item');
   const location = await getLocationInfoFromAddress({ zip, address });
@@ -84,7 +86,7 @@ const getTextContent = selector => {
     dateOfValue: new Date(dateOfValue).toISOString(),
     coords: location.coords,
     city: location.city,
-    unitType,
+    unitLayout: startCase(unitLayout),
     unitNumber,
     address: location.address,
     locationIdentifier: location.locationIdentifier,
@@ -92,7 +94,7 @@ const getTextContent = selector => {
     rooms: get(compData, 'listRoom'),
     bedrooms: get(compData, 'listBed'),
     bathrooms: get(compData, 'listBath'),
-    sqft: get(compData, 'listSqFt', ''),
+    sqft: get(compData, 'listSqFt', '') || 0,
     rent: get(compData, 'listPrice', ''),
     amenities: isEmpty(amenities) ? null : amenities,
     sourceOfInformation: 'externalDatabase',
