@@ -16,7 +16,10 @@ class ChromeService extends EventEmitter {
 
   waitFor(type) {
     return new Promise((resolve, reject) =>
-      this.once(type, resolve)
+      this.once(type, (params, callback)=>{
+        resolve(params)
+        callback()
+      })
     )
 
   }
