@@ -33,10 +33,10 @@ class ChromeService extends EventEmitter {
     const url = tab.url || tab.pendingUrl;
     if (url.match(/https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\//)) {
 
-      await chrome.browserAction.setIcon({ path: 'bowery_icon.png' });
+      await chrome.browserAction.setIcon({ path: `logo_${process.env.NODE_ENV}.png` });
       chrome.browserAction.enable();
     } else {
-      await chrome.browserAction.setIcon({ path: 'bowery_icon_disabled.png' });
+      await chrome.browserAction.setIcon({ path: 'logo_disabled.png' });
       chrome.browserAction.disable();
     }
   }

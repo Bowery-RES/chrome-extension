@@ -22,7 +22,7 @@
   }
 
   onMount(async () => {
-    lastReports = await getLastVisitedReports();
+    lastReports = await getLastVisitedReports() || [];
   });
 
   $: report = fetchReport($targetReport.value);

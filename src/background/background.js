@@ -1,5 +1,7 @@
-import '../assets/bowery_icon.png';
-import '../assets/bowery_icon_disabled.png';
+import '../assets/logo_production.png';
+import '../assets/logo_disabled.png';
+import '../assets/logo_staging.png';
+import '../assets/logo_development.png';
 import '../assets/font.css'
 
 import 'chrome-extension-async';
