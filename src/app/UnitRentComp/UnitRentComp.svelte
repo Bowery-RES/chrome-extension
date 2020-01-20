@@ -2,12 +2,11 @@
   import "chrome-extension-async";
   import axios from "axios";
   import get from "lodash/get";
-  import map from "lodash/map"
+  import map from "lodash/map";
   import { targetReport } from "./../stores.js";
   import { BOWERY_APP_DOMAIN } from "secrets";
   import RentCompForm from "./RentCompForm.svelte";
   import Loading from "./../components/Loading.svelte";
-  import { addUnitComp } from "../../lib/api";
 
   export let initialValues = {};
 
@@ -15,19 +14,13 @@
 
   function handleSubmit(event) {
     const unitComp = {
-        ...event.detail,
-        amenities: map(event.detail.amenities, 'value'),
-        unitType: get(event, 'detail.unitType.value')
-    }
-    console.log(unitComp)
+      ...event.detail,
+      amenities: map(event.detail.amenities, "value"),
+      unitLayout: get(event, "detail.unitLayout.value")
+    };
+    console.log(unitComp);
     // promise = addUnitComp($targetReport.value, unitComp).then(window.close);
   }
-
 </script>
-{#await promise}
-  <Loading />
-{:then value}
-  <RentCompForm {initialValues} on:submit={handleSubmit} />
-{:catch error}
-  <p>Something went wrong: {error.message}</p>
-{/await}
+
+<RentCompForm values={initialValues} on:submit={handleSubmit} />

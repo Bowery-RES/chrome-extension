@@ -5,6 +5,8 @@
   export let items = [];
   export let isMulti;
   export let label = "";
+  export let isClearable = false;
+  export let isSearchable = false;
 </script>
 
 <style>
@@ -14,15 +16,18 @@
     --height: 34px;
     --borderRadius: 4px;
     --multiItemMargin: 4px 4px 0 0;
-    --multiItemBG: #e0e0e0;
-    --multiItemActiveBG: rgb(206, 206, 206);
+    --multiItemBG: #EBEFFF;;
+    --multiItemActiveBG: #E8EFFF;
     --multiItemActiveColor: -internal-root-color;
-    --multiClearHoverBG: #52616f;
+    --multiClearHoverBG: #4160d3;
     --multiClearHoverFill: #ebedef;
+    --multiClearFill: rgba(0, 0, 0, 0.6);
+    --multiClearBG: #EBEFFF;
     --placeholderColor: rgba(0, 0, 0, 0.6);
     --inputFontSize: 16px;
     --listMaxHeight: 200px;
     --clearSelectTop: 8px;
+    --indicatorTop: 8px;
     --multiClearTop: 6px;
     --multiItemHeight: 28px;
     --multiSelectPadding: 0 35px 0 8px;
@@ -47,6 +52,8 @@
     {isMulti}
     {placeholder}
     {items}
+    {isClearable}
+    {isSearchable}
     bind:selectedValue
     on:change={v => (selectedValue = v)} />
 </div>

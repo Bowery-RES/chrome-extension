@@ -5,16 +5,28 @@
   import UnitRentComp from "./UnitRentComp/UnitRentComp.svelte";
   import Loading from "./components/Loading.svelte";
   import ReportUrl from "./ReportURL/ReportURL.svelte";
-  import { getInitialRentCompValues } from "../lib/utils";
-  import { WIDGET_ID } from "../lib/constants.js";
-  const initialValues = getInitialRentCompValues();
+  import BoweryService from "../services/BoweryService";
+  import ChromeService from '../services/ChromeService.js'
+  import { WIDGET_ID, EVENTS } from "../constants";
+
+  const initialValues = ChromeService.emit({ type: EVENTS.INITIALIZE });
+
+  function fetchReport(url) {
+    return BoweryService.fetchReport(url);
+  }
+
+  function getLastVisitedReports() {
+    return ChromeService.emit({
+      type: EVENTS.LAST_REPORT_INITIALIZE
+    });
+  }
 </script>
 
 <style>
   main {
     width: 682px;
     min-height: 780px;
-    font-family: "Roboto";
+    font-family: "Nunito Sans";
     position: fixed;
     top: 0px;
     right: 0px;
@@ -33,8 +45,10 @@
   .version-caption {
     font-size: 12px;
     color: #d0d0d0;
-    margin-right: 0;
     text-align: center;
+    position: absolute;
+    bottom: 4px;
+    width: 100%;
   }
 </style>
 
@@ -48,13 +62,13 @@
   {#await initialValues}
     <Loading />
   {:then value}
-    <div transition:fade>
+    <div>
       <h1>Report</h1>
-      <ReportUrl />
+      <ReportUrl {getLastVisitedReports} {fetchReport} />
       <UnitRentComp initialValues={value} />
     </div>
   {:catch error}
     <span>{error.message}</span>
   {/await}
-    <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
+  <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
 </main>

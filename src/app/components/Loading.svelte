@@ -4,8 +4,9 @@
     height: var(--spinnerHeight, 40px);
     color: #2a4370;
     animation: rotate 0.75s linear infinite;
-    margin: auto;
-    margin-top: calc(50% - 40px);
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    position: absolute;
   }
 
   .spinner_icon {
@@ -13,12 +14,6 @@
     height: 100%;
     transform-origin: center center;
     width: 100%;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
   }
 
   .spinner_path {

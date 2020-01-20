@@ -1,19 +1,17 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { form as formFactory } from "svelte-forms";
+  import { fly } from "svelte/transition";
   import Button from "@smui/button";
   import Textfield from "../components/TextField.svelte";
   import HelperText from "@smui/textfield/helper-text/index";
   import DatePicker from "./../components/DatePicker.svelte";
   import Select from "./../components/Select.svelte";
-  import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from "../../lib/constants";
-  import { validateRentComp } from "../../validation/index.js";
+  import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from "../../constants";
+  import { validateRentComp } from "../../validation";
 
-  export let initialValues;
+  export let values;
   const dispatch = createEventDispatcher();
-
-  const values = { ...initialValues };
-
+$:console.log(values)
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN;
   $: invalid = validateRentComp(values);
 </script>
@@ -35,7 +33,7 @@
 </style>
 
 <h1 class="mdc-typography--headline1 ">Rent Comp</h1>
-<form on:submit|preventDefault={e => dispatch('submit', values)}>
+<form transition:fly={{ y: 800, duration: 500 }} on:submit|preventDefault={e => dispatch('submit', values)}>
   <Textfield
     name="address"
     required

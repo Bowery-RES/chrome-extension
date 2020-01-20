@@ -11,12 +11,12 @@ $mdc-checkbox-baseline-theme-color: #4160D3;
 $mdc-checkbox-mark-color: white;
 $mdc-checkbox-item-spacing:0px;
 
-h1 {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 28px;
+#bowery-extension h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 28px !important;
 }
 
-label {
-  margin: 0;
+#bowery-extension label {
+  margin: 0 !important;
 }
