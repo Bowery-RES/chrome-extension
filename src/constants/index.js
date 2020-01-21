@@ -3,7 +3,7 @@ export const UNIT_AMENITIES_LIST = [
   { label: 'Laundry - Building', value: 'buildingLaundry' },
   { label: 'Terrace', value: 'terrace' },
   { label: 'Backyard', value: 'backyard' },
-];
+]
 
 export const UNIT_TYPES_LIST = [
 'Duplex',
@@ -21,13 +21,13 @@ export const STREET_EASY_AMENITIES_MAP = {
   laundry: 'buildingLaundry',
   terrace: 'terrace',
   backyard: 'backyard',
-};
+}
 
 export const GEOGRAPHY_OPTIONS = {
   NY: 'New York',
   NJ: 'New Jersey',
   OTHER: 'Other',
-};
+}
 
 export const GOOGLE_ADDRESS_BOROUGH = {
   Manhattan: 'Manhattan',
@@ -35,7 +35,7 @@ export const GOOGLE_ADDRESS_BOROUGH = {
   'The Bronx': 'Bronx',
   Queens: 'Queens',
   'Staten Island': 'Staten Island',
-};
+}
 
 export const EVENTS = {
   INITIALIZE: 'INITIALIZE',
@@ -44,8 +44,8 @@ export const EVENTS = {
   COMP_PARSED: 'COMP_PARSED',
   COMP_ADDED: 'COMP_ADDED',
   LAST_REPORT_INITIALIZE: 'LAST_REPORT_INITIALIZE'
-};
+}
 
-export const WIDGET_ID = 'bowery-extension';
+export const WIDGET_ID = 'bowery-extension'
 
 export const ALLOWED_URLS = /https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\/|https:\/\/www.zillow.com\/homedetails\//

@@ -1,21 +1,21 @@
 
-import 'chrome-extension-async';
+import 'chrome-extension-async'
 import EventEmitter from 'events'
-import { ALLOWED_URLS } from '../constants';
+import { ALLOWED_URLS } from '../constants'
 
 class ChromeService extends EventEmitter {
   constructor() {
     super()
-    chrome.tabs.onActivated.addListener(ChromeService.activationHandler);
-    chrome.webNavigation.onBeforeNavigate.addListener(ChromeService.activationHandler);
+    chrome.tabs.onActivated.addListener(ChromeService.activationHandler)
+    chrome.webNavigation.onBeforeNavigate.addListener(ChromeService.activationHandler)
     chrome.runtime.onMessage.addListener(({ type, data }, sender, callback) => {
-      super.emit(type, data, callback);
-      return true;
+      super.emit(type, data, callback)
+      return true
     })
   }
 
   waitFor(type) {
-    return new Promise((resolve, reject) =>
+    return new Promise((resolve) =>
       this.once(type, (params, callback)=>{
         resolve(params)
         callback()
@@ -25,19 +25,19 @@ class ChromeService extends EventEmitter {
   }
 
   static async activationHandler({ tabId }) {
-    const tab = await chrome.tabs.get(tabId);
+    const tab = await chrome.tabs.get(tabId)
     if (!tab.active) {
-      return;
+      return
     }
 
-    const url = tab.url || tab.pendingUrl;
+    const url = tab.url || tab.pendingUrl
     if (url.match(ALLOWED_URLS)) {
 
-      await chrome.browserAction.setIcon({ path: `logo_${process.env.NODE_ENV}.png` });
-      chrome.browserAction.enable();
+      await chrome.browserAction.setIcon({ path: `logo_${process.env.NODE_ENV}.png` })
+      chrome.browserAction.enable()
     } else {
-      await chrome.browserAction.setIcon({ path: 'logo_disabled.png' });
-      chrome.browserAction.disable();
+      await chrome.browserAction.setIcon({ path: 'logo_disabled.png' })
+      chrome.browserAction.disable()
     }
   }
 
@@ -53,13 +53,13 @@ class ChromeService extends EventEmitter {
     const history = await chrome.history.search({
       text: searchText,
       startTime: Date.now() - 1008000000,
-    });
+    })
     return history
   }
 
   static async getToken() {
-    const { token } = await chrome.storage.local.get('token');
-    return token;
+    const { token } = await chrome.storage.local.get('token')
+    return token
   }
 
   static setToken(token) {
@@ -67,9 +67,9 @@ class ChromeService extends EventEmitter {
   }
 
   static async runScriptInNewTab({ script, url }) {
-    const tab = await chrome.tabs.create({ url, active: false });
-    const [result] = await chrome.tabs.executeScript(tab.id, { code: script });
-    await chrome.tabs.remove(tab.id);
+    const tab = await chrome.tabs.create({ url, active: false })
+    const [result] = await chrome.tabs.executeScript(tab.id, { code: script })
+    await chrome.tabs.remove(tab.id)
     return result
   }
 }

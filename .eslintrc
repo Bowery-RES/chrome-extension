@@ -1,0 +1,51 @@
+{
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2019,
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,
+    "commonjs": true,
+    "node": true,
+    "browser": true,
+    "webextensions": true
+  },
+  "rules": {
+    "no-var": "error",
+    "semi":["error", "never"],
+    "curly": "error",
+    "eol-last": "error",
+    "id-length": [
+      "error",
+      {
+        "exceptions": [
+          "$",
+          "i"
+        ]
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreUrls": true,
+        "ignoreRegExpLiterals": true,
+        "ignoreStrings": true
+      }
+    ],
+    "no-nested-ternary": "error",
+    "require-await": "error"
+  },
+  "plugins": [
+    "svelte3"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "**/*.svelte"
+      ],
+      "processor": "svelte3/svelte3"
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 const webpack = require("webpack")
-const path = require("path");
-const fileSystem = require("fs");
-const env = require("./scripts/env");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const WriteFilePlugin = require("write-file-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
+const path = require("path")
+const fileSystem = require("fs")
+const env = require("./scripts/env")
+const CleanWebpackPlugin = require("clean-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const WriteFilePlugin = require("write-file-webpack-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const FileManagerPlugin = require('filemanager-webpack-plugin')
 
 function resolvePath (destination) {
   return path.join(__dirname, "src", destination)
@@ -16,14 +16,14 @@ function resolvePath (destination) {
 
 const alias = {
   '@lib': resolvePath("lib"),
-};
+}
 
-const secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
+const secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"))
 
-const fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"];
+const fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"]
 
 if (fileSystem.existsSync(secretsPath)) {
-  alias["secrets"] = secretsPath;
+  alias["secrets"] = secretsPath
 }
 
 const options = {
@@ -49,7 +49,7 @@ const options = {
   module: {
     rules: [
       {
-        test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
+        test: new RegExp('.(' + fileExtensions.join('|') + ')$'),
         loader: "file-loader?name=[name].[ext]",
         exclude: /node_modules/
       },
@@ -100,7 +100,7 @@ const options = {
     }),
     new CopyWebpackPlugin([{
       from: "src/manifest.json",
-      transform: function (content, path) {
+      transform: function (content) {
         return Buffer.from(JSON.stringify({
           description: process.env.npm_package_description,
           version: process.env.npm_package_version,
@@ -142,10 +142,10 @@ const options = {
       'widget',
     ]
   }
-};
-
-if (env.NODE_ENV === "development") {
-  options.devtool = "cheap-module-eval-source-map";
 }
 
-module.exports = options;
+if (env.NODE_ENV === "development") {
+  options.devtool = "cheap-module-eval-source-map"
+}
+
+module.exports = options

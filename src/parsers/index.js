@@ -1,5 +1,5 @@
-import StreetEasyParser from "./StreetEasyParser";
-import ZillowParser from "./ZillowParser";
+import StreetEasyParser from "./StreetEasyParser"
+import ZillowParser from "./ZillowParser"
 
 export default (document) => {
   switch (document.location.hostname) {
@@ -8,6 +8,6 @@ export default (document) => {
     case 'streeteasy.com':
       return new StreetEasyParser({ document })
     default:
-      break;
+      break
   }
 }

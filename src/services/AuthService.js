@@ -1,8 +1,5 @@
-import 'chrome-extension-async';
-import axios from 'axios';
-import get from 'lodash/get';
-import 'chrome-extension-async';
-import { BOWERY_APP_DOMAIN } from 'secrets';
+import get from 'lodash/get'
+import { BOWERY_APP_DOMAIN } from 'secrets'
 import BoweryService from './BoweryService'
 import ChromeService from './ChromeService'
 
@@ -11,24 +8,24 @@ class AuthService {
     try {
       const token = obtainFreshToken
         ? await AuthService._obtainToken()
-        : await ChromeService.getToken();
-      const response = await BoweryService.getAuthenticatedUser({ token });
+        : await ChromeService.getToken()
+      const response = await BoweryService.getAuthenticatedUser({ token })
       
       const user = AuthService._mapUser(response.data)
-      return { user };
+      return { user }
     } catch (error) {
       if (!obtainFreshToken) {
-        return await AuthService.authenticate({ obtainFreshToken: true });
+        return await AuthService.authenticate({ obtainFreshToken: true })
       } else {
-        throw error;
+        throw error
       }
     }
   }
 
   static async _obtainToken() {
     const jwToken = await ChromeService.runScriptInNewTab({ url: BOWERY_APP_DOMAIN, script: "localStorage.getItem('jwToken')" })
-    await ChromeService.setToken(jwToken);
-    return jwToken;
+    await ChromeService.setToken(jwToken)
+    return jwToken
   }
 
   static _mapUser(data) {
@@ -39,9 +36,9 @@ class AuthService {
       last_name: get(data, 'name.last'),
       position: get(data, 'position'),
       email: get(data, 'username'),
-    };
+    }
     return user
   }
 }
 
-export default AuthService;
+export default AuthService
