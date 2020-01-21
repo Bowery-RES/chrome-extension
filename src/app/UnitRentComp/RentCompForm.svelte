@@ -11,7 +11,6 @@
 
   export let values;
   const dispatch = createEventDispatcher();
-$:console.log(values)
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN;
   $: invalid = validateRentComp(values);
 </script>

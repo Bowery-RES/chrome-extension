@@ -1,6 +1,5 @@
 
 import 'chrome-extension-async';
-import uniqBy from 'lodash/uniqBy';
 import EventEmitter from 'events'
 import { ALLOWED_URLS } from '../constants';
 
@@ -55,7 +54,7 @@ class ChromeService extends EventEmitter {
       text: searchText,
       startTime: Date.now() - 1008000000,
     });
-    return uniqBy(history, 'title')
+    return history
   }
 
   static async getToken() {

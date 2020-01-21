@@ -14,8 +14,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://streeteasy.com/*",
-        "https://www.zillow.com/*"
+        "https://www.zillow.com/*",
+        "https://streeteasy.com/*"
       ],
       "css": [
         "widget.css"
@@ -29,6 +29,7 @@
     "tabs",
     "http://*/*",
     "https://*/*",
+    "chrome://*/*",
     "file:///*/*",
     "chrome://favicon/*",
     "sessions",
