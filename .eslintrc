@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended"],
+  "extends": ["airbnb-base", "eslint:recommended"],
   "parserOptions": {
     "ecmaVersion": 2019,
     "sourceType": "module"
@@ -12,6 +12,9 @@
     "webextensions": true
   },
   "rules": {
+    "import/no-unresolved":["error",{
+      "ignore": ["secrets"]
+    }],
     "no-var": "error",
     "semi":["error", "never"],
     "curly": "error",

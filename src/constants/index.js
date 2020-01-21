@@ -6,14 +6,14 @@ export const UNIT_AMENITIES_LIST = [
 ]
 
 export const UNIT_TYPES_LIST = [
-'Duplex',
-'Triplex',
-'Simplex',
-'Penthouse',
-'Loft',
-'Garden Style',
-'Basement',
-'Garage',
+  'Duplex',
+  'Triplex',
+  'Simplex',
+  'Penthouse',
+  'Loft',
+  'Garden Style',
+  'Basement',
+  'Garage',
 ]
 
 export const STREET_EASY_AMENITIES_MAP = {
@@ -43,7 +43,7 @@ export const EVENTS = {
   EXTENSION_CLOSE: 'EXTENSION_CLOSE',
   COMP_PARSED: 'COMP_PARSED',
   COMP_ADDED: 'COMP_ADDED',
-  LAST_REPORT_INITIALIZE: 'LAST_REPORT_INITIALIZE'
+  LAST_REPORT_INITIALIZE: 'LAST_REPORT_INITIALIZE',
 }
 
 export const WIDGET_ID = 'bowery-extension'

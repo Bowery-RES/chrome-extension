@@ -14,7 +14,7 @@ import ChromeService from '../services/ChromeService'
 const chrome = new ChromeService()
 
 chrome.on(EVENTS.EXTENSION_OPEN, (data, sendResponse) => {
-  ChromeService.executeScript({ file: 'widget.js', runAt: "document_start" })
+  ChromeService.executeScript({ file: 'widget.js', runAt: 'document_start' })
   sendResponse()
 })
 

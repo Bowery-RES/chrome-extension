@@ -14,4 +14,5 @@ function injectExtension() {
   window.app = app
 }
 
+// eslint-disable-next-line no-unused-expressions
 !document.getElementById(WIDGET_ID) && injectExtension()

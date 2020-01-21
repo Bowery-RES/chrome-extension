@@ -1,8 +1,8 @@
 import axios from 'axios'
 import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
-import { EVENTS } from '../constants'
 import { BOWERY_APP_DOMAIN } from 'secrets'
+import { EVENTS } from '../constants'
 import ChromeService from './ChromeService'
 
 const normalizeReportUrl = (url = '') => {
@@ -17,7 +17,7 @@ class BoweryService {
 
   async getAuthenticatedUser({ token }) {
     const response = await axios.get(`${this.domain}/user/authenticated-user`, {
-      headers: { Authorization: token ? `Bearer ${token}` : '' }
+      headers: { Authorization: token ? `Bearer ${token}` : '' },
     })
     return response.data
   }
@@ -51,7 +51,7 @@ class BoweryService {
     }
     const headers = await this.getAuthHeaders()
     await axios.post(`${BOWERY_APP_DOMAIN}/report/${id}/addUnitComp`, unitComp, {
-      headers
+      headers,
     })
     ChromeService.emit({ type: EVENTS.COMP_ADDED })
   }
@@ -72,12 +72,11 @@ class BoweryService {
 
   async getLastVisitedReports() {
     const pages = await ChromeService.getDomainUrlsFromHistory(BOWERY_APP_DOMAIN)
-    const reportsVisited = pages.filter(page =>
-      page.url.match(/\/report\/(\d|\w){24}/)
+    const reportsVisited = pages.filter((page) => page.url.match(/\/report\/(\d|\w){24}/)
       && page.url.startsWith(BOWERY_APP_DOMAIN)
       && page.title !== 'Bowery')
 
-    const reports = reportsVisited.map(page => ({
+    const reports = reportsVisited.map((page) => ({
       value: normalizeReportUrl(page.url),
       label: page.title,
     }))
@@ -86,4 +85,3 @@ class BoweryService {
 }
 
 export default new BoweryService({})
-

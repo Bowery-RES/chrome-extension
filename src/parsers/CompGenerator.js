@@ -1,12 +1,12 @@
 import get from 'lodash/get'
-import { GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '../constants'
 import { createClient } from '@google/maps'
 import { GOOGLE_API_KEY } from 'secrets'
+import { GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '../constants'
 import ChromeService from '../services/ChromeService'
 
 const googleMapsClient = createClient({
   key: GOOGLE_API_KEY,
-  Promise: Promise
+  Promise,
 })
 
 export default class CompGenerator {
@@ -14,14 +14,14 @@ export default class CompGenerator {
     this.parser = parser
   }
 
-  async getLocationInfoFromAddress({ address = "", zip }) {
+  async getLocationInfoFromAddress({ address = '', zip }) {
     const response = await googleMapsClient.geocode({ address: `${address} ${zip}` }).asPromise()
     const addressInfo = get(response, 'json.results.0')
     const location = {}
 
     const addressComponents = get(addressInfo, 'address_components') || []
     for (const part of addressComponents) {
-      part.types.forEach(type => {
+      part.types.forEach((type) => {
         location[type] = { short: part.short_name, long: part.long_name }
       })
     }

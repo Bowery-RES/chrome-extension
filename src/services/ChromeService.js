@@ -15,13 +15,10 @@ class ChromeService extends EventEmitter {
   }
 
   waitFor(type) {
-    return new Promise((resolve) =>
-      this.once(type, (params, callback)=>{
-        resolve(params)
-        callback()
-      })
-    )
-
+    return new Promise((resolve) => this.once(type, (params, callback) => {
+      resolve(params)
+      callback()
+    }))
   }
 
   static async activationHandler({ tabId }) {
@@ -32,7 +29,6 @@ class ChromeService extends EventEmitter {
 
     const url = tab.url || tab.pendingUrl
     if (url.match(ALLOWED_URLS)) {
-
       await chrome.browserAction.setIcon({ path: `logo_${process.env.NODE_ENV}.png` })
       chrome.browserAction.enable()
     } else {
