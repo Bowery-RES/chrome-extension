@@ -1,6 +1,6 @@
 import axios from 'axios';
 import get from 'lodash/get';
-import 'chrome-extension-async';
+import uniqBy from 'lodash/uniqBy';
 import { EVENTS } from '../constants';
 import { BOWERY_APP_DOMAIN } from 'secrets';
 import ChromeService from './ChromeService'
@@ -45,7 +45,10 @@ class BoweryService {
   };
 
   async addUnitComp(url, unitComp) {
-    const [id] = url.match(/((\d|\w){24})/);
+    const [id] = url.match(/((\d|\w){24})/) || [];
+    if (!id) {
+      throw new Error('Invalid parameters')
+    }
     const headers = await this.getAuthHeaders();
     await axios.post(`${BOWERY_APP_DOMAIN}/report/${id}/addUnitComp`, unitComp, {
       headers
@@ -69,18 +72,16 @@ class BoweryService {
 
   async getLastVisitedReports() {
     const pages = await ChromeService.getDomainUrlsFromHistory(BOWERY_APP_DOMAIN);
-    const reportsVisited = pages.filter(
-      page =>
-        page.url.match(/(\/report\/(\d|\w){24})/) &&
-        page.title !== 'Bowery' &&
-        !BOWERY_APP_DOMAIN.includes(page.title),
-    );
+    const reportsVisited = pages.filter(page =>
+      page.url.match(/\/report\/(\d|\w){24}/)
+      && page.url.startsWith(BOWERY_APP_DOMAIN)
+      && page.title !== 'Bowery');
 
     const reports = reportsVisited.map(page => ({
       value: normalizeReportUrl(page.url),
       label: page.title,
     }));
-    return reports.slice(0, 5)
+    return uniqBy(reports, 'value').slice(0, 5)
   }
 }
 
