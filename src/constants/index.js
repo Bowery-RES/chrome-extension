@@ -23,6 +23,11 @@ export const STREET_EASY_AMENITIES_MAP = {
   backyard: 'backyard',
 }
 
+export const ZILLOW_AMENITIES_MAP = {
+  'In Unit': 'unitLaundry',
+  'In Building': 'buildingLaundry',
+}
+
 export const GEOGRAPHY_OPTIONS = {
   NY: 'New York',
   NJ: 'New Jersey',

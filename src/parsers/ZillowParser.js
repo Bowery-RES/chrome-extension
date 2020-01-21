@@ -1,5 +1,9 @@
 import $ from 'jquery'
 import get from 'lodash/get'
+import startCase from 'lodash/startCase'
+import trim from 'lodash/trim'
+import isEmpty from 'lodash/isEmpty'
+import { ZILLOW_AMENITIES_MAP, UNIT_AMENITIES_LIST } from '../constants'
 
 export default class ZillowParser {
   constructor({ document }) {
@@ -12,6 +16,10 @@ export default class ZillowParser {
     return {}
   }
 
+  static getAmenities(laundry) {
+    return UNIT_AMENITIES_LIST.filter((amenity) => amenity.value === ZILLOW_AMENITIES_MAP[laundry])
+  }
+
   parse() {
     const rent = +$('.ds-home-details-chip .ds-price .ds-value')
       .first()
@@ -19,34 +27,52 @@ export default class ZillowParser {
       .replace(/[^0-9.-]+/g, '')
 
     const [bedrooms, bathrooms, sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area').get()
-      .map((element) => parseInt(element.textContent, 10))
+      .map((element) => +$(element).text().trim().replace(/[^0-9.-]+/g, ''))
 
     const [, id] = document.location.href.match(/(\w+)_zpid/)
-    const [, unitNumber] = $('.ds-address-container')
-      .children()
-      .first()
-      .text()
-      .match(/(.*) # (\w|\d)+/) || []
-
     const description = $('.ds-overview-section').text().trim()
     const [unitLayout] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/) || []
     const dateOfValue = $('.ds-price-and-tax-section-table tr:first-child td:first-child')
       .first().text().trim()
     const script = $(`article#zpid_${id}`).prev("script[type='application/ld+json']").text()
-    const data = JSON.parse(script)
-    const {
-      streetAddress, addressLocality: city, addressRegion: state, postalCode: zip,
-    } = get(data, 'address') || {}
-    // const address = $(".ds-address-container").children().last().text()
-    // const [city, state, zip] = address.match(/(.*)\, (\w+) (\w+)/)
+    let city
+    let zip
+    let streetAddress
+    let state
 
+    const laundry = $('.ds-standard-label.ds-home-fact-label').filter(function findLaundry() {
+      return $(this).text() === 'Laundry:'
+    }).next('.ds-home-fact-value').text()
+
+    const [, , , unitNumber] = $('.ds-address-container')
+      .children()
+      .first()
+      .text()
+      .match(/(.*) (#|APT) (\w+|\d+)/) || []
+
+    if (!script) {
+      streetAddress = $('.ds-address-container').children().first().text()
+      const address = $('.ds-address-container').children().last().text()
+      const matches = address.match(/(.*), (\w+) (\w+)/) || []
+      city = trim(matches[1])
+      state = trim(matches[2])
+      zip = trim(matches[3])
+    } else {
+      const data = JSON.parse(script)
+      streetAddress = get(data, 'address.streetAddress')
+      city = get(data, 'address.addressLocality')
+      state = get(data, 'address.addressRegion')
+      zip = get(data, 'address.postalCode')
+    }
+
+    const amenities = ZillowParser.getAmenities(laundry)
     const result = {
       bedrooms,
-      sqft,
+      sqft: sqft || 0,
       bathrooms,
       rent,
       unitNumber,
-      unitLayout,
+      unitLayout: startCase(unitLayout),
       dateOfValue: new Date(dateOfValue).toISOString(),
       sourceOfInformation: 'externalDatabase',
       sourceUrl: this.document.location.toString(),
@@ -55,9 +81,7 @@ export default class ZillowParser {
       zip,
       city,
       state,
-
-      amenities: null,
-
+      amenities: isEmpty(amenities) ? null : amenities,
     }
     return result
   }

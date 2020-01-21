@@ -54,6 +54,7 @@
     background: #ffffff;
     box-shadow: 0px 8px 32px rgba(0, 15, 68, 0.12);
   }
+
   .icon {
     position: absolute;
     width: 24px;

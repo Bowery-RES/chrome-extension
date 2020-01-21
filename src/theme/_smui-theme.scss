@@ -20,3 +20,10 @@ $mdc-checkbox-item-spacing:0px;
 #bowery-extension label {
   margin: 0 !important;
 }
+#bowery-extension input {
+  box-shadow: none;
+}
+
+#bowery-extension input:focus {
+  box-shadow: none;
+}

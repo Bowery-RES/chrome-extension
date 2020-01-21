@@ -14,12 +14,13 @@ export default class CompGenerator {
     this.parser = parser
   }
 
-  async getLocationInfoFromAddress({ address = '', zip }) {
+  static async  getLocationInfoFromAddress({ address = '', zip }) {
     const response = await googleMapsClient.geocode({ address: `${address} ${zip}` }).asPromise()
     const addressInfo = get(response, 'json.results.0')
     const location = {}
 
     const addressComponents = get(addressInfo, 'address_components') || []
+    // eslint-disable-next-line no-restricted-syntax
     for (const part of addressComponents) {
       part.types.forEach((type) => {
         location[type] = { short: part.short_name, long: part.long_name }
@@ -62,7 +63,7 @@ export default class CompGenerator {
 
   async parse() {
     const comp = this.parser.parse()
-    const location = await this.getLocationInfoFromAddress(comp)
+    const location = await CompGenerator.getLocationInfoFromAddress(comp)
     const propertyData = await this.parser.getPropertyData(location)
     const extendedProperty = {
       ...comp,
