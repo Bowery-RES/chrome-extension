@@ -32,7 +32,7 @@ const options = {
     popup: resolvePath("popup/popup.js"),
     options: resolvePath("options/options.js"),
     background: resolvePath("background/background.js"),
-    'parseStreetEasy': path.join(__dirname, "src", "content-scripts", "parseStreetEasy.js"),
+    parse: path.join(__dirname, "src", "content-scripts", "parse.js"),
     widget: path.join(__dirname, "src", "content-scripts", "widget.js"),
   },
   output: {

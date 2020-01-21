@@ -31,7 +31,7 @@
     top: 0px;
     right: 0px;
     padding: 16px 24px;
-    z-index: 2000;
+    z-index: 999999;
     background: #ffffff;
     box-shadow: 0px 8px 32px rgba(0, 15, 68, 0.12);
   }

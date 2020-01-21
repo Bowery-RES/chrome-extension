@@ -2,6 +2,7 @@
 import 'chrome-extension-async';
 import uniqBy from 'lodash/uniqBy';
 import EventEmitter from 'events'
+import { ALLOWED_URLS } from '../constants';
 
 class ChromeService extends EventEmitter {
   constructor() {
@@ -31,7 +32,7 @@ class ChromeService extends EventEmitter {
     }
 
     const url = tab.url || tab.pendingUrl;
-    if (url.match(/https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\//)) {
+    if (url.match(ALLOWED_URLS)) {
 
       await chrome.browserAction.setIcon({ path: `logo_${process.env.NODE_ENV}.png` });
       chrome.browserAction.enable();

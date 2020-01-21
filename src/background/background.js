@@ -22,7 +22,7 @@ chrome.on(EVENTS.INITIALIZE, (data, sendResponse) => {
   AuthService.authenticate().then(({ user }) => {
     TrackingService.identify(user);
     TrackingService.logEvent('Chrome Extension Clicked');
-    ChromeService.executeScript({ file: 'parseStreetEasy.js' })
+    ChromeService.executeScript({ file: 'parse.js' })
     chrome.waitFor(EVENTS.COMP_PARSED).then(sendResponse)
   });
 })

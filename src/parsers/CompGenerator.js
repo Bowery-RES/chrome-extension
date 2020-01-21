@@ -1,25 +1,21 @@
 import get from 'lodash/get';
 import { GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '../constants';
- import {createClient} from '@google/maps'
- import { GOOGLE_API_KEY } from 'secrets';
- import ChromeService from '../services/ChromeService'
+import { createClient } from '@google/maps'
+import { GOOGLE_API_KEY } from 'secrets';
+import ChromeService from '../services/ChromeService'
+import BoweryService from '../services/BoweryService';
 
- const googleMapsClient = createClient({
+const googleMapsClient = createClient({
   key: GOOGLE_API_KEY,
   Promise: Promise
 });
 
-export default class BaseParser {
-  constructor({ document, source }) {
-    this.document = document;
-    this.source = source;
+export default class CompGenerator {
+  constructor({ parser }) {
+    this.parser = parser;
   }
 
-  async getCompFromDocument() {
-    return {};
-  }
-
-  async getLocationInfoFromAddress ({ address = "", zip }) {
+  async getLocationInfoFromAddress({ address = "", zip }) {
     const response = await googleMapsClient.geocode({ address: `${address} ${zip}` }).asPromise();
     const addressInfo = get(response, 'json.results.0');
     const location = {};
@@ -66,7 +62,14 @@ export default class BaseParser {
   };
 
   async parse() {
-    const comp = await this.getCompFromDocument()
-    ChromeService.emit({ type: EVENTS.COMP_PARSED, data: comp });
+    const comp = this.parser.parse()
+    const location = await this.getLocationInfoFromAddress(comp);
+    const propertyData = await this.parser.getPropertyData(location)
+    const extendedProperty = {
+      ...comp,
+      ...location,
+      ...propertyData,
+    }
+    ChromeService.emit({ type: EVENTS.COMP_PARSED, data: extendedProperty });
   }
 }
