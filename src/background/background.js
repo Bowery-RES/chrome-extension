@@ -21,7 +21,7 @@ chrome.on(EVENTS.EXTENSION_OPEN, (data, sendResponse) => {
 chrome.on(EVENTS.INITIALIZE, (data, sendResponse) => {
   AuthService.authenticate().then(({ user }) => {
     TrackingService.identify(user)
-    TrackingService.logEvent('Chrome Extension Clicked')
+    TrackingService.logEvent('Chrome Extension Clicked', { source: data.hostnameew })
     ChromeService.executeScript({ file: 'parse.js' })
     chrome.waitFor(EVENTS.COMP_PARSED).then(sendResponse)
   })
@@ -32,6 +32,6 @@ chrome.on(EVENTS.LAST_REPORT_INITIALIZE, (data, sendResponse) => {
 })
 
 chrome.on(EVENTS.COMP_ADDED, (data, sendResponse) => {
-  TrackingService.logEvent('Chrome Extension Comp Added')
+  TrackingService.logEvent('Chrome Extension Comp Added', { source: data.source })
   sendResponse()
 })

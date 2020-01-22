@@ -7,7 +7,7 @@
   import DatePicker from "./../components/DatePicker.svelte";
   import Select from "./../components/Select.svelte";
   import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from "../../constants";
-  import { validateRentComp } from "../../validation";
+  import validateRentComp from "../../validation";
 
   export let values;
   const dispatch = createEventDispatcher();
@@ -50,7 +50,6 @@
   <Textfield name="zip" bind:value={values.zip} label="Zip Code" />
   <Textfield
     name="unitNumber"
-    required
     bind:value={values.unitNumber}
     label="Unit Number" />
   <DatePicker

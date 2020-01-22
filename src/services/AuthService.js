@@ -7,11 +7,11 @@ class AuthService {
   static async authenticate({ obtainFreshToken = false } = {}) {
     try {
       const token = obtainFreshToken
-        ? await AuthService._obtainToken()
+        ? await AuthService.obtainToken()
         : await ChromeService.getToken()
       const response = await BoweryService.getAuthenticatedUser({ token })
 
-      const user = AuthService._mapUser(response.data)
+      const user = AuthService.mapUser(response.data)
       return { user }
     } catch (error) {
       if (!obtainFreshToken) {
@@ -22,13 +22,13 @@ class AuthService {
     }
   }
 
-  static async _obtainToken() {
+  static async obtainToken() {
     const jwToken = await ChromeService.runScriptInNewTab({ url: BOWERY_APP_DOMAIN, script: "localStorage.getItem('jwToken')" })
     await ChromeService.setToken(jwToken)
     return jwToken
   }
 
-  static _mapUser(data) {
+  static mapUser(data) {
     const user = {
       id: get(data, 'id'),
       name: get(data, 'fullName'),

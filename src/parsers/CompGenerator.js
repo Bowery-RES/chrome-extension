@@ -3,6 +3,7 @@ import { createClient } from '@google/maps'
 import { GOOGLE_API_KEY } from 'secrets'
 import { GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '../constants'
 import ChromeService from '../services/ChromeService'
+import BoweryService from '../services/BoweryService'
 
 const googleMapsClient = createClient({
   key: GOOGLE_API_KEY,
@@ -14,7 +15,7 @@ export default class CompGenerator {
     this.parser = parser
   }
 
-  static async  getLocationInfoFromAddress({ address = '', zip }) {
+  static async getLocationInfoFromAddress({ address = '', zip }) {
     const response = await googleMapsClient.geocode({ address: `${address} ${zip}` }).asPromise()
     const addressInfo = get(response, 'json.results.0')
     const location = {}
@@ -61,10 +62,11 @@ export default class CompGenerator {
     }
   }
 
+
   async parse() {
     const comp = this.parser.parse()
     const location = await CompGenerator.getLocationInfoFromAddress(comp)
-    const propertyData = await this.parser.getPropertyData(location)
+    const propertyData = await BoweryService.getPropertyData(location)
     const extendedProperty = {
       ...comp,
       ...location,

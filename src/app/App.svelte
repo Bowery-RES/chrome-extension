@@ -14,7 +14,7 @@
 
   const initialValues = (async () => {
     loading = true;
-    const values = await ChromeService.emit({ type: EVENTS.INITIALIZE });
+    const values = await ChromeService.emit({ type: EVENTS.INITIALIZE, data: document.location });
     loading = false;
     return values;
   })();

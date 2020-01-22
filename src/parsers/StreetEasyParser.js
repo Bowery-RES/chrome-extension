@@ -5,7 +5,6 @@ import intersection from 'lodash/intersection'
 import words from 'lodash/words'
 import $ from 'jquery'
 import { UNIT_AMENITIES_LIST, STREET_EASY_AMENITIES_MAP } from '../constants'
-import BoweryService from '../services/BoweryService'
 
 export default class StreetEasyParser {
   constructor({ document }) {
@@ -13,14 +12,6 @@ export default class StreetEasyParser {
     this.source = 'StreetEasy'
   }
 
-  async getPropertyData(location) {
-    const property = await BoweryService.getPropertyData(location)
-    return {
-      borough: property.borough,
-      block: property.block,
-      lot: property.lot,
-    }
-  }
 
   parse() {
     const [, data = '[]'] = this.document.body.textContent.match(/dataLayer = (\[.*\]);/) || []
@@ -36,7 +27,7 @@ export default class StreetEasyParser {
     const [unitLayout] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/) || []
 
     const zip = get(compData, 'listZip')
-    const address = this.getTextContent('.backend_data.BuildingInfo-item')
+    const address = words($('.backend_data.BuildingInfo-item').text()).join(' ')
     const amenities = this.getListsOfAmenities(amenitiesList)
     const result = {
       dateOfValue: new Date(dateOfValue).toISOString(),
@@ -57,11 +48,6 @@ export default class StreetEasyParser {
     }
 
     return result
-  }
-
-  getTextContent(selector) {
-    const text = $(selector).text()
-    return words(text).join(' ')
   }
 
   getListsOfAmenities(amenitiesList) {
