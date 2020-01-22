@@ -20,6 +20,7 @@
   :global(.mdc-notched-outline) {
     height: 36px;
   }
+
   .root {
     padding-top: 16px;
     position: relative;
