@@ -1,7 +1,6 @@
 import axios from 'axios'
 import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
-import pick from 'lodash/pick'
 import { BOWERY_APP_DOMAIN } from 'secrets'
 import { EVENTS } from '../constants'
 import ChromeService from './ChromeService'

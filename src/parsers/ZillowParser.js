@@ -11,12 +11,10 @@ export default class ZillowParser {
     this.source = 'Zillow'
   }
 
-  // eslint-disable-next-line
-  async getPropertyData() {
-    return {}
-  }
-
-  static getAmenities(laundry) {
+  get amenities() {
+    const laundry = $('.ds-standard-label.ds-home-fact-label').filter(function findLaundry() {
+      return $(this).text() === 'Laundry:'
+    }).next('.ds-home-fact-value').text()
     return UNIT_AMENITIES_LIST.filter((amenity) => amenity.value === ZILLOW_AMENITIES_MAP[laundry])
   }
 
@@ -40,9 +38,6 @@ export default class ZillowParser {
     let streetAddress
     let state
 
-    const laundry = $('.ds-standard-label.ds-home-fact-label').filter(function findLaundry() {
-      return $(this).text() === 'Laundry:'
-    }).next('.ds-home-fact-value').text()
 
     const [, , , unitNumber] = $('.ds-address-container')
       .children()
@@ -65,7 +60,6 @@ export default class ZillowParser {
       zip = get(data, 'address.postalCode')
     }
 
-    const amenities = ZillowParser.getAmenities(laundry)
     const result = {
       bedrooms,
       sqft: sqft || 0,
@@ -81,7 +75,7 @@ export default class ZillowParser {
       zip,
       city,
       state,
-      amenities: isEmpty(amenities) ? null : amenities,
+      amenities: isEmpty(this.amenities) ? null : this.amenities,
     }
     return result
   }

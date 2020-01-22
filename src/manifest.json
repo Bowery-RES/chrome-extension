@@ -27,8 +27,8 @@
     "activeTab",
     "history",
     "tabs",
-    "http://*/*",
-    "https://*/*",
+    "https://streeteasy.com/*",
+    "https://www.zillow.com/*",
     "chrome://*/*",
     "file:///*/*",
     "chrome://favicon/*",
@@ -43,5 +43,5 @@
   },
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "version": "2.0.0"
+  "version": "2.1.0"
 }

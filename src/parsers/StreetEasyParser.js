@@ -16,8 +16,8 @@ export default class StreetEasyParser {
   parse() {
     const [, data = '[]'] = this.document.body.textContent.match(/dataLayer = (\[.*\]);/) || []
     const [compData] = JSON.parse(data)
+    this.compData = compData
 
-    const amenitiesList = get(compData, 'listAmen', '').split('|')
     const buildingTitle = $('.building-title .incognito').text()
     const [, , , unitNumber] = buildingTitle.match(/(.*) (#|UNIT-)(.*)/) || []
     const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text')
@@ -28,7 +28,6 @@ export default class StreetEasyParser {
 
     const zip = get(compData, 'listZip')
     const address = words($('.backend_data.BuildingInfo-item').text()).join(' ')
-    const amenities = this.getListsOfAmenities(amenitiesList)
     const result = {
       dateOfValue: new Date(dateOfValue).toISOString(),
       unitLayout: startCase(unitLayout),
@@ -41,7 +40,7 @@ export default class StreetEasyParser {
       bathrooms: get(compData, 'listBath'),
       sqft: get(compData, 'listSqFt', '') || 0,
       rent: get(compData, 'listPrice', ''),
-      amenities: isEmpty(amenities) ? null : amenities,
+      amenities: isEmpty(this.amenities) ? null : this.amenities,
       sourceOfInformation: 'externalDatabase',
       sourceUrl: this.document.location.toString(),
       sourceName: this.source,
@@ -50,8 +49,11 @@ export default class StreetEasyParser {
     return result
   }
 
-  getListsOfAmenities(amenitiesList) {
+  get amenities() {
+    const amenitiesList = get(this.compData, 'listAmen', '').split('|')
     const unitAmenities = intersection(Object.keys(STREET_EASY_AMENITIES_MAP), amenitiesList)
-    return unitAmenities.map((amenity) => UNIT_AMENITIES_LIST.find((pair) => pair.value === STREET_EASY_AMENITIES_MAP[amenity]))
+    return unitAmenities.map((amenity) => UNIT_AMENITIES_LIST.find(
+      (pair) => pair.value === STREET_EASY_AMENITIES_MAP[amenity],
+    ))
   }
 }
