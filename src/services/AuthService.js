@@ -3,17 +3,17 @@ import axios from 'axios';
 import get from 'lodash/get';
 import 'chrome-extension-async';
 import { BOWERY_APP_DOMAIN } from 'secrets';
+import BoweryService from './BoweryService'
+import ChromeService from './ChromeService'
 
 class AuthService {
   static async authenticate({ obtainFreshToken = false } = {}) {
     try {
-      const { token } = obtainFreshToken
+      const token = obtainFreshToken
         ? await AuthService._obtainToken()
-        : await chrome.storage.local.get('token');
-      const response = await axios.get(`${BOWERY_APP_DOMAIN}/user/authenticated-user`, {
-        headers: { Authorization: token ? `Bearer ${token}` : '' },
-      });
-
+        : await ChromeService.getToken();
+      const response = await BoweryService.getAuthenticatedUser({ token });
+      
       const user = AuthService._mapUser(response.data)
       return { user };
     } catch (error) {
@@ -26,11 +26,9 @@ class AuthService {
   }
 
   static async _obtainToken() {
-    const tab = await chrome.tabs.create({ url: BOWERY_APP_DOMAIN, active: false });
-    const [jwToken] = await chrome.tabs.executeScript(tab.id, { code: "localStorage.getItem('jwToken')" });
-    await chrome.tabs.remove(tab.id);
-    await chrome.storage.local.set({ token: jwToken });
-    return { token: jwToken };
+    const jwToken = await ChromeService.runScriptInNewTab({ url: BOWERY_APP_DOMAIN, script: "localStorage.getItem('jwToken')" })
+    await ChromeService.setToken(jwToken);
+    return jwToken;
   }
 
   static _mapUser(data) {

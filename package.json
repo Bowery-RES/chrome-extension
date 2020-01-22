@@ -1,10 +1,10 @@
 {
   "name": "bowery-chrome-extension",
-  "version": "1.1.0",
-  "description": "Bowery chrome extension for Streeteasy",
+  "version": "2.0.0",
+  "description": "Bowery Chrome Extension",
   "scripts": {
-    "build": "node utils/build.js",
-    "start": "node utils/webserver.js"
+    "build": "node scripts/build.js",
+    "start": "node scripts/webserver.js"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^1.0.0",
@@ -15,25 +15,30 @@
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
     "mini-css-extract-plugin": "^0.7.0",
+    "node-sass": "^4.13.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "sass-loader": "^8.0.0",
     "style-loader": "^0.23.1",
     "svelte": "^3.5.1",
+    "svelte-flatpickr": "^2.3.1",
+    "svelte-forms": "^1.2.0",
     "svelte-loader": "^2.13.4",
-    "svelte-material-ui": "^1.0.0-beta.15",
+    "svelte-material-ui": "^1.0.0-beta.19",
+    "svelte-select": "^3.1.1",
     "webpack": "4.33.0",
     "webpack-dev-server": "3.7.1",
-    "write-file-webpack-plugin": "4.5.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "node-sass": "^4.13.0",
-    "sass-loader": "^8.0.0",
-    "svelte-flatpickr": "^2.3.1",
-    "svelte-select": "^3.1.1"
+    "write-file-webpack-plugin": "4.5.0"
   },
   "dependencies": {
+    "@google/maps": "^1.0.2",
+    "@hapi/joi": "^17.0.2",
     "amplitude-js": "^5.8.0",
     "axios": "^0.19.0",
     "chrome-extension-async": "^3.3.2",
+    "events": "^3.1.0",
     "filemanager-webpack-plugin": "^2.0.5",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "svelte-icons": "^1.1.0"
   }
 }

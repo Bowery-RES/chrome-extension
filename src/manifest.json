@@ -1,12 +1,26 @@
 {
   "name": "Bowery Comp Tool",
+  "background_page": "background.html",
   "background": {
-    "page": "background.html"
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": true
   },
   "browser_action": {
     "default_popup": "popup.html",
-    "default_icon": "bowery_icon.png"
+    "default_icon": "logo_production.png"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://streeteasy.com/*"
+      ],
+      "css": [
+        "widget.css"
+      ]
+    }
+  ],
   "permissions": [
     "storage",
     "activeTab",
@@ -14,12 +28,17 @@
     "tabs",
     "http://*/*",
     "https://*/*",
-    "chrome://favicon/",
+    "chrome://*/*",
+    "file:///*/*",
+    "chrome://favicon/*",
     "sessions",
     "webNavigation"
   ],
+  "web_accessible_resources": [
+    "widget.css"
+  ],
   "icons": {
-    "128": "bowery_icon.png"
+    "128": "logo_production.png"
   },
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

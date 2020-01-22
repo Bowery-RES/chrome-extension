@@ -1,7 +1,22 @@
-$mdc-theme-primary: #2A4370;
+$mdc-theme-primary: #4160D3;
 $mdc-theme-secondary: #D5D5D5;
-$mdc-theme-on-primary: #442b2d;
-$mdc-theme-on-secondary: hsl(208, 23%, 22%);
-body {
-  margin: 0;
+$mdc-theme-on-primary: #4160D3;
+$mdc-theme-on-secondary: #D5D5D5;
+$mdc-theme-error: rgba(255, 62, 0, .87);
+
+$mdc-text-field-height: 36px !default;
+
+$mdc-checkbox-touch-area: 38px;
+$mdc-checkbox-baseline-theme-color: #4160D3;
+$mdc-checkbox-mark-color: white;
+$mdc-checkbox-item-spacing:0px;
+
+#bowery-extension h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 28px !important;
+}
+
+#bowery-extension label {
+  margin: 0 !important;
 }
