@@ -8,7 +8,7 @@ import 'chrome-extension-async'
 import AuthService from '../services/AuthService'
 import BoweryService from '../services/BoweryService'
 import TrackingService from '../services/TrackingService'
-import { EVENTS } from '../constants'
+import { EVENTS, SOURCES_MAP } from '../constants'
 import ChromeService from '../services/ChromeService'
 
 const chrome = new ChromeService()
@@ -21,7 +21,7 @@ chrome.on(EVENTS.EXTENSION_OPEN, (data, sendResponse) => {
 chrome.on(EVENTS.INITIALIZE, (data, sendResponse) => {
   AuthService.authenticate().then(({ user }) => {
     TrackingService.identify(user)
-    TrackingService.logEvent('Chrome Extension Clicked', { source: data.hostnameew })
+    TrackingService.logEvent('Chrome Extension Clicked', { source: SOURCES_MAP[data.hostname] })
     ChromeService.executeScript({ file: 'parse.js' })
     chrome.waitFor(EVENTS.COMP_PARSED).then(sendResponse)
   })
@@ -32,6 +32,6 @@ chrome.on(EVENTS.LAST_REPORT_INITIALIZE, (data, sendResponse) => {
 })
 
 chrome.on(EVENTS.COMP_ADDED, (data, sendResponse) => {
-  TrackingService.logEvent('Chrome Extension Comp Added', { source: data.source })
+  TrackingService.logEvent('Chrome Extension Comp Added', { source: data.sourceName })
   sendResponse()
 })

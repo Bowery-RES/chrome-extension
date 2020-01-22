@@ -3,12 +3,12 @@ import get from 'lodash/get'
 import startCase from 'lodash/startCase'
 import trim from 'lodash/trim'
 import isEmpty from 'lodash/isEmpty'
-import { ZILLOW_AMENITIES_MAP, UNIT_AMENITIES_LIST } from '../constants'
+import { ZILLOW_AMENITIES_MAP, UNIT_AMENITIES_LIST, SOURCES_MAP } from '../constants'
 
 export default class ZillowParser {
   constructor({ document }) {
     this.document = document
-    this.source = 'Zillow'
+    this.source = SOURCES_MAP[this.document.location.hostname]
   }
 
   get amenities() {

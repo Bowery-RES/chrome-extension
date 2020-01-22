@@ -4,12 +4,12 @@ import startCase from 'lodash/startCase'
 import intersection from 'lodash/intersection'
 import words from 'lodash/words'
 import $ from 'jquery'
-import { UNIT_AMENITIES_LIST, STREET_EASY_AMENITIES_MAP } from '../constants'
+import { UNIT_AMENITIES_LIST, SOURCES_MAP, STREET_EASY_AMENITIES_MAP } from '../constants'
 
 export default class StreetEasyParser {
   constructor({ document }) {
     this.document = document
-    this.source = 'StreetEasy'
+    this.source = SOURCES_MAP[this.document.location.hostname]
   }
 
 
