@@ -36,6 +36,8 @@
   <Textfield
     {type}
     bind:value
+    on:change
+    on:input
     input$required={required}
     {disabled}
     variant="outlined"

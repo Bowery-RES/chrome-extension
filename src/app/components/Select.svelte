@@ -16,13 +16,13 @@
     --height: 34px;
     --borderRadius: 4px;
     --multiItemMargin: 4px 4px 0 0;
-    --multiItemBG: #EBEFFF;;
-    --multiItemActiveBG: #E8EFFF;
+    --multiItemBG: #ebefff;
+    --multiItemActiveBG: #e8efff;
     --multiItemActiveColor: -internal-root-color;
     --multiClearHoverBG: #4160d3;
     --multiClearHoverFill: #ebedef;
     --multiClearFill: rgba(0, 0, 0, 0.6);
-    --multiClearBG: #EBEFFF;
+    --multiClearBG: #ebefff;
     --placeholderColor: rgba(0, 0, 0, 0.6);
     --inputFontSize: 16px;
     --listMaxHeight: 200px;
@@ -34,6 +34,10 @@
     padding-top: 16px;
     margin-top: 2px;
     position: relative;
+  }
+
+  :global(.select .multiSelect input) {
+    height: 34px !important;
   }
   label {
     top: -8px;

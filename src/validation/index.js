@@ -3,8 +3,8 @@ import joi from '@hapi/joi'
 const rentCompValidationSchema = joi.object({
   address: joi.string().required(),
   city: joi.string().required(),
-  bathrooms: joi.number().required(),
-  bedrooms: joi.number().required(),
+  bathrooms: joi.number().multiple(0.5).required(),
+  bedrooms: joi.number().integer().required(),
   rent: joi.number().required(),
 })
 
