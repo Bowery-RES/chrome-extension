@@ -1,62 +1,63 @@
-const webpack = require("webpack")
-const path = require("path");
-const fileSystem = require("fs");
-const env = require("./scripts/env");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const WriteFilePlugin = require("write-file-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
+const webpack = require('webpack')
+const path = require('path')
+const fileSystem = require('fs')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const WriteFilePlugin = require('write-file-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const FileManagerPlugin = require('filemanager-webpack-plugin')
+const cssnano = require('cssnano')
+const env = require('./scripts/env')
 
-function resolvePath (destination) {
-  return path.join(__dirname, "src", destination)
+function resolvePath(destination) {
+  return path.join(__dirname, 'src', destination)
 }
 
 const alias = {
-  '@lib': resolvePath("lib"),
-};
+  '@lib': resolvePath('lib'),
+}
 
-const secretsPath = path.join(__dirname, ("secrets." + env.NODE_ENV + ".js"));
+const secretsPath = path.join(__dirname, (`secrets.${env.NODE_ENV}.js`))
 
-const fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"];
+const fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2']
 
 if (fileSystem.existsSync(secretsPath)) {
-  alias["secrets"] = secretsPath;
+  alias.secrets = secretsPath
 }
 
 const options = {
   mode: 'development',
   entry: {
-    popup: resolvePath("popup/popup.js"),
-    options: resolvePath("options/options.js"),
-    background: resolvePath("background/background.js"),
-    'parseStreetEasy': path.join(__dirname, "src", "content-scripts", "parseStreetEasy.js"),
-    widget: path.join(__dirname, "src", "content-scripts", "widget.js"),
+    popup: resolvePath('popup/popup.js'),
+    options: resolvePath('options/options.js'),
+    background: resolvePath('background/background.js'),
+    parse: path.join(__dirname, 'src', 'content-scripts', 'parse.js'),
+    widget: path.join(__dirname, 'src', 'content-scripts', 'widget.js'),
   },
   output: {
-    path: path.join(__dirname, "build"),
-    filename: "[name].js"
+    path: path.join(__dirname, 'build'),
+    filename: '[name].js',
   },
   node: {
     child_process: 'empty',
     fs: 'empty',
     crypto: 'empty',
     net: 'empty',
-    tls: 'empty'
+    tls: 'empty',
   },
   module: {
     rules: [
       {
-        test: new RegExp('\.(' + fileExtensions.join('|') + ')$'),
-        loader: "file-loader?name=[name].[ext]",
-        exclude: /node_modules/
+        test: new RegExp(`.(${fileExtensions.join('|')})$`),
+        loader: 'file-loader?name=[name].[ext]',
+        exclude: /node_modules/,
       },
       {
         test: /\.html$/,
-        loader: "html-loader",
-        exclude: /node_modules/
+        loader: 'html-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.svelte$/,
@@ -64,9 +65,9 @@ const options = {
           loader: 'svelte-loader',
           options: {
             emitCss: false,
-            hotReload: false
-          }
-        }
+            hotReload: false,
+          },
+        },
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -80,72 +81,72 @@ const options = {
               sassOptions: {
                 includePaths: [
                   './src/theme',
-                  './node_modules'
-                ]
-              }
-            }
-          }
-        ]
-      }
-    ]
+                  './node_modules',
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
   },
   resolve: {
-    alias: alias,
+    alias,
   },
   plugins: [
-    new CleanWebpackPlugin(["build"]),
+    new CleanWebpackPlugin(['build']),
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
-      "process.env.VERSION": JSON.stringify(process.env.npm_package_version)
+      'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
+      'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
     }),
     new CopyWebpackPlugin([{
-      from: "src/manifest.json",
-      transform: function (content, path) {
+      from: 'src/manifest.json',
+      transform(content) {
         return Buffer.from(JSON.stringify({
           description: process.env.npm_package_description,
           version: process.env.npm_package_version,
-          ...JSON.parse(content.toString())
+          ...JSON.parse(content.toString()),
         }))
-      }
+      },
     }]),
-    ...['popup', 'options', 'background'].map(page => new HtmlWebpackPlugin({
+    ...['popup', 'options', 'background'].map((page) => new HtmlWebpackPlugin({
       template: resolvePath(`${page}/${page}.html`),
       filename: `${page}.html`,
-      chunks: [page]
+      chunks: [page],
     })),
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      chunkFilename: '[name].[id].css'
+      chunkFilename: '[name].[id].css',
     }),
     new OptimizeCssAssetsPlugin({
       assetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano'),
+      cssProcessor: cssnano,
       cssProcessorPluginOptions: {
-        preset: ['default', { discardComments: { removeAll: true } }]
+        preset: ['default', { discardComments: { removeAll: true } }],
       },
-      canPrint: true
+      canPrint: true,
     }),
     new WriteFilePlugin(),
     new FileManagerPlugin({
       onEnd: {
         archive: [
           {
-            source: path.join(__dirname, "build"),
-            destination: path.join(__dirname, "packages", `${env.NODE_ENV}-v${process.env.npm_package_version}.zip`)
+            source: path.join(__dirname, 'build'),
+            destination: path.join(__dirname, 'packages', `${env.NODE_ENV}-v${process.env.npm_package_version}.zip`),
           },
-        ]
-      }
-    })
+        ],
+      },
+    }),
   ].filter(Boolean),
   chromeExtensionBoilerplate: {
     notHotReload: [
       'widget',
-    ]
-  }
-};
-
-if (env.NODE_ENV === "development") {
-  options.devtool = "cheap-module-eval-source-map";
+    ],
+  },
 }
 
-module.exports = options;
+if (env.NODE_ENV === 'development') {
+  options.devtool = 'cheap-module-eval-source-map'
+}
+
+module.exports = options

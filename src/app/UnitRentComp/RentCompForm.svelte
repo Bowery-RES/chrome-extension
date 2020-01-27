@@ -3,11 +3,12 @@
   import { fly } from "svelte/transition";
   import Button from "@smui/button";
   import Textfield from "../components/TextField.svelte";
+  import NumberField from "../components/NumberField.svelte";
   import HelperText from "@smui/textfield/helper-text/index";
   import DatePicker from "./../components/DatePicker.svelte";
   import Select from "./../components/Select.svelte";
   import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from "../../constants";
-  import { validateRentComp } from "../../validation";
+  import validateRentComp from "../../validation";
 
   export let values;
   const dispatch = createEventDispatcher();
@@ -32,7 +33,9 @@
 </style>
 
 <h1 class="mdc-typography--headline1 ">Rent Comp</h1>
-<form transition:fly={{ y: 800, duration: 500 }} on:submit|preventDefault={e => dispatch('submit', values)}>
+<form
+  transition:fly={{ y: 800, duration: 500 }}
+  on:submit|preventDefault={e => dispatch('submit', values)}>
   <Textfield
     name="address"
     required
@@ -50,7 +53,6 @@
   <Textfield name="zip" bind:value={values.zip} label="Zip Code" />
   <Textfield
     name="unitNumber"
-    required
     bind:value={values.unitNumber}
     label="Unit Number" />
   <DatePicker
@@ -64,27 +66,25 @@
     items={UNIT_TYPES_LIST}
     bind:selectedValue={values.unitLayout}
     placeholder="Select Unit Type" />
-  <Textfield
+  <NumberField
     name="bathrooms"
+    step={0.5}
     required
-    type="number"
     bind:value={values.bathrooms}
     label="Number of Bathrooms" />
-  <Textfield
+  <NumberField
     required
-    type="number"
+    step={1}
     name="bedrooms"
     bind:value={values.bedrooms}
     label="Number of Bedrooms" />
-  <Textfield
-    type="number"
+  <NumberField
     name="sqft"
     bind:value={values.sqft}
     label="Unit Square Footage" />
 
-  <Textfield
+  <NumberField
     required
-    type="number"
     name="rent"
     bind:value={values.rent}
     label="Monthly Rent">
@@ -96,7 +96,7 @@
         {:else}N/A{/if}
       </HelperText>
     </span>
-  </Textfield>
+  </NumberField>
   <footer>
     <Button
       style="color: white;"

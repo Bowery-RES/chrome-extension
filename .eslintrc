@@ -1,0 +1,56 @@
+{
+  "extends": ["airbnb-base", "eslint:recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2019,
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,
+    "commonjs": true,
+    "node": true,
+    "browser": true,
+    "webextensions": true
+  },
+  "rules": {
+    "import/no-unresolved":["error",{
+      "ignore": ["secrets"]
+    }],
+    "import/no-extraneous-dependencies": 0,
+    "class-methods-use-this": 0,
+    "no-var": "error",
+    "semi":["error", "never"],
+    "curly": "error",
+    "eol-last": "error",
+    "id-length": [
+      "error",
+      {
+        "exceptions": [
+          "$",
+          "i"
+        ]
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreUrls": true,
+        "ignoreRegExpLiterals": true,
+        "ignoreStrings": true
+      }
+    ],
+    "no-nested-ternary": "error",
+    "require-await": "error"
+  },
+  "plugins": [
+    "svelte3"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "**/*.svelte"
+      ],
+      "processor": "svelte3/svelte3"
+    },
+  ]
+}

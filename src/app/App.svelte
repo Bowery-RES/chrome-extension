@@ -14,7 +14,7 @@
 
   const initialValues = (async () => {
     loading = true;
-    const values = await ChromeService.emit({ type: EVENTS.INITIALIZE });
+    const values = await ChromeService.emit({ type: EVENTS.INITIALIZE, data: document.location });
     loading = false;
     return values;
   })();
@@ -50,10 +50,11 @@
     top: 0px;
     right: 0px;
     padding: 16px 24px;
-    z-index: 2000;
+    z-index: 999999;
     background: #ffffff;
     box-shadow: 0px 8px 32px rgba(0, 15, 68, 0.12);
   }
+
   .icon {
     position: absolute;
     width: 24px;

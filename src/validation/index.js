@@ -1,13 +1,13 @@
-import joi from '@hapi/joi';
-const rentCompValidationSchema = joi.object({
-    address: joi.string().required(),
-    city: joi.string().required(),
-    unitNumber: joi.string().required(),
-    bathrooms: joi.number().required(),
-    bedrooms: joi.number().required(),
-    rent: joi.number().required(),
-});
+import joi from '@hapi/joi'
 
-export function validateRentComp(data) {
-    return !!rentCompValidationSchema.validate(data, { allowUnknown: true }).error;
+const rentCompValidationSchema = joi.object({
+  address: joi.string().required(),
+  city: joi.string().required(),
+  bathrooms: joi.number().multiple(0.5).required(),
+  bedrooms: joi.number().integer().required(),
+  rent: joi.number().required(),
+})
+
+export default function validateRentComp(data) {
+  return !!rentCompValidationSchema.validate(data, { allowUnknown: true }).error
 }

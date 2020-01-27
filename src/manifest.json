@@ -14,6 +14,7 @@
   "content_scripts": [
     {
       "matches": [
+        "https://www.zillow.com/*",
         "https://streeteasy.com/*"
       ],
       "css": [
@@ -26,8 +27,11 @@
     "activeTab",
     "history",
     "tabs",
-    "http://*/*",
-    "https://*/*",
+    "https://streeteasy.com/*",
+    "https://www.zillow.com/*",
+    "https://test.bowery.link/*",
+    "https://app.boweryvaluation.com/*",
+    "https://bowery-staging.herokuapp.com/*",
     "chrome://*/*",
     "file:///*/*",
     "chrome://favicon/*",
@@ -41,5 +45,6 @@
     "128": "logo_production.png"
   },
   "manifest_version": 2,
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "version": "2.1.0"
 }
