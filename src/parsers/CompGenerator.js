@@ -53,7 +53,7 @@ export default class CompGenerator {
     }
 
     return {
-      address: `${get(location, 'street_number.long')} ${get(location, 'route.long')}`,
+      address: [get(location, 'street_number.long'), get(location, 'route.long')].filter(Boolean).join(' '),
       city: city ? city.short : '',
       zip: location.postal_code ? location.postal_code.short : '',
       state,
