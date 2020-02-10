@@ -25,7 +25,7 @@ export default class ZillowParser {
       .replace(/[^0-9.-]+/g, '')
 
     const [bedrooms, bathrooms, sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area').get()
-      .map((element) => +$(element).text().trim().replace(/[^0-9.-]+/g, ''))
+      .map((element) => +$(element).text().trim().replace(/[^0-9.-]+/g, '') || 0)
 
     const [, id] = document.location.href.match(/(\w+)_zpid/)
     const description = $('.ds-overview-section').text().trim()
@@ -62,7 +62,7 @@ export default class ZillowParser {
 
     const result = {
       bedrooms,
-      sqft: sqft || 0,
+      sqft,
       bathrooms,
       rent,
       unitNumber,
