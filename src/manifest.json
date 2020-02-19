@@ -32,10 +32,6 @@
     "https://test.bowery.link/*",
     "https://app.boweryvaluation.com/*",
     "https://bowery-staging.herokuapp.com/*",
-    "chrome://*/*",
-    "file:///*/*",
-    "chrome://favicon/*",
-    "sessions",
     "webNavigation"
   ],
   "web_accessible_resources": [
