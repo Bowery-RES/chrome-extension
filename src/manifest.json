@@ -1,6 +1,7 @@
 {
   "name": "Bowery Comp Tool",
   "background_page": "background.html",
+  "description": "Chrome extension for Bowery appraisers using the Bowery Authorship Application.",
   "background": {
     "scripts": [
       "background.js"
@@ -32,10 +33,6 @@
     "https://test.bowery.link/*",
     "https://app.boweryvaluation.com/*",
     "https://bowery-staging.herokuapp.com/*",
-    "chrome://*/*",
-    "file:///*/*",
-    "chrome://favicon/*",
-    "sessions",
     "webNavigation"
   ],
   "web_accessible_resources": [
