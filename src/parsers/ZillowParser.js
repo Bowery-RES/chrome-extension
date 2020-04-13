@@ -18,6 +18,13 @@ export default class ZillowParser {
     return UNIT_AMENITIES_LIST.filter((amenity) => amenity.value === ZILLOW_AMENITIES_MAP[laundry])
   }
 
+  get dateOfValue() {
+    const dateOfValueRaw = $('.ds-price-and-tax-section-table tr:first-child td:first-child')
+      .first().text().trim()
+    const date = new Date(dateOfValueRaw)
+    return isNaN(date.getTime()) ? null : date.toISOString()
+  }
+
   parse() {
     const rent = +$('.ds-home-details-chip .ds-price .ds-value')
       .first()
@@ -30,14 +37,12 @@ export default class ZillowParser {
     const [, id] = document.location.href.match(/(\w+)_zpid/)
     const description = $('.ds-overview-section').text().trim()
     const [unitLayout] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/) || []
-    const dateOfValue = $('.ds-price-and-tax-section-table tr:first-child td:first-child')
-      .first().text().trim()
+
     const script = $(`article#zpid_${id}`).prev("script[type='application/ld+json']").text()
     let city
     let zip
     let streetAddress
     let state
-
 
     const [, , , unitNumber] = $('.ds-address-container')
       .children()
@@ -67,7 +72,7 @@ export default class ZillowParser {
       rent,
       unitNumber,
       unitLayout: startCase(unitLayout),
-      dateOfValue: new Date(dateOfValue).toISOString(),
+      dateOfValue: this.dateOfValue,
       sourceOfInformation: 'externalDatabase',
       sourceUrl: this.document.location.toString(),
       sourceName: this.source,
