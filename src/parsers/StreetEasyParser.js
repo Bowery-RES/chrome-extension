@@ -24,7 +24,7 @@ export default class StreetEasyParser {
       .text()
       .trim()
     const description = $('.Description-block').text().trim()
-    const [unitLayout] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/) || []
+    const [unitLayout] = description.match(new RegExp(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/, 'i')) || []
 
     const zip = get(compData, 'listZip')
     const address = words($('.backend_data.BuildingInfo-item').text()).join(' ')
