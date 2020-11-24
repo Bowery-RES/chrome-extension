@@ -12,27 +12,42 @@ export default class ZillowParser {
   }
 
   get amenities() {
-    const laundry = $('.ds-standard-label.ds-home-fact-label').filter(function findLaundry() {
-      return $(this).text() === 'Laundry:'
-    }).next('.ds-home-fact-value').text()
+    const laundry = $('.ds-standard-label.ds-home-fact-label')
+      .filter(function findLaundry() {
+        return $(this).text() === 'Laundry:'
+      })
+      .next('.ds-home-fact-value')
+      .text()
     return UNIT_AMENITIES_LIST.filter((amenity) => amenity.value === ZILLOW_AMENITIES_MAP[laundry])
   }
 
   get dateOfValue() {
-    const dateOfValueRaw = $('.ds-price-and-tax-section-table tr:first-child td:first-child')
-      .first().text().trim()
+    const dateOfValueRaw = $('.ds-expandable-card-section-flush-padding tr:first-child td:first-child').first().text().trim()
     const date = new Date(dateOfValueRaw)
     return isNaN(date.getTime()) ? null : date.toISOString()
   }
 
-  parse() {
+  get rent() {
     const rent = +$('.ds-home-details-chip .ds-price .ds-value')
       .first()
       .text()
+      .replace(/[^0-9.-]+/g, '') || $('.ds-expandable-card-section-flush-padding tr:first-child td:nth-child(3)').first()
+      .text()
       .replace(/[^0-9.-]+/g, '')
+    return rent
+  }
 
-    const [bedrooms, bathrooms, sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area').get()
-      .map((element) => +$(element).text().trim().replace(/[^0-9.-]+/g, '') || 0)
+  parse() {
+    const { rent } = this
+
+    const [bedrooms, bathrooms, sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area')
+      .get()
+      .map(
+        (element) => +$(element)
+          .text()
+          .trim()
+          .replace(/[^0-9.-]+/g, '') || 0,
+      )
 
     const [, id] = document.location.href.match(/(\w+)_zpid/)
     const description = $('.ds-overview-section').text().trim()
@@ -44,15 +59,15 @@ export default class ZillowParser {
     let streetAddress
     let state
 
-    const [, , , unitNumber] = $('.ds-address-container')
+    const [, , , unitNumber] = $('.ds-price-change-address-row')
       .children()
       .first()
       .text()
-      .match(/(.*) (#|APT) (\w+|\d+)/) || []
+      .match(/(.*) (#|APT) *(\w+|\d+)/) || []
 
     if (!script) {
-      streetAddress = $('.ds-address-container').children().first().text()
-      const address = $('.ds-address-container').children().last().text()
+      streetAddress = $('.ds-price-change-address-row').children().first().text()
+      const address = $('.ds-price-change-address-row').children().last().text()
       const matches = address.match(/(.*), (\w+) (\w+)/) || []
       city = trim(matches[1])
       state = trim(matches[2])
