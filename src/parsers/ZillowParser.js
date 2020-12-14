@@ -28,13 +28,13 @@ export default class ZillowParser {
   }
 
   get rent() {
-    const rent = +$('.ds-home-details-chip .ds-price .ds-value')
+    const rent = $('.ds-home-details-chip .ds-price .ds-value')
       .first()
       .text()
       .replace(/[^0-9.-]+/g, '') || $('.ds-expandable-card-section-flush-padding tr:first-child td:nth-child(3) span:first-child').first()
       .text()
       .replace(/[^0-9.-]+/g, '')
-    return rent
+    return +rent
   }
 
   parse() {
