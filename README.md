@@ -4,12 +4,11 @@
 1. Check if your Node.js version is >= 6.
 2. Clone the repository.
 3. Run `npm install`
-4. Create `secrets.development.js` file with the following content:
-    ```javascript
-    module.exports = {
-      GOOGLE_API_KEY: "GOOGLE API KEY",
-      BOWERY_APP_DOMAIN: "BOWERY APP DOMAIN",
-    }
+4. Create `.env` file with the following content:
+    ```
+    GOOGLE_API_KEY=
+    BOWERY_APP_DOMAIN=
+    AMPLITUDE_API_KEY=
     ```
 5. Run the following command:
     ```
@@ -38,16 +37,15 @@ $ PORT=6002 npm start
 ```
 
 ## Packing
-After the development of your extension create `secrets.production.js` file with the following content:
+After the development of your extension create `.env` file with the following content:
 
-```javascript
- module.exports = {
-   GOOGLE_API_KEY: "GOOGLE API KEY",
-   BOWERY_APP_DOMAIN: "BOWERY APP DOMAIN",
- }
+```
+GOOGLE_API_KEY=
+BOWERY_APP_DOMAIN=
+AMPLITUDE_API_KEY=
 ```
 Run command:
 ```
-$ NODE_ENV=production npm run build
+$ npm run build
 ```
 Now, the content of `build` folder will be the extension ready to be submitted to the Chrome Web Store.

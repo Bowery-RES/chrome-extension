@@ -1,6 +1,5 @@
 const webpack = require('webpack')
 const path = require('path')
-const fileSystem = require('fs')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -15,18 +14,9 @@ function resolvePath(destination) {
   return path.join(__dirname, 'src', destination)
 }
 
-const alias = {
-  '@lib': resolvePath('lib'),
-}
-
-const secretsPath = path.join(__dirname, `secrets.${env.NODE_ENV}.js`)
+const secretsPath = path.join(__dirname, `scripts/env.js`)
 
 const fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2']
-
-if (fileSystem.existsSync(secretsPath)) {
-  alias.secrets = secretsPath
-}
-
 const options = {
   mode: 'development',
   entry: {
@@ -88,13 +78,18 @@ const options = {
     ],
   },
   resolve: {
-    alias,
+    alias: {
+      secrets: secretsPath,
+    },
   },
   plugins: [
     new CleanWebpackPlugin(['build']),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
+      'process.env.APP_ENV': JSON.stringify(env.APP_ENV),
       'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
+      'process.env.GOOGLE_API_KEY': JSON.stringify(env.GOOGLE_API_KEY),
+      'process.env.BOWERY_APP_DOMAIN': JSON.stringify(env.BOWERY_APP_DOMAIN),
+      'process.env.AMPLITUDE_API_KEY': JSON.stringify(env.AMPLITUDE_API_KEY),
     }),
     new CopyWebpackPlugin([
       {
@@ -133,10 +128,15 @@ const options = {
     new WriteFilePlugin(),
     new FileManagerPlugin({
       onEnd: {
+        mkdir: [path.join(__dirname, 'packages')],
         archive: [
           {
             source: path.join(__dirname, 'build'),
-            destination: path.join(__dirname, 'packages', `${env.NODE_ENV}-v${process.env.npm_package_version}.zip`),
+            destination: path.join(
+              __dirname,
+              'packages',
+              `BoweryChromeExtension(${env.APP_ENV}-v${process.env.npm_package_version}).zip`
+            ),
           },
         ],
       },

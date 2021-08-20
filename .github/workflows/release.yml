@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+       include:
+         - node-version: 12.x
+           APP_ENV: production
+           BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
+         - node-version: 12.x
+           APP_ENV: staging
+           BOWERY_APP_DOMAIN: https://bowery-staging.herokuapp.com
+         - node-version: 12.x
+           APP_ENV: ci
+           BOWERY_APP_DOMAIN: https://bowery-ci.herokuapp.com
+         - node-version: 12.x
+           APP_ENV: patch
+           BOWERY_APP_DOMAIN: https://patch.boweryvaluation.com
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm install -s
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+          APP_ENV: ${{matrix.APP_ENV}}
+          BOWERY_APP_DOMAIN: ${{matrix.BOWERY_APP_DOMAIN}}
+          GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
+          AMPLITUDE_API_KEY: ${{secrets[format('{0}_AMPLITUDE_KEY', matrix.APP_ENV)]}}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ./packages/*

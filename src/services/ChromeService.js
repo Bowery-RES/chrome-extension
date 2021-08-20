@@ -30,7 +30,7 @@ class ChromeService extends EventEmitter {
 
     const url = tab.url || tab.pendingUrl
     if (url.match(ALLOWED_URLS)) {
-      await chrome.browserAction.setIcon({ path: `logo_${process.env.NODE_ENV}.png` })
+      await chrome.browserAction.setIcon({ path: `logo_${process.env.APP_ENV}.png` })
       chrome.browserAction.enable()
     } else {
       await chrome.browserAction.setIcon({ path: 'logo_disabled.png' })
