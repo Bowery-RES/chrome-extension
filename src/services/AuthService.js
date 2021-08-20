@@ -6,9 +6,7 @@ import ChromeService from './ChromeService'
 class AuthService {
   static async authenticate({ obtainFreshToken = false } = {}) {
     try {
-      const token = obtainFreshToken
-        ? await AuthService.obtainToken()
-        : await ChromeService.getToken()
+      const token = obtainFreshToken ? await AuthService.obtainToken() : await ChromeService.getToken()
       const response = await BoweryService.getAuthenticatedUser({ token })
 
       const user = AuthService.mapUser(response.data)
@@ -23,7 +21,10 @@ class AuthService {
   }
 
   static async obtainToken() {
-    const jwToken = await ChromeService.runScriptInNewTab({ url: BOWERY_APP_DOMAIN, script: "localStorage.getItem('jwToken')" })
+    const jwToken = await ChromeService.runScriptInNewTab({
+      url: BOWERY_APP_DOMAIN,
+      script: "localStorage.getItem('jwToken')",
+    })
     await ChromeService.setToken(jwToken)
     return jwToken
   }

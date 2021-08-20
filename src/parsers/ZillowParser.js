@@ -2,6 +2,7 @@ import $ from 'jquery'
 import get from 'lodash/get'
 import startCase from 'lodash/startCase'
 import trim from 'lodash/trim'
+import isNaN from 'lodash/isNaN'
 import isEmpty from 'lodash/isEmpty'
 import { ZILLOW_AMENITIES_MAP, UNIT_AMENITIES_LIST, SOURCES_MAP } from '../constants'
 
@@ -22,16 +23,24 @@ export default class ZillowParser {
   }
 
   get dateOfValue() {
-    const dateOfValueRaw = $('.ds-expandable-card-section-flush-padding tr:first-child td:first-child').first().text().trim()
+    const dateOfValueRaw = $('.ds-expandable-card-section-flush-padding tr:first-child td:first-child')
+      .first()
+      .text()
+      .trim()
     const date = new Date(dateOfValueRaw)
     return isNaN(date.getTime()) ? null : date.toISOString()
   }
 
   get rent() {
-    const rent = $('.ds-home-details-chip .ds-summary-row h4')
-      .first()
-      .text()
-      .replace(/[^0-9.-]+/g, '') || $('.ds-expandable-card-section-flush-padding tr:first-child td:nth-child(3) span:first-child').contents().get(0).nodeValue.replace(/[^0-9.-]+/g, '')
+    const rent =
+      $('.ds-home-details-chip .ds-summary-row h4')
+        .first()
+        .text()
+        .replace(/[^0-9.-]+/g, '') ||
+      $('.ds-expandable-card-section-flush-padding tr:first-child td:nth-child(3) span:first-child')
+        .contents()
+        .get(0)
+        .nodeValue.replace(/[^0-9.-]+/g, '')
     return +rent
   }
 
@@ -41,10 +50,11 @@ export default class ZillowParser {
     const [bedrooms, bathrooms, sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area')
       .get()
       .map(
-        (element) => +$(element)
-          .text()
-          .trim()
-          .replace(/[^0-9.-]+/g, '') || 0,
+        (element) =>
+          +$(element)
+            .text()
+            .trim()
+            .replace(/[^0-9.-]+/g, '') || 0
       )
 
     const [, id] = document.location.href.match(/(\w+)_zpid/)
@@ -57,11 +67,12 @@ export default class ZillowParser {
     let streetAddress
     let state
 
-    const [, , , unitNumber] = $('.ds-price-change-address-row')
-      .children()
-      .first()
-      .text()
-      .match(/(.*) (#|APT) *(\w+|\d+)/) || []
+    const [, , , unitNumber] =
+      $('.ds-price-change-address-row')
+        .children()
+        .first()
+        .text()
+        .match(/(.*) (#|APT) *(\w+|\d+)/) || []
 
     if (!script) {
       streetAddress = $('.ds-price-change-address-row').children().first().text()

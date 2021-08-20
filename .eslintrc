@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb-base", "eslint:recommended"],
+  "extends": ["airbnb-base", "eslint:recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "ecmaVersion": 2019,
     "sourceType": "module"
@@ -15,12 +15,14 @@
     "import/no-unresolved":["error",{
       "ignore": ["secrets"]
     }],
+    "prettier/prettier": "error",
     "import/no-extraneous-dependencies": 0,
     "class-methods-use-this": 0,
     "no-var": "error",
     "semi":["error", "never"],
     "curly": "error",
     "eol-last": "error",
+    "implicit-arrow-linebreak":  0,
     "id-length": [
       "error",
       {
@@ -30,20 +32,12 @@
         ]
       }
     ],
-    "max-len": [
-      "error",
-      {
-        "code": 120,
-        "ignoreUrls": true,
-        "ignoreRegExpLiterals": true,
-        "ignoreStrings": true
-      }
-    ],
     "no-nested-ternary": "error",
     "require-await": "error"
   },
   "plugins": [
-    "svelte3"
+    "svelte3",
+    "prettier"
   ],
   "overrides": [
     {

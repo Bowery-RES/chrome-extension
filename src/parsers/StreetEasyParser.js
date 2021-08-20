@@ -12,7 +12,6 @@ export default class StreetEasyParser {
     this.source = SOURCES_MAP[this.document.location.hostname]
   }
 
-
   parse() {
     const [, data = '[]'] = this.document.body.textContent.match(/dataLayer = (\[.*\]);/) || []
     const [compData] = JSON.parse(data)
@@ -24,7 +23,8 @@ export default class StreetEasyParser {
       .text()
       .trim()
     const description = $('.Description-block').text().trim()
-    const [unitLayout] = description.match(new RegExp(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/, 'i')) || []
+    const [unitLayout] =
+      description.match(new RegExp(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/, 'i')) || []
 
     const zip = get(compData, 'listZip')
     const address = words($('.backend_data.BuildingInfo-item').text()).join(' ')
@@ -52,8 +52,8 @@ export default class StreetEasyParser {
   get amenities() {
     const amenitiesList = get(this.compData, 'listAmen', '').split('|')
     const unitAmenities = intersection(Object.keys(STREET_EASY_AMENITIES_MAP), amenitiesList)
-    return unitAmenities.map((amenity) => UNIT_AMENITIES_LIST.find(
-      (pair) => pair.value === STREET_EASY_AMENITIES_MAP[amenity],
-    ))
+    return unitAmenities.map((amenity) =>
+      UNIT_AMENITIES_LIST.find((pair) => pair.value === STREET_EASY_AMENITIES_MAP[amenity])
+    )
   }
 }
