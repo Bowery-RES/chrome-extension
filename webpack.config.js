@@ -19,7 +19,7 @@ const alias = {
   '@lib': resolvePath('lib'),
 }
 
-const secretsPath = path.join(__dirname, (`secrets.${env.NODE_ENV}.js`))
+const secretsPath = path.join(__dirname, `secrets.${env.NODE_ENV}.js`)
 
 const fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2']
 
@@ -79,10 +79,7 @@ const options = {
             loader: 'sass-loader',
             options: {
               sassOptions: {
-                includePaths: [
-                  './src/theme',
-                  './node_modules',
-                ],
+                includePaths: ['./src/theme', './node_modules'],
               },
             },
           },
@@ -99,21 +96,28 @@ const options = {
       'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
       'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
     }),
-    new CopyWebpackPlugin([{
-      from: 'src/manifest.json',
-      transform(content) {
-        return Buffer.from(JSON.stringify({
-          description: process.env.npm_package_description,
-          version: process.env.npm_package_version,
-          ...JSON.parse(content.toString()),
-        }))
+    new CopyWebpackPlugin([
+      {
+        from: 'src/manifest.json',
+        transform(content) {
+          return Buffer.from(
+            JSON.stringify({
+              description: process.env.npm_package_description,
+              version: process.env.npm_package_version,
+              ...JSON.parse(content.toString()),
+            })
+          )
+        },
       },
-    }]),
-    ...['popup', 'options', 'background'].map((page) => new HtmlWebpackPlugin({
-      template: resolvePath(`${page}/${page}.html`),
-      filename: `${page}.html`,
-      chunks: [page],
-    })),
+    ]),
+    ...['popup', 'options', 'background'].map(
+      (page) =>
+        new HtmlWebpackPlugin({
+          template: resolvePath(`${page}/${page}.html`),
+          filename: `${page}.html`,
+          chunks: [page],
+        })
+    ),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name].[id].css',
@@ -139,9 +143,7 @@ const options = {
     }),
   ].filter(Boolean),
   chromeExtensionBoilerplate: {
-    notHotReload: [
-      'widget',
-    ],
+    notHotReload: ['widget'],
   },
 }
 

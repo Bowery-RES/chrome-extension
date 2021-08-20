@@ -62,7 +62,6 @@ export default class CompGenerator {
     }
   }
 
-
   async parse() {
     const comp = this.parser.parse()
     const location = await CompGenerator.getLocationInfoFromAddress(comp)

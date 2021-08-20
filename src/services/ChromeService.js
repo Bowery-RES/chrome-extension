@@ -1,4 +1,3 @@
-
 import 'chrome-extension-async'
 import EventEmitter from 'events'
 import { ALLOWED_URLS } from '../constants'
@@ -15,10 +14,12 @@ class ChromeService extends EventEmitter {
   }
 
   waitFor(type) {
-    return new Promise((resolve) => this.once(type, (params, callback) => {
-      resolve(params)
-      callback()
-    }))
+    return new Promise((resolve) =>
+      this.once(type, (params, callback) => {
+        resolve(params)
+        callback()
+      })
+    )
   }
 
   static async activationHandler({ tabId }) {

@@ -53,7 +53,8 @@ export const EVENTS = {
 
 export const WIDGET_ID = 'bowery-extension'
 
-export const ALLOWED_URLS = /https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\/|https:\/\/www.zillow.com\/homedetails\//
+export const ALLOWED_URLS =
+  /https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\/|https:\/\/www.zillow.com\/homedetails\//
 
 export const SOURCES_MAP = {
   'www.zillow.com': 'Zillow',

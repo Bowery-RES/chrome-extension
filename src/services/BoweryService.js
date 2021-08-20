@@ -91,6 +91,7 @@ class BoweryService {
       const result = get(response, 'data.0', {})
       return transform(result)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.log(error)
     }
     return {}
@@ -98,9 +99,9 @@ class BoweryService {
 
   async getLastVisitedReports() {
     const pages = await ChromeService.getDomainUrlsFromHistory(this.domain)
-    const reportsVisited = pages.filter((page) => page.url.match(/\/report\/(\d|\w){24}/)
-      && page.url.startsWith(this.domain)
-      && page.title !== 'Bowery')
+    const reportsVisited = pages.filter(
+      (page) => page.url.match(/\/report\/(\d|\w){24}/) && page.url.startsWith(this.domain) && page.title !== 'Bowery'
+    )
 
     const reports = reportsVisited.map((page) => ({
       value: normalizeReportUrl(page.url, this.domain),
