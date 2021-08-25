@@ -22,7 +22,7 @@ class AuthService {
 
   static async obtainToken() {
     const jwToken = await ChromeService.runScriptInNewTab({
-      url: BOWERY_APP_DOMAIN,
+      url: `${BOWERY_APP_DOMAIN}/user`,
       script: "localStorage.getItem('jwToken')",
     })
     await ChromeService.setToken(jwToken)
