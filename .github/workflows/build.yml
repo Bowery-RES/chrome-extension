@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        run: npm install -s
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+          APP_ENV: ci
+          BOWERY_APP_DOMAIN: https://bowery-ci.herokuapp.com
+          GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
+          AMPLITUDE_API_KEY: ${{secrets.CI_AMPLITUDE_KEY}}
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v2
+        with:
+          name: BoweryChromeExtension
+          path: packages/*
