@@ -54,6 +54,17 @@ Now, the content of `build` folder will be the extension ready to be submitted t
 3. Click on `Load unpacked extension`
 4. Select the folder containing extensions source.
 
+## Testing
+On each push to master chrome extension artifact is created. They are stored [here](https://github.com/Bowery-RES/chrome-extension/actions/workflows/build.yml).
+* Open latest job
+![image](https://user-images.githubusercontent.com/29887755/130805545-c122be11-639c-47fc-bd17-c9ca9455bfb7.png)
+
+* Download artifact
+![image](https://user-images.githubusercontent.com/29887755/130805469-51361bd7-2f51-4868-999f-9a4d1369c6ff.png)
+
+* Unzip and load to chrome
+
+
 ## Release
 _Releases are maintained by Github releases. The flow is the following_
 * Update version in package.json to `<CURRENT_VERSION>`
