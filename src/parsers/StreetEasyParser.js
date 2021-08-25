@@ -28,6 +28,7 @@ export default class StreetEasyParser {
 
     const zip = get(compData, 'listZip')
     const address = words($('.backend_data.BuildingInfo-item').text()).join(' ')
+
     const result = {
       dateOfValue: new Date(dateOfValue).toISOString(),
       unitLayout: startCase(unitLayout),
@@ -41,12 +42,18 @@ export default class StreetEasyParser {
       sqft: get(compData, 'listSqFt', '') || 0,
       rent: get(compData, 'listPrice', ''),
       amenities: isEmpty(this.amenities) ? null : this.amenities,
+      internalNotes: this.hasElevator ? 'Building has an elevator' : '',
       sourceOfInformation: 'externalDatabase',
       sourceUrl: this.document.location.toString(),
       sourceName: this.source,
     }
 
     return result
+  }
+
+  get hasElevator() {
+    const amenitiesList = get(this.compData, 'listAmen', '')
+    return /elevator/.test(amenitiesList)
   }
 
   get amenities() {
