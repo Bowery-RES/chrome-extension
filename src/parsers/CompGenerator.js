@@ -70,6 +70,7 @@ export default class CompGenerator {
       ...comp,
       ...location,
       ...propertyData,
+      chromeExtensionVersion: process.env.VERSION,
     }
     ChromeService.emit({ type: EVENTS.COMP_PARSED, data: extendedProperty })
   }

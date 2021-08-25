@@ -97,9 +97,9 @@ const options = {
         transform(content) {
           return Buffer.from(
             JSON.stringify({
+              ...JSON.parse(content.toString()),
               description: process.env.npm_package_description,
               version: process.env.npm_package_version,
-              ...JSON.parse(content.toString()),
             })
           )
         },
