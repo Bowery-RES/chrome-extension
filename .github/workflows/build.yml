@@ -20,8 +20,9 @@ jobs:
           BOWERY_APP_DOMAIN: https://bowery-ci.herokuapp.com
           GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
           AMPLITUDE_API_KEY: ${{secrets.CI_AMPLITUDE_KEY}}
-      - name: Upload math result for job 1
+          GENERATE_ARTIFACT: false
+      - name: Upload Extension Artifact
         uses: actions/upload-artifact@v2
         with:
           name: BoweryChromeExtension
-          path: packages/*
+          path: build/*

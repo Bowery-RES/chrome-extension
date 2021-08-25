@@ -13,7 +13,6 @@ const env = require('./scripts/env')
 function resolvePath(destination) {
   return path.join(__dirname, 'src', destination)
 }
-
 const secretsPath = path.join(__dirname, `scripts/env.js`)
 
 const fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2']
@@ -126,21 +125,22 @@ const options = {
       canPrint: true,
     }),
     new WriteFilePlugin(),
-    new FileManagerPlugin({
-      onEnd: {
-        mkdir: [path.join(__dirname, 'packages')],
-        archive: [
-          {
-            source: path.join(__dirname, 'build'),
-            destination: path.join(
-              __dirname,
-              'packages',
-              `BoweryChromeExtension(${env.APP_ENV}-v${process.env.npm_package_version}).zip`
-            ),
-          },
-        ],
-      },
-    }),
+    process.env.GENERATE_ARTIFACT !== 'false' &&
+      new FileManagerPlugin({
+        onEnd: {
+          mkdir: [path.join(__dirname, 'packages')],
+          archive: [
+            {
+              source: path.join(__dirname, 'build'),
+              destination: path.join(
+                __dirname,
+                'packages',
+                `BoweryChromeExtension(${env.APP_ENV}-v${process.env.npm_package_version}).zip`
+              ),
+            },
+          ],
+        },
+      }),
   ].filter(Boolean),
   chromeExtensionBoilerplate: {
     notHotReload: ['widget'],
