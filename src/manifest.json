@@ -30,7 +30,7 @@
     "tabs",
     "https://streeteasy.com/*",
     "https://www.zillow.com/*",
-    "https://test.bowery.link/*",
+    "https://bowery-ci.herokuapp.com/*",
     "https://app.boweryvaluation.com/*",
     "https://bowery-staging.herokuapp.com/*",
     "webNavigation"

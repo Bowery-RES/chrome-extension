@@ -47,10 +47,10 @@ export default class ZillowParser {
   parse() {
     const { rent } = this
 
-    const [bedrooms, bathrooms, sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area')
-      .get()
+    const [bedrooms, , bathrooms, , sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area-container')
+      .children()
       .map(
-        (element) =>
+        (index, element) =>
           +$(element)
             .text()
             .trim()
