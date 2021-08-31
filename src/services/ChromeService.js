@@ -1,6 +1,6 @@
 import 'chrome-extension-async'
 import EventEmitter from 'events'
-import { ALLOWED_URLS } from '../constants'
+import { ALLOWED_URLS, LOGO_MAP } from '../constants'
 
 class ChromeService extends EventEmitter {
   constructor() {
@@ -30,7 +30,7 @@ class ChromeService extends EventEmitter {
 
     const url = tab.url || tab.pendingUrl
     if (url.match(ALLOWED_URLS)) {
-      await chrome.browserAction.setIcon({ path: `logo_${process.env.APP_ENV}.png` })
+      await chrome.browserAction.setIcon({ path: LOGO_MAP[process.env.APP_ENV] || 'logo_development.png' })
       chrome.browserAction.enable()
     } else {
       await chrome.browserAction.setIcon({ path: 'logo_disabled.png' })

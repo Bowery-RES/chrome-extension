@@ -60,3 +60,11 @@ export const SOURCES_MAP = {
   'www.zillow.com': 'Zillow',
   'streeteasy.com': 'StreetEasy',
 }
+
+export const LOGO_MAP = {
+  ci: 'logo_development.png',
+  development: 'logo_development.png',
+  staging: 'logo_staging.png',
+  production: 'logo_production.png',
+  patch: 'logo_staging.png',
+}
