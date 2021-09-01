@@ -9,7 +9,7 @@
     GOOGLE_API_KEY=***
     BOWERY_APP_DOMAIN=***
     AMPLITUDE_API_KEY=***
-    APP_ENV=development
+    APP_ENV=ci
     ```
 * Run the following command:
     ```
