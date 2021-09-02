@@ -17,8 +17,8 @@ jobs:
            APP_ENV: staging
            BOWERY_APP_DOMAIN: https://bowery-staging.herokuapp.com
          - node-version: 12.x
-           APP_ENV: ci
-           BOWERY_APP_DOMAIN: https://bowery-ci.herokuapp.com
+           APP_ENV: development
+           BOWERY_APP_DOMAIN: https://bowery-development.herokuapp.com
          - node-version: 12.x
            APP_ENV: patch
            BOWERY_APP_DOMAIN: https://patch.boweryvaluation.com

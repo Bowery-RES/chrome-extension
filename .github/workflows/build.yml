@@ -17,7 +17,7 @@ jobs:
         env:
           NODE_ENV: production
           APP_ENV: ci
-          BOWERY_APP_DOMAIN: https://bowery-ci.herokuapp.com
+          BOWERY_APP_DOMAIN: https://bowery-development.herokuapp.com
           GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
           AMPLITUDE_API_KEY: ${{secrets.CI_AMPLITUDE_KEY}}
           GENERATE_ARTIFACT: false
