@@ -17,7 +17,7 @@ export default class CompGenerator {
 
   static async getLocationInfoFromAddress({ address = '', zip }) {
     const response = await googleMapsClient.geocode({ address: `${address} ${zip}` }).asPromise()
-    const addressInfo = get(response, 'json.results.0')
+    const addressInfo = get(response, 'json.results.0') || {}
     const location = {}
 
     const addressComponents = get(addressInfo, 'address_components') || []
