@@ -16,7 +16,8 @@
     {
       "matches": [
         "https://www.zillow.com/*",
-        "https://streeteasy.com/*"
+        "https://streeteasy.com/*",
+        "https://www.westsiderentals.com/*"
       ],
       "css": [
         "widget.css"
@@ -24,16 +25,17 @@
     }
   ],
   "permissions": [
-    "storage",
     "activeTab",
     "history",
+    "storage",
     "tabs",
-    "https://streeteasy.com/*",
-    "https://www.zillow.com/*",
-    "https://bowery-ci.herokuapp.com/*",
+    "webNavigation",
+    "https://bowery-development.herokuapp.com/*",
     "https://app.boweryvaluation.com/*",
     "https://bowery-staging.herokuapp.com/*",
-    "webNavigation"
+    "https://streeteasy.com/*",
+    "https://www.zillow.com/*",
+    "https://www.westsiderentals.com/*"
   ],
   "web_accessible_resources": [
     "widget.css"
