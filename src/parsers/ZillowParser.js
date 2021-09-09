@@ -1,10 +1,10 @@
 import $ from 'jquery'
 import get from 'lodash/get'
-import startCase from 'lodash/startCase'
 import trim from 'lodash/trim'
 import isNaN from 'lodash/isNaN'
 import isEmpty from 'lodash/isEmpty'
 import { ZILLOW_AMENITIES_MAP, UNIT_AMENITIES_LIST, SOURCES_MAP } from '../constants'
+import { getUnitLayout } from '../helpers'
 
 export default class ZillowParser {
   constructor({ document }) {
@@ -59,7 +59,7 @@ export default class ZillowParser {
 
     const [, id] = document.location.href.match(/(\w+)_zpid/)
     const description = $('.ds-overview-section').text().trim()
-    const [unitLayout] = description.match(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/) || []
+    const unitLayout = getUnitLayout(description)
 
     const script = $(`article#zpid_${id}`).prev("script[type='application/ld+json']").text()
     let city
@@ -95,7 +95,7 @@ export default class ZillowParser {
       bathrooms,
       rent,
       unitNumber,
-      unitLayout: startCase(unitLayout),
+      unitLayout,
       dateOfValue: this.dateOfValue,
       sourceOfInformation: 'externalDatabase',
       sourceUrl: this.document.location.toString(),
