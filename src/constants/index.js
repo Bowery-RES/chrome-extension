@@ -53,12 +53,19 @@ export const EVENTS = {
 
 export const WIDGET_ID = 'bowery-extension'
 
-export const ALLOWED_URLS =
-  /https:\/\/streeteasy.com\/building\/|https:\/\/streeteasy.com\/rental\/|https:\/\/www.zillow.com\/homedetails\//
+export const ALLOWED_URLS = new RegExp(
+  [
+    'https://streeteasy.com/building/',
+    'https://streeteasy.com/rental/',
+    'https://www.zillow.com/homedetails/',
+    'https://www.westsiderentals.com/',
+  ].join('|')
+)
 
 export const SOURCES_MAP = {
   'www.zillow.com': 'Zillow',
   'streeteasy.com': 'StreetEasy',
+  'www.westsiderentals.com': 'WestsideRentals',
 }
 
 export const LOGO_MAP = {
