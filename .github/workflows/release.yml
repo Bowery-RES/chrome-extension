@@ -21,7 +21,7 @@ jobs:
            BOWERY_APP_DOMAIN: https://bowery-development.herokuapp.com
          - node-version: 12.x
            APP_ENV: patch
-           BOWERY_APP_DOMAIN: https://patch.boweryvaluation.com
+           BOWERY_APP_DOMAIN: https://bowery-patch.herokuapp.com/
     steps:
       - name: Checkout
         uses: actions/checkout@v2
