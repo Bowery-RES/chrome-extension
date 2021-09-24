@@ -4,7 +4,7 @@ import trim from 'lodash/trim'
 import isNaN from 'lodash/isNaN'
 import isEmpty from 'lodash/isEmpty'
 import { ZILLOW_AMENITIES_MAP, UNIT_AMENITIES_LIST, SOURCES_MAP } from '../constants'
-import { getUnitLayout } from '../helpers'
+import { getUnitLayout, extractNumber, priceRegExp } from '../helpers'
 
 export default class ZillowParser {
   constructor({ document }) {
@@ -32,16 +32,8 @@ export default class ZillowParser {
   }
 
   get rent() {
-    const rent =
-      $('.ds-home-details-chip .ds-summary-row h4')
-        .first()
-        .text()
-        .replace(/[^0-9.-]+/g, '') ||
-      $('.ds-expandable-card-section-flush-padding tr:first-child td:nth-child(3) span:first-child')
-        .contents()
-        .get(0)
-        .nodeValue.replace(/[^0-9.-]+/g, '')
-    return +rent
+    const [rent] = $('.ds-home-details-chip').text().match(priceRegExp()) || [null]
+    return extractNumber(rent)
   }
 
   parse() {

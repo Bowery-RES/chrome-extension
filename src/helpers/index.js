@@ -6,3 +6,6 @@ export const getUnitLayout = (description) => {
   const [resutl] = description.match(new RegExp(UNIT_TYPES_LIST.join('|'), 'i')) || ['']
   return startCase(resutl)
 }
+
+export const priceRegExp = ({ prefix = '\\$', pattern = '[\\d,]+', postfix = '/mo', flags = 'g' } = {}) =>
+  new RegExp([prefix, pattern, postfix].join(''), flags)
