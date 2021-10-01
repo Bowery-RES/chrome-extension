@@ -9,3 +9,5 @@ export const getUnitLayout = (description) => {
 
 export const priceRegExp = ({ prefix = '\\$', pattern = '[\\d,]+', postfix = '/mo', flags = 'g' } = {}) =>
   new RegExp([prefix, pattern, postfix].join(''), flags)
+
+export const getDefault = (value, property, defaultValue) => (value ? value[property] : defaultValue)

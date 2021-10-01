@@ -37,17 +37,16 @@ export default class StreetEasyParser {
       zip,
 
       rooms: get(compData, 'listRoom'),
-      bedrooms: get(compData, 'listBed') || null,
-      bathrooms: get(compData, 'listBath'),
-      sqft: get(compData, 'listSqFt', '') || 0,
-      rent: get(compData, 'listPrice', ''),
+      bedrooms: get(compData, 'listBed', 0),
+      bathrooms: get(compData, 'listBath', 0),
+      sqft: get(compData, 'listSqFt', 0),
+      rent: get(compData, 'listPrice', 0),
       amenities: isEmpty(this.amenities) ? null : this.amenities,
       internalNotes: this.hasElevator ? 'Building has an elevator' : '',
       sourceOfInformation: 'externalDatabase',
       sourceUrl: this.document.location.toString(),
       sourceName: this.source,
     }
-
     return result
   }
 

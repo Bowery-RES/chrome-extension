@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import { SOURCES_MAP } from '../constants'
-import { extractNumber, getUnitLayout } from '../helpers'
+import { extractNumber, getDefault, getUnitLayout } from '../helpers'
 
 export default class WRParser {
   constructor({ document }) {
@@ -20,9 +20,9 @@ export default class WRParser {
     const rent = extractNumber(rentString)
     const sqft = extractNumber(sqftString)
 
-    const bedrooms = descriptionShort.match(/(\d+) BD/)[1]
-    const bathrooms = descriptionShort.match(/(\d+) BA/)[1]
-    const unitNumber = descriptionShort.match(/Unit (\d+)/)[1]
+    const bedrooms = getDefault(descriptionShort.match(/(\d+) BD/), 1, 0)
+    const bathrooms = getDefault(descriptionShort.match(/(\d+) BA/), 1, 0)
+    const unitNumber = getDefault(descriptionShort.match(/Unit (\d+)/), 1, null)
 
     const profileDesctioption = $('.profile-description').text()
     const unitLayout = getUnitLayout(profileDesctioption)
