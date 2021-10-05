@@ -25,7 +25,7 @@
     lastReports = await getLastVisitedReports() || [];
   });
 
-  $: report = fetchReport($targetReport.value);
+  $: report = fetchReport($targetReport.reportLink);
 </script>
 
 <style>
@@ -59,7 +59,7 @@
           <HelperText class="mdc-typography--headline6" persistent>
 
             <a
-              href={`${$targetReport.value}/residential-rent-comps`}
+              href={`${$targetReport.reportLink}/residential-rent-comps`}
               target="_blank">
               {get(reportData, 'new.address', '')}
             </a>

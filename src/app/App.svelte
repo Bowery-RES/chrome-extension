@@ -1,51 +1,75 @@
 <script>
-  import Main from "./App.svelte";
-  import Ripple from "@smui/ripple";
-  import Close from "svelte-icons/md/MdClose.svelte";
-  import UnitRentComp from "./UnitRentComp/UnitRentComp.svelte";
-  import Loading from "./components/Loading.svelte";
-  import ReportUrl from "./ReportURL/ReportURL.svelte";
-  import BoweryService from "../services/BoweryService";
-  import { targetReport } from "./stores.js";
+  import Main from './App.svelte'
+  import Ripple from '@smui/ripple'
+  import Close from 'svelte-icons/md/MdClose.svelte'
+  import UnitRentComp from './UnitRentComp/UnitRentComp.svelte'
+  import Loading from './components/Loading.svelte'
+  import ReportUrl from './ReportURL/ReportURL.svelte'
+  import { targetReport } from './stores.js'
+  import BoweryService from '../services/BoweryService'
+  import ChromeService from '../services/ChromeService.js'
+  import { WIDGET_ID, EVENTS } from '../constants'
+  import { createDTO, UnitComp, UnitCompDTO } from '../entities'
 
-  import ChromeService from "../services/ChromeService.js";
-  import { WIDGET_ID, EVENTS } from "../constants";
-  let loading = false;
+  let loading = false
 
   const initialValues = (async () => {
-    loading = true;
-    const values = await ChromeService.emit({ type: EVENTS.INITIALIZE, data: document.location });
-    loading = false;
-    return values;
-  })();
+    loading = true
+    const values = await ChromeService.emit({ type: EVENTS.INITIALIZE, data: document.location })
+    loading = false
+
+    return values
+  })()
 
   function fetchReport(url) {
-    return BoweryService.fetchReport(url);
+    return BoweryService.fetchReport(url)
   }
+
   function close() {
-    document.getElementById(WIDGET_ID).remove();
+    document.getElementById(WIDGET_ID).remove()
   }
+
   async function submitCompToReport(data) {
+    const unitComp = new UnitComp($targetReport.reportLink)
+    const DTO = createDTO(unitComp, UnitCompDTO)
+
     try {
-      loading = true;
-      await BoweryService.addUnitComp($targetReport.value, data).then(close);
+      loading = true
+      await BoweryService.addUnitComp(DTO, data).then(close)
     } finally {
-      loading = false;
+      loading = false
     }
   }
 
   function getLastVisitedReports() {
     return ChromeService.emit({
-      type: EVENTS.LAST_REPORT_INITIALIZE
-    });
+      type: EVENTS.LAST_REPORT_INITIALIZE,
+    })
   }
 </script>
+
+<main class:loading>
+  <div use:Ripple={[true, { color: 'surface' }]} class="icon" on:click={close}>
+    <Close />
+  </div>
+  {#if loading}
+    <Loading />
+  {/if}
+  {#await initialValues then value}
+    <div>
+      <h1>Report</h1>
+      <ReportUrl {getLastVisitedReports} {fetchReport} />
+      <UnitRentComp {submitCompToReport} initialValues={value} />
+    </div>
+  {/await}
+  <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
+</main>
 
 <style>
   main {
     width: 682px;
     min-height: 808px;
-    font-family: "Nunito Sans";
+    font-family: 'Nunito Sans';
     position: fixed;
     top: 0px;
     right: 0px;
@@ -77,7 +101,7 @@
     text-align: left;
   }
   .loading::after {
-    content: "";
+    content: '';
     top: 0px;
     right: 0px;
     width: 682px;
@@ -86,20 +110,3 @@
     background-color: rgba(0, 0, 0, 0.1);
   }
 </style>
-
-<main class:loading>
-  <div use:Ripple={[true, { color: 'surface' }]} class="icon" on:click={close}>
-    <Close />
-  </div>
-  {#if loading}
-    <Loading />
-  {/if}
-  {#await initialValues then value}
-    <div>
-      <h1>Report</h1>
-      <ReportUrl {getLastVisitedReports} {fetchReport} />
-      <UnitRentComp {submitCompToReport} initialValues={value} />
-    </div>
-  {/await}
-  <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
-</main>
