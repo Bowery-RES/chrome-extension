@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
 import { BOWERY_APP_DOMAIN } from 'secrets'
 import { EVENTS } from '../constants'
-import { createDTO, UnitComp, UnitCompDTO } from '../entities'
+import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
 import ChromeService from './ChromeService'
 
 const normalizeReportUrl = (url = '', domain) => {
@@ -53,8 +53,8 @@ class BoweryService {
 
     const headers = await this.getAuthHeaders()
     const unitComp = new UnitComp(unitCompData)
-    const DTO = createDTO(unitComp, UnitCompDTO)
-    await axios.post(`${this.domain}/report/${id}/addUnitComp`, DTO, {
+    const unitCompDTO = createDTO(unitComp, UnitCompDTOTemplate)
+    await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitCompDTO, {
       headers,
     })
 

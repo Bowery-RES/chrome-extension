@@ -1,5 +1,5 @@
 import UnitComp from './UnitComp'
-import UnitCompDTO from './UnitCompDTO'
+import UnitCompDTOTemplate from './UnitCompDTOTemplate'
 
 const createDTO = (entity = {}, DTO) => {
   if (entity.data === undefined || DTO === undefined) {
@@ -15,4 +15,4 @@ const createDTO = (entity = {}, DTO) => {
   return typedData
 }
 
-export { createDTO, UnitComp, UnitCompDTO }
+export { createDTO, UnitComp, UnitCompDTOTemplate }
