@@ -3,6 +3,7 @@ import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
 import { BOWERY_APP_DOMAIN } from 'secrets'
 import { EVENTS } from '../constants'
+import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
 import ChromeService from './ChromeService'
 
 const normalizeReportUrl = (url = '', domain) => {
@@ -44,16 +45,20 @@ class BoweryService {
     return response.data
   }
 
-  async addUnitComp(url, unitComp) {
+  async addUnitComp(url, unitCompData) {
     const [id] = url.match(/((\d|\w){24})/) || []
     if (!id) {
       throw new Error('Invalid parameters')
     }
+
     const headers = await this.getAuthHeaders()
-    await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitComp, {
+    const unitComp = new UnitComp(unitCompData)
+    const unitCompDTO = createDTO(unitComp, UnitCompDTOTemplate)
+    await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitCompDTO, {
       headers,
     })
-    ChromeService.emit({ type: EVENTS.COMP_ADDED, data: { source: unitComp.sourceName } })
+
+    ChromeService.emit({ type: EVENTS.COMP_ADDED, data: { source: unitCompData.sourceName } })
   }
 
   getPropertyRequest(location) {

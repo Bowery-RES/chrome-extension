@@ -40,7 +40,7 @@ export default class StreetEasyParser {
       bedrooms: get(compData, 'listBed', 0),
       bathrooms: get(compData, 'listBath', 0),
       sqft: get(compData, 'listSqFt', 0),
-      rent: get(compData, 'listPrice', 0),
+      rent: get(compData, 'listPrice', null),
       amenities: isEmpty(this.amenities) ? null : this.amenities,
       internalNotes: this.hasElevator ? 'Building has an elevator' : '',
       sourceOfInformation: 'externalDatabase',
