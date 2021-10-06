@@ -17,7 +17,7 @@ export default class WRParser {
 
     const dateOfValue = new Date().toISOString()
 
-    const rent = extractNumber(rentString)
+    const rent = extractNumber(rentString) || null
     const sqft = extractNumber(sqftString)
 
     const bedrooms = getDefault(descriptionShort.match(/(\d+) BD/), 1, 0)
