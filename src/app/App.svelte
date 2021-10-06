@@ -30,12 +30,12 @@
   }
 
   async function submitCompToReport(data) {
-    const unitComp = new UnitComp($targetReport.reportLink)
+    const unitComp = new UnitComp(data)
     const DTO = createDTO(unitComp, UnitCompDTO)
 
     try {
       loading = true
-      await BoweryService.addUnitComp(DTO, data).then(close)
+      await BoweryService.addUnitComp($targetReport.value, DTO).then(close)
     } finally {
       loading = false
     }
