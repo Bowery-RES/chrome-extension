@@ -9,7 +9,6 @@
   import BoweryService from '../services/BoweryService'
   import ChromeService from '../services/ChromeService.js'
   import { WIDGET_ID, EVENTS } from '../constants'
-  import { createDTO, UnitComp, UnitCompDTO } from '../entities'
 
   let loading = false
 
@@ -30,12 +29,9 @@
   }
 
   async function submitCompToReport(data) {
-    const unitComp = new UnitComp(data)
-    const DTO = createDTO(unitComp, UnitCompDTO)
-
     try {
       loading = true
-      await BoweryService.addUnitComp($targetReport.value, DTO).then(close)
+      await BoweryService.addUnitComp($targetReport.value, data).then(close)
     } finally {
       loading = false
     }
