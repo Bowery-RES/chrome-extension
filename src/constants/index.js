@@ -58,7 +58,6 @@ export const ALLOWED_URLS = new RegExp(
     'https://streeteasy.com/building/',
     'https://streeteasy.com/rental/',
     'https://www.zillow.com/homedetails/',
-    'https://www.zillow.com/homes/',
     'https://www.westsiderentals.com/',
   ].join('|')
 )
