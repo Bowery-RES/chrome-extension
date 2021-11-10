@@ -4,6 +4,7 @@ import { GOOGLE_API_KEY } from 'secrets'
 import { GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '../constants'
 import ChromeService from '../services/ChromeService'
 import BoweryService from '../services/BoweryService'
+import transformCity from './transformers/mapCity'
 
 const googleMapsClient = createClient({
   key: GOOGLE_API_KEY,
@@ -72,6 +73,14 @@ export default class CompGenerator {
       ...propertyData,
       chromeExtensionVersion: process.env.VERSION,
     }
-    ChromeService.emit({ type: EVENTS.COMP_PARSED, data: extendedProperty })
+    this.emit({ data: extendedProperty })
+  }
+
+  transform(data, middlewares = [(dataToTransform) => dataToTransform]) {
+    return middlewares.reduce((transformedData, fn) => fn(transformedData), data)
+  }
+
+  emit({ type = EVENTS.COMP_PARSED, data }) {
+    ChromeService.emit({ type, data: this.transform(data, [transformCity]) })
   }
 }
