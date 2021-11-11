@@ -1,6 +1,5 @@
 {
   "name": "Bowery Comp Tool",
-  "background_page": "background.html",
   "description": "Chrome extension for Bowery appraisers using the Bowery Authorship Application.",
   "background": {
     "scripts": [
