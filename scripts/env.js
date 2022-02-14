@@ -1,4 +1,8 @@
-require('dotenv').config()
+const result = require('dotenv').config()
+
+if (result.error) {
+  throw result.error
+}
 
 module.exports = {
   NODE_ENV: process.env.NODE_ENV || 'development',
