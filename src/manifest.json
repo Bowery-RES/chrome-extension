@@ -16,7 +16,8 @@
       "matches": [
         "https://www.zillow.com/*",
         "https://streeteasy.com/*",
-        "https://www.westsiderentals.com/*"
+        "https://www.westsiderentals.com/*",
+        "https://www.compass.com/*"
       ],
       "css": [
         "widget.css"
@@ -34,7 +35,8 @@
     "https://bowery-staging.herokuapp.com/*",
     "https://streeteasy.com/*",
     "https://www.zillow.com/*",
-    "https://www.westsiderentals.com/*"
+    "https://www.westsiderentals.com/*",
+    "https://www.compass.com/*"
   ],
   "web_accessible_resources": [
     "widget.css"

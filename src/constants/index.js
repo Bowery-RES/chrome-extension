@@ -28,6 +28,13 @@ export const ZILLOW_AMENITIES_MAP = {
   'In Building': 'buildingLaundry',
 }
 
+export const COMPASS_AMENITIES_MAP = {
+  'Private Laundry': 'unitLaundry',
+  'Laundry in Building': 'buildingLaundry',
+  'Private Terrace': 'terrace',
+  'Back Yard': 'backyard',
+}
+
 export const GEOGRAPHY_OPTIONS = {
   NY: 'New York',
   NJ: 'New Jersey',
@@ -59,6 +66,7 @@ export const ALLOWED_URLS = new RegExp(
     'https://streeteasy.com/rental/',
     'https://www.zillow.com/homedetails/',
     'https://www.westsiderentals.com/',
+    'https://www.compass.com/',
   ].join('|')
 )
 
@@ -66,6 +74,7 @@ export const SOURCES_MAP = {
   'www.zillow.com': 'Zillow',
   'streeteasy.com': 'StreetEasy',
   'www.westsiderentals.com': 'WestsideRentals',
+  'www.compass.com': 'Compass',
 }
 
 export const LOGO_MAP = {
