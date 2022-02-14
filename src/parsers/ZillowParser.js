@@ -13,12 +13,7 @@ export default class ZillowParser {
   }
 
   get amenities() {
-    const laundry = $('.ds-standard-label.ds-home-fact-label')
-      .filter(function findLaundry() {
-        return $(this).text() === 'Laundry:'
-      })
-      .next('.ds-home-fact-value')
-      .text()
+    const laundry = $('#ds-data-view ul > li > span:contains(Laundry:)').next('span').text().trim()
     return UNIT_AMENITIES_LIST.filter((amenity) => amenity.value === ZILLOW_AMENITIES_MAP[laundry])
   }
 
