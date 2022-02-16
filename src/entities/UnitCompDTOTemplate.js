@@ -3,5 +3,5 @@ export default {
   sqft: Number,
   bathrooms: Number,
   rent: Number,
-  unitNumber: Number,
+  unitNumber: String,
 }

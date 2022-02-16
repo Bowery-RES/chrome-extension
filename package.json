@@ -1,6 +1,10 @@
 {
   "name": "bowery-chrome-extension",
+<<<<<<< HEAD
   "version": "2.3.0",
+=======
+  "version": "2.3.1",
+>>>>>>> master
   "description": "Chrome extension for Bowery appraisers using the Bowery Authorship Application.",
   "scripts": {
     "build": "node scripts/build.js",
