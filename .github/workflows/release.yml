@@ -10,18 +10,12 @@ jobs:
     strategy:
       matrix:
        include:
-         - node-version: 12.x
-           APP_ENV: production
+         - APP_ENV: production
            BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
-         - node-version: 12.x
-           APP_ENV: staging
+         - APP_ENV: staging
            BOWERY_APP_DOMAIN: https://bowery-staging.herokuapp.com
-         - node-version: 12.x
-           APP_ENV: development
+         - APP_ENV: development
            BOWERY_APP_DOMAIN: https://bowery-development.herokuapp.com
-         - node-version: 12.x
-           APP_ENV: patch
-           BOWERY_APP_DOMAIN: https://bowery-patch.herokuapp.com/
     steps:
       - name: Checkout
         uses: actions/checkout@v2

@@ -1,6 +1,6 @@
 const webpack = require('webpack')
 const path = require('path')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WriteFilePlugin = require('write-file-webpack-plugin')
@@ -82,7 +82,7 @@ const options = {
     },
   },
   plugins: [
-    new CleanWebpackPlugin(['build']),
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.APP_ENV': JSON.stringify(env.APP_ENV),
       'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
