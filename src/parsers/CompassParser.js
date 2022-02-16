@@ -10,17 +10,15 @@ export default class CompassParser {
     this.source = SOURCES_MAP[this.document.location.hostname]
   }
 
-  get location() {
+  get address() {
     const prettyAddress = get(this.compData, 'props.listingRelation.listing.location.prettyAddress', '')
     const locations = prettyAddress.split(/,\s+/)
 
     if (locations.length < 2) {
-      return locations
+      return locations[0]
     }
 
-    const unitNumber = locations.pop()
-    const address = locations.join(', ')
-    return [address, unitNumber]
+    return locations.slice(0, -1).join(', ')
   }
 
   get unitLayout() {
@@ -57,8 +55,8 @@ export default class CompassParser {
       sqft: get(this.compData, 'props.listingRelation.listing.size.squareFeet', 0),
       bathrooms: get(this.compData, 'props.listingRelation.listing.size.totalBathrooms', 0),
       rent: get(this.compData, 'props.listingRelation.listing.price.lastKnown', null),
-      address: isEmpty(this.location[0]) ? null : this.location[0],
-      unitNumber: isEmpty(this.location[1]) ? null : this.location[1],
+      address: isEmpty(this.address) ? null : this.address,
+      unitNumber: get(this.compData, 'props.listingRelation.listing.location.unitNumber', null),
       unitLayout: this.unitLayout,
       dateOfValue: this.dateOfValue,
       sourceOfInformation: 'externalDatabase',
