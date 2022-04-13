@@ -32,7 +32,7 @@ export default class ZillowParser {
     if (containerSpanNodes.length) {
       let rentIndex
       containerSpanNodes.forEach((item, index) => {
-        if (item.textContent.includes('Est. payment')) {
+        if (item.textContent.includes('Est.')) {
           rentIndex = index
         }
       })
