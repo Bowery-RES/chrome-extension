@@ -27,20 +27,10 @@ export default class ZillowParser {
   }
 
   get rent() {
-    const container = this.document.querySelector('.data-column-container .summary-container')
-    const containerSpanNodes = container.querySelectorAll('span')
-    if (containerSpanNodes.length) {
-      let rentIndex
-      containerSpanNodes.forEach((item, index) => {
-        if (item.textContent.includes('Est.')) {
-          rentIndex = index
-        }
-      })
-      const rentValue = rentIndex ? containerSpanNodes[rentIndex + 1] : null
-      const rent = rentValue ? rentValue.textContent.split('/')[0] : null
-      return extractNumber(rent)
-    }
-    return null
+    const element = $('.data-column-container .summary-container span:contains("Est.")').next()
+    const rentValue = element ? element.text() : null
+    const rent = rentValue ? rentValue.split('/')[0] : null
+    return extractNumber(rent)
   }
 
   parse() {
