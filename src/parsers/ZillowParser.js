@@ -4,7 +4,7 @@ import trim from 'lodash/trim'
 import isNaN from 'lodash/isNaN'
 import isEmpty from 'lodash/isEmpty'
 import { ZILLOW_AMENITIES_MAP, UNIT_AMENITIES_LIST, SOURCES_MAP } from '../constants'
-import { getUnitLayout, extractNumber, priceRegExp } from '../helpers'
+import { getUnitLayout, extractNumber } from '../helpers'
 
 export default class ZillowParser {
   constructor({ document }) {
@@ -27,14 +27,17 @@ export default class ZillowParser {
   }
 
   get rent() {
-    const [rent] = $('.ds-home-details-chip').text().match(priceRegExp()) || [null]
+    const element = $('.data-column-container .summary-container span:contains("Est.")').next()
+    const rentValue = element ? element.text() : null
+    const rent = rentValue ? rentValue.split('/')[0] : null
     return extractNumber(rent)
   }
 
   parse() {
     const { rent } = this
-
-    const [bedrooms, , bathrooms, , sqft] = $('.ds-home-details-chip .ds-bed-bath-living-area-container')
+    const [bedrooms, , bathrooms, , sqft] = $(
+      '.data-column-container .summary-container [data-testid="bed-bath-beyond"]'
+    )
       .children()
       .map(
         (index, element) =>
@@ -62,12 +65,13 @@ export default class ZillowParser {
         .match(/(.*) (#|APT) *(\w+|\d+)/) || []
 
     if (!script) {
-      streetAddress = $('.ds-price-change-address-row').children().first().text()
-      const address = $('.ds-price-change-address-row').children().last().text()
-      const matches = address.match(/(.*), (\w+) (\w+)/) || []
-      city = trim(matches[1])
-      state = trim(matches[2])
-      zip = trim(matches[3])
+      const fullAddress = $('.data-column-container .summary-container h1').text()
+      const matches = fullAddress.match(/(.*), (\w+) (\w+)/) || []
+      const [streetValue, cityValue] = trim(matches[1]).split(',')
+      streetAddress = streetValue || ''
+      city = cityValue || ''
+      state = trim(matches[2]) || ''
+      zip = trim(matches[3]) || ''
     } else {
       const data = JSON.parse(script)
       streetAddress = get(data, 'address.streetAddress')
