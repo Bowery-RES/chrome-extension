@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import get from 'lodash/get'
 import trim from 'lodash/trim'
 import isNaN from 'lodash/isNaN'
 import isEmpty from 'lodash/isEmpty'
@@ -10,6 +9,14 @@ export default class ZillowParser {
   constructor({ document }) {
     this.document = document
     this.source = SOURCES_MAP[this.document.location.hostname]
+  }
+
+  get rentContainer() {
+    return $('#ds-container .ds-data-col').length
+  }
+
+  get saleContainer() {
+    return $('.data-column-container .summary-container').length
   }
 
   get amenities() {
@@ -27,17 +34,22 @@ export default class ZillowParser {
   }
 
   get rent() {
-    const element = $('.data-column-container .summary-container span:contains("Est.")').next()
+    const { saleContainer, rentContainer } = this
+    let element
+    if (saleContainer) {
+      element = $('.data-column-container .summary-container span:contains("Est.")').next()
+    } else if (rentContainer) {
+      element = $('#ds-container .ds-data-col [data-testid="price"]')
+    } else {
+      return null
+    }
     const rentValue = element ? element.text() : null
     const rent = rentValue ? rentValue.split('/')[0] : null
     return extractNumber(rent)
   }
 
-  parse() {
-    const { rent } = this
-    const [bedrooms, , bathrooms, , sqft] = $(
-      '.data-column-container .summary-container [data-testid="bed-bath-beyond"]'
-    )
+  parseHandler(roomStr, addressStr) {
+    const [bedroomsValue, , bathroomsValue, , sqftValue] = $(roomStr)
       .children()
       .map(
         (index, element) =>
@@ -46,16 +58,38 @@ export default class ZillowParser {
             .trim()
             .replace(/[^0-9.-]+/g, '') || 0
       )
+    const fullAddress = $(addressStr).text()
+    const matches = fullAddress.match(/(.*), (\w+) (\w+)/) || []
+    const [streetValue, cityValue] = trim(matches[1]).split(',')
+    return {
+      bedrooms: bedroomsValue || '',
+      bathrooms: bathroomsValue || '',
+      sqft: sqftValue || '',
+      streetAddress: streetValue || '',
+      city: cityValue || '',
+      state: trim(matches[2]) || '',
+      zip: trim(matches[3]) || '',
+    }
+  }
 
-    const [, id] = document.location.href.match(/(\w+)_zpid/)
+  parse() {
+    const { rent, saleContainer, rentContainer } = this
     const description = $('.ds-overview-section').text().trim()
     const unitLayout = getUnitLayout(description)
+    let resultOfParsing
 
-    const script = $(`article#zpid_${id}`).prev("script[type='application/ld+json']").text()
-    let city
-    let zip
-    let streetAddress
-    let state
+    if (saleContainer) {
+      resultOfParsing = this.parseHandler(
+        '.data-column-container .summary-container [data-testid="bed-bath-beyond"]',
+        '.data-column-container .summary-container h1'
+      )
+    }
+    if (rentContainer) {
+      resultOfParsing = this.parseHandler(
+        '#ds-container .ds-data-col [data-testid="bed-bath-beyond"]',
+        '#ds-container .ds-data-col h1'
+      )
+    }
 
     const [, , , unitNumber] =
       $('.ds-price-change-address-row')
@@ -64,21 +98,7 @@ export default class ZillowParser {
         .text()
         .match(/(.*) (#|APT) *(\w+|\d+)/) || []
 
-    if (!script) {
-      const fullAddress = $('.data-column-container .summary-container h1').text()
-      const matches = fullAddress.match(/(.*), (\w+) (\w+)/) || []
-      const [streetValue, cityValue] = trim(matches[1]).split(',')
-      streetAddress = streetValue || ''
-      city = cityValue || ''
-      state = trim(matches[2]) || ''
-      zip = trim(matches[3]) || ''
-    } else {
-      const data = JSON.parse(script)
-      streetAddress = get(data, 'address.streetAddress')
-      city = get(data, 'address.addressLocality')
-      state = get(data, 'address.addressRegion')
-      zip = get(data, 'address.postalCode')
-    }
+    const { bedrooms, sqft, bathrooms, streetAddress, zip, city, state } = resultOfParsing
 
     const result = {
       bedrooms,
