@@ -20,17 +20,36 @@ export default class ZillowParser {
   }
 
   get amenities() {
-    const laundry = $('#ds-data-view ul > li > span:contains(Laundry:)').next('span').text().trim()
-    return UNIT_AMENITIES_LIST.filter((amenity) => amenity.value === ZILLOW_AMENITIES_MAP[laundry])
+    const laundry = $(':contains("Appliances")').parent().find('ul > li > span:contains(Laundry)').text().trim()
+    if (!laundry) {
+      return []
+    }
+
+    const ZILLOW_AMENITIES_INCLUDED = []
+    Object.entries(ZILLOW_AMENITIES_MAP).forEach(([key, value]) => {
+      if (laundry.includes(key)) {
+        ZILLOW_AMENITIES_INCLUDED.push(value)
+      }
+    })
+
+    return UNIT_AMENITIES_LIST.filter((amenity) => ZILLOW_AMENITIES_INCLUDED.includes(amenity.value))
   }
 
   get dateOfValue() {
-    const dateOfValueRaw = $('.ds-expandable-card-section-flush-padding tr:first-child td:first-child')
-      .first()
-      .text()
-      .trim()
-    const date = new Date(dateOfValueRaw)
-    return isNaN(date.getTime()) ? null : date.toISOString()
+    try {
+      const priceHistory = $(':contains("Price history")').parent()
+      if (!priceHistory) {
+        return null
+      }
+
+      const dateOfValue = priceHistory.find('table tbody td > span').first().text().trim()
+      const date = new Date(dateOfValue)
+
+      return isNaN(date.getTime()) ? null : date.toISOString()
+    } catch (error) {
+      console.warn({ error })
+      return null
+    }
   }
 
   get rent() {
@@ -58,10 +77,13 @@ export default class ZillowParser {
             .trim()
             .replace(/[^0-9.-]+/g, '') || 0
       )
+
     const fullAddress = $(addressStr).text()
     const matches = fullAddress.match(/(.*), (\w+) (\w+)/) || []
     const [streetValue, cityValue] = trim(matches[1]).split(',')
+
     return {
+      fullAddress: fullAddress || '',
       bedrooms: bedroomsValue || '',
       bathrooms: bathroomsValue || '',
       sqft: sqftValue || '',
@@ -91,14 +113,8 @@ export default class ZillowParser {
       )
     }
 
-    const [, , , unitNumber] =
-      $('.ds-price-change-address-row')
-        .children()
-        .first()
-        .text()
-        .match(/(.*) (#|APT) *(\w+|\d+)/) || []
-
-    const { bedrooms, sqft, bathrooms, streetAddress, zip, city, state } = resultOfParsing
+    const { bedrooms, sqft, bathrooms, fullAddress, streetAddress, zip, city, state } = resultOfParsing
+    const [, , , unitNumber] = fullAddress.match(/(.*) (#|APT) *(\w+|\d+)/) || []
 
     const result = {
       bedrooms,
