@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import startCase from 'lodash/startCase'
+import isNaN from 'lodash/isNaN'
 import intersection from 'lodash/intersection'
 import words from 'lodash/words'
 import $ from 'jquery'
@@ -19,23 +20,20 @@ export default class StreetEasyParser {
 
     const buildingTitle = $('.building-title .incognito').text()
     const [, , , unitNumber] = buildingTitle.match(/(.*) (#|UNIT-)(.*)/) || []
-    const dateOfValue = $('.DetailsPage-priceHistory .Table tr:first-child .Table-cell--priceHistoryDate .Text')
-      .text()
-      .trim()
-    const description = $('.Description-block').text().trim()
+
     const [unitLayout] =
-      description.match(new RegExp(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/, 'i')) || []
+      this.description.match(new RegExp(/(duplex|triplex|simplex|penthouse|loft|garden style|basement|garage)/, 'i')) ||
+      []
 
     const zip = get(compData, 'listZip')
     const address = words($('.backend_data.BuildingInfo-item').text()).join(' ')
 
     const result = {
-      dateOfValue: new Date(dateOfValue).toISOString(),
+      dateOfValue: this.dateOfValue,
       unitLayout: startCase(unitLayout),
       unitNumber,
       address,
       zip,
-
       rooms: get(compData, 'listRoom'),
       bedrooms: get(compData, 'listBed', 0),
       bathrooms: get(compData, 'listBath', 0),
@@ -48,6 +46,50 @@ export default class StreetEasyParser {
       sourceName: this.source,
     }
     return result
+  }
+
+  get dateOfValue() {
+    try {
+      const propertyHistory = $('h2:contains("Property History")').parent()
+      if (!propertyHistory) {
+        return null
+      }
+
+      let targetTableIndex
+      const tabs = propertyHistory.find('[class*="History"] button > span').each((index, elem) => {
+        if (elem.innerText === 'Price history') {
+          targetTableIndex = index
+        }
+      })
+
+      if (!tabs || targetTableIndex === undefined) {
+        return null
+      }
+
+      const dateOfValue = propertyHistory
+        .find('[class*="History"] table')
+        .eq(targetTableIndex)
+        .find(`tbody td`)
+        .first()
+        .text()
+        .trim()
+
+      const date = new Date(dateOfValue)
+      return isNaN(date.getTime()) ? null : date.toISOString()
+    } catch (error) {
+      console.warn({ error })
+
+      return null
+    }
+  }
+
+  get description() {
+    let description = $('[data-qa="description-block"]').text().trim()
+    if (!description) {
+      description = $('h2:contains("Description")').parent().text().trim()
+    }
+
+    return description || ''
   }
 
   get hasElevator() {
