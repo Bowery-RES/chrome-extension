@@ -13,9 +13,9 @@ jobs:
          - APP_ENV: production
            BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
          - APP_ENV: staging
-           BOWERY_APP_DOMAIN: https://bowery-staging.herokuapp.com
+           BOWERY_APP_DOMAIN: https://webapp.bowery-stg.systems
          - APP_ENV: development
-           BOWERY_APP_DOMAIN: https://bowery-development.herokuapp.com
+           BOWERY_APP_DOMAIN: https://webapp.bowery-dev.systems
     steps:
       - name: Checkout
         uses: actions/checkout@v2
