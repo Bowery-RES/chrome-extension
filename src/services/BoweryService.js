@@ -5,6 +5,7 @@ import { BOWERY_APP_DOMAIN } from 'secrets'
 import { EVENTS } from '../constants'
 import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
 import ChromeService from './ChromeService'
+import CompPlexService from './CompPlexService'
 
 const normalizeReportUrl = (url = '', domain) => {
   const [reportUrl] = url.match(/((\d|\w){24})/)
@@ -12,8 +13,9 @@ const normalizeReportUrl = (url = '', domain) => {
 }
 
 class BoweryService {
-  constructor({ domain = BOWERY_APP_DOMAIN }) {
+  constructor({ domain = BOWERY_APP_DOMAIN, compPlexService = new CompPlexService() }) {
     this.domain = domain
+    this.compPlexService = compPlexService
   }
 
   async getAuthenticatedUser({ token }) {
@@ -46,6 +48,8 @@ class BoweryService {
   }
 
   async addUnitComp(url, unitCompData) {
+    await this.compPlexService.addUnitComp(unitCompData)
+
     const [id] = url.match(/((\d|\w){24})/) || []
     if (!id) {
       throw new Error('Invalid parameters')
