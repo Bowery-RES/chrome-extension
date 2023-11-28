@@ -5,6 +5,7 @@
   import "flatpickr/dist/themes/light.css";
   export let value;
   export let label;
+  export let required;
   const flatpickrOptions = {
     element: "#picker",
     dateFormat: "m-d-Y"
@@ -29,6 +30,9 @@
   label {
     height: 36px !important;
   }
+  .required::after {
+    content: " *";
+  }
 </style>
 
 <Flatpickr bind:value options={flatpickrOptions} element="#picker">
@@ -37,7 +41,7 @@
       id="picker"
       class="mdc-text-field flatpickr mdc-text-field--outlined
       mdc-text-field--dense">
-      <span>{label}</span>
+      <span class:required>{label}</span>
       <input class="mdc-text-field__input" data-input />
       <div
         class="mdc-notched-outline mdc-notched-outline--upgraded

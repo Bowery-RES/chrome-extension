@@ -7,12 +7,14 @@
   import HelperText from '@smui/textfield/helper-text/index'
   import DatePicker from './../components/DatePicker.svelte'
   import Select from './../components/Select.svelte'
+  import { targetReport } from './../stores.js'
   import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from '../../constants'
   import validateRentComp from '../../validation'
 
   export let values
   const dispatch = createEventDispatcher()
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN
+  $: values.report = $targetReport.value
   $: invalid = validateRentComp(values)
 </script>
 
