@@ -3,9 +3,8 @@ import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
 import { BOWERY_APP_DOMAIN } from 'secrets'
 import { EVENTS } from '../constants'
-import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
+// import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
 import ChromeService from './ChromeService'
-import CompPlexService from './CompPlexService'
 
 const normalizeReportUrl = (url = '', domain) => {
   const [reportUrl] = url.match(/((\d|\w){24})/)
@@ -13,9 +12,8 @@ const normalizeReportUrl = (url = '', domain) => {
 }
 
 class BoweryService {
-  constructor({ domain = BOWERY_APP_DOMAIN, compPlexService = new CompPlexService() }) {
+  constructor({ domain = BOWERY_APP_DOMAIN }) {
     this.domain = domain
-    this.compPlexService = compPlexService
   }
 
   async getAuthenticatedUser({ token }) {
@@ -47,22 +45,20 @@ class BoweryService {
     return response.data
   }
 
-  async addUnitComp(url, unitCompData) {
-    await this.compPlexService.addUnitComp(unitCompData)
-
+  async addUnitComp(url, unitCompData, sourceName) {
     const [id] = url.match(/((\d|\w){24})/) || []
     if (!id) {
       throw new Error('Invalid parameters')
     }
 
     const headers = await this.getAuthHeaders()
-    const unitComp = new UnitComp(unitCompData)
-    const unitCompDTO = createDTO(unitComp, UnitCompDTOTemplate)
-    await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitCompDTO, {
+    // const unitComp = new UnitComp(unitCompData)
+    // const unitCompDTO = createDTO(unitComp, UnitCompDTOTemplate)
+    await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitCompData, {
       headers,
     })
 
-    ChromeService.emit({ type: EVENTS.COMP_ADDED, data: { source: unitCompData.sourceName } })
+    ChromeService.emit({ type: EVENTS.COMP_ADDED, data: { source: sourceName } })
   }
 
   getPropertyRequest(location) {

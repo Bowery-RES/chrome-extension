@@ -8,6 +8,7 @@
   import { targetReport } from './stores.js'
   import BoweryService from '../services/BoweryService'
   import ChromeService from '../services/ChromeService.js'
+  import CompPlexService from '../services/CompPlexService'
   import { WIDGET_ID, EVENTS } from '../constants'
 
   let loading = false
@@ -31,7 +32,8 @@
   async function submitCompToReport(data) {
     try {
       loading = true
-      await BoweryService.addUnitComp($targetReport.value, data).then(close)
+      const compPlexComp = await CompPlexService.addUnitComp(data)
+      await BoweryService.addUnitComp($targetReport.value, compPlexComp, data.sourceName).then(close)
     } finally {
       loading = false
     }
