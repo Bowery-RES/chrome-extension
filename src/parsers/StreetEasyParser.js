@@ -3,7 +3,6 @@ import isEmpty from 'lodash/isEmpty'
 import startCase from 'lodash/startCase'
 import isNaN from 'lodash/isNaN'
 import intersection from 'lodash/intersection'
-import words from 'lodash/words'
 import $ from 'jquery'
 import { UNIT_AMENITIES_LIST, SOURCES_MAP, STREET_EASY_AMENITIES_MAP } from '../constants'
 
@@ -26,7 +25,7 @@ export default class StreetEasyParser {
       []
 
     const zip = get(compData, 'listZip')
-    const address = words($('.backend_data.BuildingInfo-item').text()).join(' ')
+    const address = $('.backend_data.BuildingInfo-item').text().trim().replace(/\n/g, ' ').replace(/\s+/g, ' ')
 
     const result = {
       dateOfValue: this.dateOfValue,
