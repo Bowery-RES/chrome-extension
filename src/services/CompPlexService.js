@@ -28,7 +28,7 @@ class CompPlexService {
       const stringifiedErrors = JSON.stringify(errors)
       throw new Error(stringifiedErrors)
     }
-    const data = get(response, 'data.data')
+    const data = get(response, 'data.data.upsertResidentialLeaseByAddress')
     return data
   }
 
@@ -77,54 +77,8 @@ class CompPlexService {
           upsertResidentialLeaseByAddress(input: $input) {
             id
             version
-            isLatestVersion
-            address {
-              streetAddress
-                city
-                state
-                postalCode
-                coords {
-                    latitude
-                    longitude
-                }
-                propertyIdentification {
-                    propertyIdentifierType
-                    propertyIdentifier
-                }
-            }
-            propertyInformation {
-              photo {
-                cdnUrl
-                fileName
-                isLandscape
-              }
-            }
-            leaseDate
-            unitNumber
-            numberOfBedrooms
-            status
-            leaseInformation {
-                monthlyRent
-                unitSquareFootage
-                numberOfBathrooms
-                unitType
-                unitAmenities
-            }
-            resourceInformation {
-              sources {
-                type
-                url
-                document {
-                  fileName
-                  namespace
-                  fileId
-                  createdDate
-                }
-                id
-              }
-            }
-          }
-        }`
+        }
+      }`
   }
 }
 

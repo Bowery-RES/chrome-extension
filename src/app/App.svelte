@@ -33,7 +33,7 @@
     try {
       loading = true
       const compPlexComp = await CompPlexService.addUnitComp(data)
-      await BoweryService.addUnitComp($targetReport.value, compPlexComp, data.sourceName).then(close)
+      await BoweryService.addUnitComp($targetReport.value, compPlexComp, data).then(close)
     } finally {
       loading = false
     }
