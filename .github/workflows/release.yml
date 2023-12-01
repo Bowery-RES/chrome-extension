@@ -12,10 +12,10 @@ jobs:
        include:
          - APP_ENV: production
            BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
-           COMPPLEX_DOMAIN: https://compplex-server.development.bowery.link/graphql
+           COMPPLEX_DOMAIN: https://compplex-server.bowery.link/graphql
          - APP_ENV: staging
            BOWERY_APP_DOMAIN: https://webapp.bowery-stg.systems
-           COMPPLEX_DOMAIN: https://compplex-server.development.bowery.link/graphql
+           COMPPLEX_DOMAIN: https://compplex-server.staging.bowery.link/graphql
          - APP_ENV: development
            BOWERY_APP_DOMAIN: https://webapp.bowery-dev.systems
            COMPPLEX_DOMAIN: https://compplex-server.development.bowery.link/graphql
