@@ -3,6 +3,7 @@ import get from 'lodash/get'
 import camelCase from 'lodash/camelCase'
 import { COMPPLEX_DOMAIN } from 'secrets'
 import AuthService from './AuthService'
+import { UnitCompDTOTemplate, createDTO } from '../entities'
 
 class CompPlexService {
   constructor({ domain = COMPPLEX_DOMAIN } = {}) {
@@ -32,13 +33,15 @@ class CompPlexService {
     return data
   }
 
-  mapUnitComp(unitCompData, user) {
+  mapUnitComp(unitCompDataUntyped, user) {
     const mapAmenity = (amenity) => {
       if (amenity === 'unitLaundry') {
         return 'inUnitLaundry'
       }
       return amenity
     }
+
+    const unitCompData = createDTO({ data: unitCompDataUntyped }, UnitCompDTOTemplate)
 
     return {
       address: {
