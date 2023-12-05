@@ -7,16 +7,18 @@
   import HelperText from '@smui/textfield/helper-text/index'
   import DatePicker from './../components/DatePicker.svelte'
   import Select from './../components/Select.svelte'
+  import { targetReport } from './../stores.js'
   import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from '../../constants'
   import validateRentComp from '../../validation'
 
   export let values
   const dispatch = createEventDispatcher()
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN
+  $: values.report = $targetReport.value
   $: invalid = validateRentComp(values)
 </script>
 
-<h1 class="mdc-typography--headline1 ">Rent Comp</h1>
+<h1 class="mdc-typography--headline1">Rent Comp</h1>
 <form transition:fly={{ y: 800, duration: 500 }} on:submit|preventDefault={(e) => dispatch('submit', values)}>
   <Textfield name="address" required bind:value={values.address} label="Address" />
   <Select
@@ -28,10 +30,10 @@
     bind:selectedValue={values.amenities}
   />
   <Textfield name="city" required bind:value={values.city} label="City" />
-  <Textfield name="state" bind:value={values.state} label="State" />
-  <Textfield name="zip" bind:value={values.zip} label="Zip Code" />
-  <Textfield name="unitNumber" bind:value={values.unitNumber} label="Unit Number" />
-  <DatePicker name="dateOfValue" bind:value={values.dateOfValue} label="Date Of Value" />
+  <Textfield name="state" required bind:value={values.state} label="State" />
+  <Textfield name="zip" required bind:value={values.zip} label="Zip Code" />
+  <Textfield name="unitNumber" required bind:value={values.unitNumber} label="Unit Number" />
+  <DatePicker name="dateOfValue" required bind:value={values.dateOfValue} label="Date Of Value" />
 
   <Select
     name="unitLayout"

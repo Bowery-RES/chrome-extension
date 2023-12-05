@@ -45,14 +45,18 @@ class BoweryService {
     return response.data
   }
 
-  async addUnitComp(url, unitCompData) {
+  async addUnitComp(url, compPlexComp, unitCompData) {
     const [id] = url.match(/((\d|\w){24})/) || []
     if (!id) {
       throw new Error('Invalid parameters')
     }
 
     const headers = await this.getAuthHeaders()
-    const unitComp = new UnitComp(unitCompData)
+    const unitComp = new UnitComp({
+      ...unitCompData,
+      leaseId: compPlexComp.id,
+      leaseVersionNumber: compPlexComp.version,
+    })
     const unitCompDTO = createDTO(unitComp, UnitCompDTOTemplate)
     await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitCompDTO, {
       headers,

@@ -9,7 +9,7 @@ class AuthService {
       const token = obtainFreshToken ? await AuthService.obtainToken() : await ChromeService.getToken()
       const response = await BoweryService.getAuthenticatedUser({ token })
 
-      const user = AuthService.mapUser(response.data)
+      const user = AuthService.mapUser(response)
       return { user }
     } catch (error) {
       if (!obtainFreshToken) {

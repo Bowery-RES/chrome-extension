@@ -12,10 +12,13 @@ jobs:
        include:
          - APP_ENV: production
            BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
+           COMPPLEX_DOMAIN: https://compplex-server.bowery.link/graphql
          - APP_ENV: staging
            BOWERY_APP_DOMAIN: https://webapp.bowery-stg.systems
+           COMPPLEX_DOMAIN: https://compplex-server.staging.bowery.link/graphql
          - APP_ENV: development
            BOWERY_APP_DOMAIN: https://webapp.bowery-dev.systems
+           COMPPLEX_DOMAIN: https://compplex-server.development.bowery.link/graphql
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -31,6 +34,7 @@ jobs:
           NODE_ENV: production
           APP_ENV: ${{matrix.APP_ENV}}
           BOWERY_APP_DOMAIN: ${{matrix.BOWERY_APP_DOMAIN}}
+          COMPPLEX_DOMAIN: ${{matrix.COMPPLEX_DOMAIN}}
           GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
           AMPLITUDE_API_KEY: ${{secrets[format('{0}_AMPLITUDE_KEY', matrix.APP_ENV)]}}
       - name: Release

@@ -88,6 +88,7 @@ const options = {
       'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
       'process.env.GOOGLE_API_KEY': JSON.stringify(env.GOOGLE_API_KEY),
       'process.env.BOWERY_APP_DOMAIN': JSON.stringify(env.BOWERY_APP_DOMAIN),
+      'process.env.COMPPLEX_DOMAIN': JSON.stringify(env.COMPPLEX_DOMAIN),
       'process.env.AMPLITUDE_API_KEY': JSON.stringify(env.AMPLITUDE_API_KEY),
     }),
     new CopyWebpackPlugin([

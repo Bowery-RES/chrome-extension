@@ -8,6 +8,7 @@
     ```
     GOOGLE_API_KEY=***
     BOWERY_APP_DOMAIN=***
+    COMPPLEX_DOMAIN=***
     AMPLITUDE_API_KEY=***
     APP_ENV=ci
     ```
@@ -38,6 +39,7 @@ Create `.env` file with the following content:
 ```
 GOOGLE_API_KEY=
 BOWERY_APP_DOMAIN=
+COMPPLEX_DOMAIN=
 AMPLITUDE_API_KEY=
 APP_ENV=
 NODE_ENV=production
