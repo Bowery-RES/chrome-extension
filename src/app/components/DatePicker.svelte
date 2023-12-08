@@ -30,8 +30,8 @@
   label {
     height: 36px !important;
   }
-  .required::after {
-    content: " *";
+  .required::before {
+    content: "*";
   }
 </style>
 

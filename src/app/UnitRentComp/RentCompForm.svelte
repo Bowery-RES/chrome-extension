@@ -21,31 +21,10 @@
 <h1 class="mdc-typography--headline1">Rent Comp</h1>
 <form transition:fly={{ y: 800, duration: 500 }} on:submit|preventDefault={(e) => dispatch('submit', values)}>
   <Textfield name="address" required bind:value={values.address} label="Address" />
-  <Select
-    isMulti
-    name="amenities"
-    label="Amenities"
-    items={UNIT_AMENITIES_LIST}
-    placeholder="Select Unit Amenities"
-    bind:selectedValue={values.amenities}
-  />
+  <Textfield name="unitNumber" required bind:value={values.unitNumber} label="Unit Number" />
   <Textfield name="city" required bind:value={values.city} label="City" />
   <Textfield name="state" required bind:value={values.state} label="State" />
   <Textfield name="zip" required bind:value={values.zip} label="Zip Code" />
-  <Textfield name="unitNumber" required bind:value={values.unitNumber} label="Unit Number" />
-  <DatePicker name="dateOfValue" required bind:value={values.dateOfValue} label="Date Of Value" />
-
-  <Select
-    name="unitLayout"
-    label="Unit Type"
-    items={UNIT_TYPES_LIST}
-    bind:selectedValue={values.unitLayout}
-    placeholder="Select Unit Type"
-  />
-  <NumberField name="bathrooms" step={0.5} required bind:value={values.bathrooms} label="Number of Bathrooms" />
-  <NumberField required step={1} name="bedrooms" bind:value={values.bedrooms} label="Number of Bedrooms" />
-  <NumberField name="sqft" bind:value={values.sqft} label="Unit Square Footage" />
-
   <NumberField required name="rent" step={1} bind:value={values.rent} label="Monthly Rent">
     <span slot="helperText">
       <HelperText persistent>
@@ -56,6 +35,26 @@
       </HelperText>
     </span>
   </NumberField>
+  <NumberField required step={1} name="bedrooms" bind:value={values.bedrooms} label="Number of Bedrooms" />
+  <NumberField name="bathrooms" step={0.5} required bind:value={values.bathrooms} label="Number of Bathrooms" />
+  <NumberField name="sqft" bind:value={values.sqft} label="Unit Square Footage" />
+  <DatePicker name="dateOfValue" required bind:value={values.dateOfValue} label="Date Of Value" />
+  <Select
+    name="unitLayout"
+    label="Unit Type"
+    items={UNIT_TYPES_LIST}
+    bind:selectedValue={values.unitLayout}
+    placeholder="Select Unit Type"
+  />
+  <Select
+    isMulti
+    name="amenities"
+    label="Amenities"
+    items={UNIT_AMENITIES_LIST}
+    placeholder="Select Unit Amenities"
+    bind:selectedValue={values.amenities}
+  />
+
   <footer>
     <Button style="color: white;" variant="raised" disabled={invalid} type="submit">Submit</Button>
   </footer>
