@@ -35,10 +35,10 @@
       </HelperText>
     </span>
   </NumberField>
-  <NumberField required step={1} name="bedrooms" bind:value={values.bedrooms} label="Number of Bedrooms" />
-  <NumberField name="bathrooms" step={0.5} required bind:value={values.bathrooms} label="Number of Bathrooms" />
+  <NumberField required step={1} name="bedrooms" bind:value={values.bedrooms} label="No. of Bedrooms" />
+  <NumberField name="bathrooms" step={0.5} required bind:value={values.bathrooms} label="No. of Bathrooms" />
   <NumberField name="sqft" bind:value={values.sqft} label="Unit Square Footage" />
-  <DatePicker name="dateOfValue" required bind:value={values.dateOfValue} label="Date Of Value" />
+  <DatePicker name="dateOfValue" required bind:value={values.dateOfValue} label="Date of Value" />
   <Select
     name="unitLayout"
     label="Unit Type"
@@ -56,7 +56,7 @@
   />
 
   <footer>
-    <Button style="color: white;" variant="raised" disabled={invalid} type="submit">Submit</Button>
+    <Button class="submit-button" variant="raised" disabled={invalid} type="submit">Save Rent Comp</Button>
   </footer>
 </form>
 
@@ -71,7 +71,11 @@
 
   footer {
     display: flex;
-    justify-content: flex-end;
     grid-column: 1 / 3;
+  }
+
+  footer > :global(.submit-button) {
+    color: white;
+    flex-grow: 1;
   }
 </style>
