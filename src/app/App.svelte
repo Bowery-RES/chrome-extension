@@ -10,8 +10,10 @@
   import ChromeService from '../services/ChromeService.js'
   import CompPlexService from '../services/CompPlexService'
   import { WIDGET_ID, EVENTS } from '../constants'
+  import ErrorCallout from './components/ErrorCallout.svelte'
 
   let loading = false
+  let error = true
 
   const initialValues = (async () => {
     loading = true
@@ -56,6 +58,11 @@
   {#await initialValues then value}
     <div class="child-margin">
       <h6>Bowery Comp Tool</h6>
+      {#if error}
+        <ErrorCallout>
+          <span slot="message">Error Message</span>
+        </ErrorCallout>
+      {/if}
       <ReportUrl {getLastVisitedReports} {fetchReport} />
       <UnitRentComp {submitCompToReport} initialValues={value} />
     </div>
