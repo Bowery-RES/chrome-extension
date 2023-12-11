@@ -54,8 +54,8 @@
     <Loading />
   {/if}
   {#await initialValues then value}
-    <div>
-      <h1>Report</h1>
+    <div class="child-margin">
+      <h6>Bowery Comp Tool</h6>
       <ReportUrl {getLastVisitedReports} {fetchReport} />
       <UnitRentComp {submitCompToReport} initialValues={value} />
     </div>
@@ -66,7 +66,6 @@
 <style>
   main {
     width: 682px;
-    min-height: 808px;
     font-family: 'Nunito Sans';
     position: fixed;
     top: 0px;
@@ -75,6 +74,10 @@
     z-index: 999999;
     background: #ffffff;
     box-shadow: 0px 8px 32px rgba(0, 15, 68, 0.12);
+  }
+
+  .child-margin > :global(*) {
+    margin-bottom: 16px;
   }
 
   .icon {
@@ -96,6 +99,7 @@
 
   .loading {
     margin: 0;
+    min-height: 808px;
     text-align: left;
   }
   .loading::after {
@@ -103,7 +107,7 @@
     top: 0px;
     right: 0px;
     width: 682px;
-    min-height: 808px;
+    min-height: 100%;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.1);
   }

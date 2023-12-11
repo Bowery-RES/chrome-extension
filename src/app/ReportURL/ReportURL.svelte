@@ -22,7 +22,7 @@
   }
 
   onMount(async () => {
-    lastReports = await getLastVisitedReports() || [];
+    lastReports = (await getLastVisitedReports()) || [];
   });
 
   $: report = fetchReport($targetReport.value);
@@ -39,52 +39,43 @@
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
-    margin-top: 16px;
     height: 78px;
   }
 </style>
 
 <section transition:fly={{ y: -800, duration: 500 }}>
   <div>
-    <Textfield
-      disabled={checked}
-      bind:value={$targetReport.value}
-      label="Report URL">
-      <div slot="helperText">
-        {#await report}
-          <div style="width: 300px; margin-top: 8px;">
-            <LinearProgress indeterminate />
-          </div>
-        {:then reportData}
-          <HelperText class="mdc-typography--headline6" persistent>
-
-            <a
-              href={`${$targetReport.value}/residential-rent-comps`}
-              target="_blank">
-              {get(reportData, 'new.address', '')}
-            </a>
-          </HelperText>
-
-        {:catch error}
-          Error: {error.message}
-        {/await}
-
-      </div>
-    </Textfield>
-
+    <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required></Textfield>
+    <FormField style="margin-left: -8px">
+      <Checkbox bind:checked />
+      <span slot="label">Use last report</span>
+    </FormField>
   </div>
   <div class="last-report-used">
-    <FormField>
-      <Checkbox bind:checked />
-      <span slot="label">Last Report Used</span>
-    </FormField>
-
     {#if checked}
       <div transition:fly={{ x: 330, duration: 500 }}>
         <Select
           items={lastReports}
           placeholder="Select Report"
-          bind:selectedValue={$targetReport} />
+          label="Last Report(s) Used"
+          bind:selectedValue={$targetReport}
+        >
+          <div slot="helperText">
+            {#await report}
+              <div style="width: 300px; margin-top: 8px;">
+                <LinearProgress indeterminate />
+              </div>
+            {:then reportData}
+              <HelperText persistent>
+                <a href={`${$targetReport.value}/residential-rent-comps`} target="_blank">
+                  View {get(reportData, 'new.address', '')} in WebApp.
+                </a>
+              </HelperText>
+            {:catch error}
+              Error: {error.message}
+            {/await}
+          </div>
+        </Select>
       </div>
     {/if}
   </div>

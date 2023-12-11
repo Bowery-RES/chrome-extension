@@ -18,7 +18,7 @@
   $: invalid = validateRentComp(values)
 </script>
 
-<h1 class="mdc-typography--headline1">Rent Comp</h1>
+<div class="subtitle1">Rent Comp</div>
 <form transition:fly={{ y: 800, duration: 500 }} on:submit|preventDefault={(e) => dispatch('submit', values)}>
   <Textfield name="address" required bind:value={values.address} label="Address" />
   <Textfield name="unitNumber" required bind:value={values.unitNumber} label="Unit Number" />
