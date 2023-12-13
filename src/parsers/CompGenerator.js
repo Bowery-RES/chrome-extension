@@ -5,6 +5,7 @@ import { GEOGRAPHY_OPTIONS, GOOGLE_ADDRESS_BOROUGH, EVENTS } from '../constants'
 import ChromeService from '../services/ChromeService'
 import BoweryService from '../services/BoweryService'
 import transformCity from './transformers/mapCity'
+import ErrorService from '../services/ErrorService'
 
 const googleMapsClient = createClient({
   key: GOOGLE_API_KEY,
@@ -64,16 +65,38 @@ export default class CompGenerator {
   }
 
   async parse() {
-    const comp = this.parser.parse()
-    const location = await CompGenerator.getLocationInfoFromAddress(comp)
-    const propertyData = await BoweryService.getPropertyData(location)
-    const extendedProperty = {
-      ...comp,
-      ...location,
-      ...propertyData,
-      chromeExtensionVersion: process.env.VERSION,
+    try {
+      let comp
+      try {
+        comp = this.parser.parse()
+      } catch (error) {
+        throw new Error(ErrorService.messages().PARSING, { cause: error })
+      }
+
+      let location
+      try {
+        location = await CompGenerator.getLocationInfoFromAddress(comp)
+      } catch (error) {
+        throw new Error(ErrorService.messages().GOOGLE, { cause: error })
+      }
+
+      let propertyData
+      try {
+        propertyData = await BoweryService.getPropertyData(location)
+      } catch (error) {
+        throw new Error(ErrorService.messages().WEBAPP, { cause: error })
+      }
+
+      const extendedProperty = {
+        ...comp,
+        ...location,
+        ...propertyData,
+        chromeExtensionVersion: process.env.VERSION,
+      }
+      this.emit({ data: extendedProperty })
+    } catch (error) {
+      ChromeService.emit({ type: EVENTS.COMP_PARSE_FAILED, data: ErrorService.serialize(error) })
     }
-    this.emit({ data: extendedProperty })
   }
 
   transform(data, middlewares = [(dataToTransform) => dataToTransform]) {

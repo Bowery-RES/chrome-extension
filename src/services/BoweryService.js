@@ -5,6 +5,7 @@ import { BOWERY_APP_DOMAIN } from 'secrets'
 import { EVENTS } from '../constants'
 import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
 import ChromeService from './ChromeService'
+import ErrorService from './ErrorService'
 
 const normalizeReportUrl = (url = '', domain) => {
   const [reportUrl] = url.match(/((\d|\w){24})/)
@@ -46,23 +47,27 @@ class BoweryService {
   }
 
   async addUnitComp(url, compPlexComp, unitCompData) {
-    const [id] = url.match(/((\d|\w){24})/) || []
-    if (!id) {
-      throw new Error('Invalid parameters')
+    try {
+      const [id] = url.match(/((\d|\w){24})/) || []
+      if (!id) {
+        throw new Error('Invalid parameters')
+      }
+
+      const headers = await this.getAuthHeaders()
+      const unitComp = new UnitComp({
+        ...unitCompData,
+        leaseId: compPlexComp.id,
+        leaseVersionNumber: compPlexComp.version,
+      })
+      const unitCompDTO = createDTO(unitComp, UnitCompDTOTemplate)
+      await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitCompDTO, {
+        headers,
+      })
+
+      ChromeService.emit({ type: EVENTS.COMP_ADDED, data: { source: unitCompData.sourceName } })
+    } catch (error) {
+      throw new Error(ErrorService.messages().WEBAPP_SUBMIT, { cause: error })
     }
-
-    const headers = await this.getAuthHeaders()
-    const unitComp = new UnitComp({
-      ...unitCompData,
-      leaseId: compPlexComp.id,
-      leaseVersionNumber: compPlexComp.version,
-    })
-    const unitCompDTO = createDTO(unitComp, UnitCompDTOTemplate)
-    await axios.post(`${this.domain}/report/${id}/addUnitComp`, unitCompDTO, {
-      headers,
-    })
-
-    ChromeService.emit({ type: EVENTS.COMP_ADDED, data: { source: unitCompData.sourceName } })
   }
 
   getPropertyRequest(location) {
@@ -102,8 +107,8 @@ class BoweryService {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error)
+      throw error
     }
-    return {}
   }
 
   async getLastVisitedReports() {

@@ -11,16 +11,22 @@
   import CompPlexService from '../services/CompPlexService'
   import { WIDGET_ID, EVENTS } from '../constants'
   import ErrorCallout from './components/ErrorCallout.svelte'
+  import ErrorService from '../services/ErrorService'
 
   let loading = false
-  let error = true
+  let appError = null
+  $: errorMessage = appError && ErrorService.formatMessageFromError(appError)
 
   const initialValues = (async () => {
-    loading = true
-    const values = await ChromeService.emit({ type: EVENTS.INITIALIZE, data: document.location })
-    loading = false
-
-    return values
+    try {
+      loading = true
+      return await ChromeService.emit({ type: EVENTS.INITIALIZE, data: document.location })
+    } catch (error) {
+      console.warn('Error on initialization', error)
+      appError = error
+    } finally {
+      loading = false
+    }
   })()
 
   function fetchReport(url) {
@@ -36,6 +42,9 @@
       loading = true
       const compPlexComp = await CompPlexService.addUnitComp(data)
       await BoweryService.addUnitComp($targetReport.value, compPlexComp, data).then(close)
+    } catch (error) {
+      console.error('Error on submission', error)
+      appError = error
     } finally {
       loading = false
     }
@@ -58,9 +67,9 @@
   {#await initialValues then value}
     <div class="child-margin">
       <h6>Bowery Comp Tool</h6>
-      {#if error}
+      {#if errorMessage}
         <ErrorCallout>
-          <span slot="message">Error Message</span>
+          <span slot="message">{errorMessage}</span>
         </ErrorCallout>
       {/if}
       <ReportUrl {getLastVisitedReports} {fetchReport} />
