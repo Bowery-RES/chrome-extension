@@ -16,6 +16,7 @@
 
   let checked = false;
   let lastReports = [];
+  let error = null;
 
   $: if (checked) {
     targetReport.set(get(lastReports, "0", {}));
@@ -25,7 +26,15 @@
     lastReports = (await getLastVisitedReports()) || [];
   });
 
-  $: report = fetchReport($targetReport.value);
+  $: report = fetchReport($targetReport.value)
+    .then((result) => {
+      error = false
+      return result
+    })
+    .catch((err) => {
+      console.error('Error fetching report', err)
+      error = err
+    });
 </script>
 
 <style>
@@ -41,11 +50,30 @@
     flex: 1;
     height: 78px;
   }
+
+  .error {
+    color: #d34141;
+    padding: 0 16px;
+    font-family: Nunito Sans;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.4px;
+  }
 </style>
 
 <section transition:fly={{ y: -800, duration: 500 }}>
   <div>
-    <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required></Textfield>
+    <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required invalid={error}>
+      <div slot="helperText">
+        {#if error}
+          <div class="error">
+            Report data cannot be found.
+          </div>
+        {/if}
+      </div>
+    </Textfield>
     <FormField style="margin-left: -8px">
       <Checkbox bind:checked />
       <span slot="label">Use last report</span>

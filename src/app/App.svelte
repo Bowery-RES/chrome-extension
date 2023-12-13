@@ -82,6 +82,7 @@
 <style>
   main {
     width: 682px;
+    min-height: 650px;
     font-family: 'Nunito Sans';
     position: fixed;
     top: 0px;
