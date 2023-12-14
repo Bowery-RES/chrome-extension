@@ -13,6 +13,7 @@
 
   export let getLastVisitedReports = noop;
   export let fetchReport = noop;
+  export let normalizeReportUrl = noop;
 
   let checked = false;
   let lastReports = [];
@@ -26,15 +27,18 @@
     lastReports = (await getLastVisitedReports()) || [];
   });
 
-  $: report = fetchReport($targetReport.value)
-    .then((result) => {
-      error = false
-      return result
-    })
-    .catch((err) => {
-      console.error('Error fetching report', err)
-      error = err
-    });
+  $: report = (() => {
+    error = false
+    return fetchReport($targetReport.value)
+      .then((result) => {
+        error = false
+        return result
+      })
+      .catch((err) => {
+        console.error('Error fetching report', err)
+        error = err
+      });
+  })();
 </script>
 
 <style>
@@ -67,10 +71,13 @@
   <div>
     <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required invalid={error}>
       <div slot="helperText">
-        {#if error}
-          <div class="error">
-            Report data cannot be found.
+        {#await report}
+          <div style="width: 300px; margin-top: 8px;">
+            <LinearProgress indeterminate />
           </div>
+        {/await}
+        {#if error}
+          <div class="error">Report data cannot be found.</div>
         {/if}
       </div>
     </Textfield>
@@ -95,7 +102,7 @@
               </div>
             {:then reportData}
               <HelperText persistent>
-                <a href={`${$targetReport.value}/residential-rent-comps`} target="_blank">
+                <a href={`${normalizeReportUrl($targetReport.value)}/residential-rent-comps`} target="_blank">
                   View {get(reportData, 'new.address', '')} in WebApp.
                 </a>
               </HelperText>

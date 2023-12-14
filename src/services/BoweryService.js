@@ -7,9 +7,9 @@ import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
 import ChromeService from './ChromeService'
 import ErrorService from './ErrorService'
 
-const normalizeReportUrl = (url = '', domain) => {
+const getReportId = (url = '') => {
   const [reportUrl] = url.match(/((\d|\w){24})/)
-  return `${domain}/report/${reportUrl}`
+  return reportUrl
 }
 
 class BoweryService {
@@ -111,6 +111,11 @@ class BoweryService {
     }
   }
 
+  normalizeReportUrl(url) {
+    const reportId = getReportId(url)
+    return `${this.domain}/report/${reportId}`
+  }
+
   async getLastVisitedReports() {
     const pages = await ChromeService.getDomainUrlsFromHistory(this.domain)
     const reportsVisited = pages.filter(
@@ -118,7 +123,7 @@ class BoweryService {
     )
 
     const reports = reportsVisited.map((page) => ({
-      value: normalizeReportUrl(page.url, this.domain),
+      value: getReportId(page.url),
       label: page.title,
     }))
     return uniqBy(reports, 'value').slice(0, 5)

@@ -33,6 +33,10 @@
     return BoweryService.fetchReport(url)
   }
 
+  function normalizeReportUrl(url) {
+    return BoweryService.normalizeReportUrl(url)
+  }
+
   function close() {
     document.getElementById(WIDGET_ID).remove()
   }
@@ -72,7 +76,7 @@
           <span slot="message">{errorMessage}</span>
         </ErrorCallout>
       {/if}
-      <ReportUrl {getLastVisitedReports} {fetchReport} />
+      <ReportUrl {getLastVisitedReports} {fetchReport} {normalizeReportUrl} />
       <UnitRentComp {submitCompToReport} initialValues={value} />
     </div>
   {/await}
