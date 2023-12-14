@@ -54,6 +54,10 @@ class CompPlexService {
         city: unitCompData.city,
         state: unitCompData.state,
         postalCode: unitCompData.zip,
+        coords: {
+          latitude: get(unitCompData, 'coords.latitude'),
+          longitude: get(unitCompData, 'coords.longitude'),
+        },
       },
       leaseDate: unitCompData.dateOfValue,
       unitNumber: unitCompData.unitNumber,
@@ -64,6 +68,7 @@ class CompPlexService {
         unitAmenities: unitCompData.amenities.map(mapAmenity),
         unitType: unitCompData.unitLayout ? camelCase(unitCompData.unitLayout) : null,
         unitSquareFootage: unitCompData.sqft,
+        numberOfBathrooms: String(unitCompData.bathrooms),
       },
       resourceInformation: {
         sources: [
