@@ -65,14 +65,29 @@
     line-height: 20px;
     letter-spacing: 0.4px;
   }
+
+  .progress-bar {
+    width: 300px;
+    margin-top: 8px;
+  }
+
+ .report-url :global(.use-last-report-checkbox) {
+    margin-left: -8px;
+  }
+
+  .report-url :global(.use-last-report-checkbox) :global(label) {
+    padding-left: 0;
+  }
+
+
 </style>
 
-<section transition:fly={{ y: -800, duration: 500 }}>
+<section class="report-url" transition:fly={{ y: -800, duration: 500 }}>
   <div>
     <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required invalid={error}>
       <div slot="helperText">
         {#await report}
-          <div style="width: 300px; margin-top: 8px;">
+          <div class="progress-bar">
             <LinearProgress indeterminate />
           </div>
         {/await}
@@ -81,7 +96,7 @@
         {/if}
       </div>
     </Textfield>
-    <FormField style="margin-left: -8px">
+    <FormField class="use-last-report-checkbox">
       <Checkbox bind:checked />
       <span slot="label">Use last report</span>
     </FormField>
@@ -97,7 +112,7 @@
         >
           <div slot="helperText">
             {#await report}
-              <div style="width: 300px; margin-top: 8px;">
+              <div class="progress-bar">
                 <LinearProgress indeterminate />
               </div>
             {:then reportData}

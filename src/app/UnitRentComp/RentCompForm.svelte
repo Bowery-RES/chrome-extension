@@ -77,5 +77,6 @@
   footer > :global(.submit-button) {
     color: white;
     flex-grow: 1;
+    height: 48px;
   }
 </style>
