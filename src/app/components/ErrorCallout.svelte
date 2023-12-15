@@ -14,8 +14,8 @@
 <style>
   .error-callout {
     display: flex;
-    background-color: #f8ecec;
-    color: #4d1e1c;
+    background-color: #fbecec;
+    color: #541a1a;
     border-radius: 4px;
     padding: 6px 16px;
     margin-bottom: 24px;

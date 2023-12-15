@@ -4,6 +4,7 @@ import camelCase from 'lodash/camelCase'
 import { COMPPLEX_DOMAIN } from 'secrets'
 import AuthService from './AuthService'
 import { UnitCompDTOTemplate, createDTO } from '../entities'
+import ErrorService from './ErrorService'
 
 class CompPlexService {
   constructor({ domain = COMPPLEX_DOMAIN } = {}) {
@@ -11,26 +12,30 @@ class CompPlexService {
   }
 
   async addUnitComp(unitCompData) {
-    const { user } = await AuthService.authenticate()
+    try {
+      const { user } = await AuthService.authenticate()
 
-    const residentialLeaseInput = this.mapUnitComp(unitCompData, user)
+      const residentialLeaseInput = this.mapUnitComp(unitCompData, user)
 
-    const body = {
-      query: this.upsertResidentialLeaseByAddressQuery(),
-      variables: { input: residentialLeaseInput },
+      const body = {
+        query: this.upsertResidentialLeaseByAddressQuery(),
+        variables: { input: residentialLeaseInput },
+      }
+
+      const response = await axios.post(this.domain, JSON.stringify(body), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const errors = get(response, 'data.errors')
+      if (errors) {
+        console.warn('[CompPlexService] addUnitComp', errors)
+        const stringifiedErrors = JSON.stringify(errors)
+        throw new Error(stringifiedErrors)
+      }
+      const data = get(response, 'data.data.upsertResidentialLeaseByAddress')
+      return data
+    } catch (error) {
+      throw new Error(ErrorService.messages().COMPPLEX, { cause: error })
     }
-
-    const response = await axios.post(this.domain, JSON.stringify(body), {
-      headers: { 'Content-Type': 'application/json' },
-    })
-    const errors = get(response, 'data.errors')
-    if (errors) {
-      console.warn('[CompPlexService] addUnitComp', errors)
-      const stringifiedErrors = JSON.stringify(errors)
-      throw new Error(stringifiedErrors)
-    }
-    const data = get(response, 'data.data.upsertResidentialLeaseByAddress')
-    return data
   }
 
   mapUnitComp(unitCompDataUntyped, user) {

@@ -13,9 +13,11 @@
 
   export let getLastVisitedReports = noop;
   export let fetchReport = noop;
+  export let normalizeReportUrl = noop;
 
   let checked = false;
   let lastReports = [];
+  let error = null;
 
   $: if (checked) {
     targetReport.set(get(lastReports, "0", {}));
@@ -25,7 +27,18 @@
     lastReports = (await getLastVisitedReports()) || [];
   });
 
-  $: report = fetchReport($targetReport.value);
+  $: report = (() => {
+    error = false
+    return fetchReport($targetReport.value)
+      .then((result) => {
+        error = false
+        return result
+      })
+      .catch((err) => {
+        console.error('Error fetching report', err)
+        error = err
+      });
+  })();
 </script>
 
 <style>
@@ -41,12 +54,49 @@
     flex: 1;
     height: 78px;
   }
+
+  .error {
+    color: #d34141;
+    padding: 0 16px;
+    font-family: Nunito Sans;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.4px;
+  }
+
+  .progress-bar {
+    width: 300px;
+    margin-top: 8px;
+  }
+
+ .report-url :global(.use-last-report-checkbox) {
+    margin-left: -8px;
+  }
+
+  .report-url :global(.use-last-report-checkbox) :global(label) {
+    padding-left: 0;
+  }
+
+
 </style>
 
-<section transition:fly={{ y: -800, duration: 500 }}>
+<section class="report-url" transition:fly={{ y: -800, duration: 500 }}>
   <div>
-    <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required></Textfield>
-    <FormField style="margin-left: -8px">
+    <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required invalid={error}>
+      <div slot="helperText">
+        {#await report}
+          <div class="progress-bar">
+            <LinearProgress indeterminate />
+          </div>
+        {/await}
+        {#if error}
+          <div class="error">Report data cannot be found.</div>
+        {/if}
+      </div>
+    </Textfield>
+    <FormField class="use-last-report-checkbox">
       <Checkbox bind:checked />
       <span slot="label">Use last report</span>
     </FormField>
@@ -62,12 +112,12 @@
         >
           <div slot="helperText">
             {#await report}
-              <div style="width: 300px; margin-top: 8px;">
+              <div class="progress-bar">
                 <LinearProgress indeterminate />
               </div>
             {:then reportData}
               <HelperText persistent>
-                <a href={`${$targetReport.value}/residential-rent-comps`} target="_blank">
+                <a href={`${normalizeReportUrl($targetReport.value)}/residential-rent-comps`} target="_blank">
                   View {get(reportData, 'new.address', '')} in WebApp.
                 </a>
               </HelperText>

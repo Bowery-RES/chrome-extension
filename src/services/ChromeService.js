@@ -1,6 +1,7 @@
 import 'chrome-extension-async'
 import EventEmitter from 'events'
 import { ALLOWED_URLS, LOGO_MAP } from '../constants'
+import ErrorService from './ErrorService'
 
 class ChromeService extends EventEmitter {
   constructor() {
@@ -38,8 +39,12 @@ class ChromeService extends EventEmitter {
     }
   }
 
-  static emit({ type, data }) {
-    return chrome.runtime.sendMessage({ type, data })
+  static async emit({ type, data }) {
+    const response = await chrome.runtime.sendMessage({ type, data })
+    if (ErrorService.isSerializedError(response)) {
+      throw ErrorService.deserialize(response)
+    }
+    return response
   }
 
   static executeScript(params) {
