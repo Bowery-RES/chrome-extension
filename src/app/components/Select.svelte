@@ -60,4 +60,5 @@
     {isSearchable}
     bind:selectedValue
     on:change={v => (selectedValue = v)} />
+  <slot name="helperText" />
 </div>

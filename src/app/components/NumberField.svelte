@@ -21,8 +21,8 @@
     top: -24px !important;
     font-weight: 600 !important;
   }
-  .required::after {
-    content: " *";
+  .required::before {
+    content: "*";
   }
   :global(.mdc-text-field--invalid span) {
     color: rgba(255, 62, 0, 0.87);
