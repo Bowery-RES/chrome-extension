@@ -12,13 +12,13 @@ jobs:
        include:
          - APP_ENV: production
            BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
-           COMPPLEX_DOMAIN: https://compplex-server.bowery.link/graphql
+           COMPPLEX_DOMAIN: https://compplex-server.bowery-prod.systems/graphql
          - APP_ENV: staging
            BOWERY_APP_DOMAIN: https://webapp.bowery-stg.systems
-           COMPPLEX_DOMAIN: https://compplex-server.staging.bowery.link/graphql
+           COMPPLEX_DOMAIN: https://compplex-server.bowery-stg.systems/graphql
          - APP_ENV: development
            BOWERY_APP_DOMAIN: https://webapp.bowery-dev.systems
-           COMPPLEX_DOMAIN: https://compplex-server.development.bowery.link/graphql
+           COMPPLEX_DOMAIN: https://compplex-server.bowery-dev.systems/graphql
     steps:
       - name: Checkout
         uses: actions/checkout@v2

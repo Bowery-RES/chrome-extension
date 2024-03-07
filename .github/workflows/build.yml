@@ -22,7 +22,7 @@ jobs:
           NODE_ENV: production
           APP_ENV: ci
           BOWERY_APP_DOMAIN: https://webapp.bowery-dev.systems
-          COMPPLEX_DOMAIN: https://compplex-server.development.bowery.link/graphql
+          COMPPLEX_DOMAIN: https://compplex-server.bowery-dev.systems/graphql
           GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
           AMPLITUDE_API_KEY: ${{secrets.CI_AMPLITUDE_KEY}}
           GENERATE_ARTIFACT: false
