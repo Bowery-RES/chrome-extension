@@ -80,6 +80,5 @@ export const SOURCES_MAP = {
 
 export const LOGO_MAP = {
   development: 'logo_development.png',
-  staging: 'logo_staging.png',
   production: 'logo_production.png',
 }
