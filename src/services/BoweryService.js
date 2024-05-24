@@ -7,8 +7,8 @@ import { createDTO, UnitComp, UnitCompDTOTemplate } from '../entities'
 import ChromeService from './ChromeService'
 import ErrorService from './ErrorService'
 
-const getReportId = (url = '') => {
-  const [reportUrl] = url.match(/((\d|\w){24})/)
+const getReportId = (url) => {
+  const [reportUrl] = (url || '').match(/((\d|\w){24})/) || []
   return reportUrl
 }
 
@@ -35,20 +35,28 @@ class BoweryService {
     }
     const match = url.match(/((\d|\w){24})/)
     if (!match) {
-      throw new Error('Not a valid URL')
+      throw new Error('Invalid Report URL.')
     }
     const [id] = match
     const headers = await this.getAuthHeaders()
-    const response = await axios.get(`${this.domain}/report/${id}`, {
-      headers,
-    })
 
-    return response.data
+    try {
+      const response = await axios.get(`${this.domain}/report/${id}`, { headers })
+      return response.data
+    } catch (error) {
+      let errorMessage = 'Report data cannot be found.'
+
+      if (error.response && error.response.status === 404) {
+        errorMessage = 'Report not found.'
+      }
+
+      throw new Error(errorMessage)
+    }
   }
 
   async addUnitComp(url, compPlexComp, unitCompData) {
     try {
-      const [id] = url.match(/((\d|\w){24})/) || []
+      const [id] = (url || '').match(/((\d|\w){24})/) || []
       if (!id) {
         throw new Error('Invalid parameters')
       }
@@ -66,6 +74,7 @@ class BoweryService {
 
       ChromeService.emit({ type: EVENTS.COMP_ADDED, data: { source: unitCompData.sourceName } })
     } catch (error) {
+      console.error('Error adding UnitComp to Webapp', { error })
       throw new Error(ErrorService.messages().WEBAPP_SUBMIT, { cause: error })
     }
   }

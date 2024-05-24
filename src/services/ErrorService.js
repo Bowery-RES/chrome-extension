@@ -12,13 +12,17 @@ class ErrorService {
   }
 
   static deserialize(serializedError) {
+    if (!serializedError) {
+      return undefined
+    }
+
     const error = new Error(serializedError.message, { cause: this.deserialize(serializedError.cause) })
     error.stack = serializedError.stack
     return error
   }
 
   static isSerializedError(error) {
-    return error && error.message && error.stack && !(error instanceof Error)
+    return !!(error && error.message && error.stack && !(error instanceof Error))
   }
 
   static formatMessageFromError(error) {

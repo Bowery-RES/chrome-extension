@@ -98,7 +98,7 @@ export default class ZillowParser {
     const { rent, saleContainer, rentContainer } = this
     const description = $('.ds-overview-section').text().trim()
     const unitLayout = getUnitLayout(description)
-    let resultOfParsing
+    let resultOfParsing = {}
 
     if (saleContainer) {
       resultOfParsing = this.parseHandler(
@@ -114,7 +114,7 @@ export default class ZillowParser {
     }
 
     const { bedrooms, sqft, bathrooms, fullAddress, streetAddress, zip, city, state } = resultOfParsing
-    const [, , , unitNumber] = fullAddress.match(/(.*) (#|APT) *(\w+|\d+)/) || []
+    const [, , , unitNumber] = (fullAddress || '').match(/(.*) (#|APT) *(\w+|\d+)/) || []
 
     const result = {
       bedrooms,

@@ -1,11 +1,11 @@
 <script>
-  import Main from './App.svelte'
   import Ripple from '@smui/ripple'
   import Close from 'svelte-icons/md/MdClose.svelte'
+
   import UnitRentComp from './UnitRentComp/UnitRentComp.svelte'
   import Loading from './components/Loading.svelte'
   import ReportUrl from './ReportURL/ReportURL.svelte'
-  import { targetReport } from './stores.js'
+  import { fetchingStatus, targetReport } from './stores.js'
   import BoweryService from '../services/BoweryService'
   import ChromeService from '../services/ChromeService.js'
   import CompPlexService from '../services/CompPlexService'
@@ -41,11 +41,16 @@
     document.getElementById(WIDGET_ID).remove()
   }
 
-  async function submitCompToReport(data) {
+  async function submitComp(data) {
     try {
       loading = true
       const compPlexComp = await CompPlexService.addUnitComp(data)
-      await BoweryService.addUnitComp($targetReport.value, compPlexComp, data).then(close)
+
+      if (!$fetchingStatus.error && $targetReport.value) {
+        await BoweryService.addUnitComp($targetReport.value, compPlexComp, data)
+      }
+
+      close()
     } catch (error) {
       console.error('Error on submission', error)
       appError = error
@@ -77,7 +82,7 @@
         </ErrorCallout>
       {/if}
       <ReportUrl {getLastVisitedReports} {fetchReport} {normalizeReportUrl} />
-      <UnitRentComp {submitCompToReport} initialValues={value} />
+      <UnitRentComp {submitComp} initialValues={value} />
     </div>
   {/await}
   <div class="version-caption">Bowery Comp Tool v{process.env.VERSION}</div>
@@ -115,7 +120,8 @@
     text-align: center;
     position: absolute;
     bottom: 4px;
-    width: 100%;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
 
   .loading {
@@ -131,5 +137,21 @@
     min-height: 100%;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.mdc-text-field--invalid span) {
+    color: rgba(255, 62, 0, 0.87);
+  }
+
+  :global(.mdc-text-field--invalid input) {
+    color: rgba(255, 62, 0, 0.87) !important;
+  }
+
+  :global(.mdc-text-field) {
+    width: 100%;
+  }
+
+  :global(.mdc-text-field__input) {
+    padding: 12px 16px !important;
   }
 </style>

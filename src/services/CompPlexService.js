@@ -34,6 +34,7 @@ class CompPlexService {
       const data = get(response, 'data.data.upsertResidentialLeaseByAddress')
       return data
     } catch (error) {
+      console.error('Error adding UnitComp to CompPlex', { error })
       throw new Error(ErrorService.messages().COMPPLEX, { cause: error })
     }
   }
