@@ -1,6 +1,6 @@
 {
   "name": "bowery-chrome-extension",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "description": "Chrome extension for Bowery appraisers using the Bowery Authorship Application.",
   "engines": {
     "node": ">=16.0"
