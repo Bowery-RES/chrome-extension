@@ -2,30 +2,29 @@
   import { createEventDispatcher } from 'svelte'
   import { fly } from 'svelte/transition'
   import Button from '@smui/button'
-  import Textfield from '../components/TextField.svelte'
-  import NumberField from '../components/NumberField.svelte'
   import HelperText from '@smui/textfield/helper-text/index'
+
+  import { fetchingStatus } from './../stores.js'
+  import Input from '../components/Input.svelte'
   import DatePicker from './../components/DatePicker.svelte'
   import Select from './../components/Select.svelte'
-  import { targetReport } from './../stores.js'
   import { UNIT_AMENITIES_LIST, UNIT_TYPES_LIST } from '../../constants'
   import validateRentComp from '../../validation'
 
   export let values
   const dispatch = createEventDispatcher()
   $: values.pricePerSqft = values.sqft ? (values.rent * 12) / values.sqft : NaN
-  $: values.report = $targetReport.value
   $: invalid = validateRentComp(values)
 </script>
 
 <div class="subtitle1">Rent Comp</div>
 <form transition:fly={{ y: 800, duration: 500 }} on:submit|preventDefault={(e) => dispatch('submit', values)}>
-  <Textfield name="address" required bind:value={values.address} label="Address" />
-  <Textfield name="unitNumber" required bind:value={values.unitNumber} label="Unit Number" />
-  <Textfield name="city" required bind:value={values.city} label="City" />
-  <Textfield name="state" required bind:value={values.state} label="State" />
-  <Textfield name="zip" required bind:value={values.zip} label="Zip Code" />
-  <NumberField required name="rent" step={1} bind:value={values.rent} label="Monthly Rent">
+  <Input type="text" name="address" required bind:value={values.address} label="Address" />
+  <Input type="text" name="unitNumber" required bind:value={values.unitNumber} label="Unit Number" />
+  <Input type="text" name="city" required bind:value={values.city} label="City" />
+  <Input type="text" name="state" required bind:value={values.state} label="State" />
+  <Input type="text" name="zip" required bind:value={values.zip} label="Zip Code" />
+  <Input type="number" required name="rent" step={1} bind:value={values.rent} label="Monthly Rent">
     <span slot="helperText">
       <HelperText persistent>
         Rent per SF:
@@ -34,10 +33,10 @@
         {:else}N/A{/if}
       </HelperText>
     </span>
-  </NumberField>
-  <NumberField required step={1} name="bedrooms" bind:value={values.bedrooms} label="No. of Bedrooms" />
-  <NumberField name="bathrooms" step={0.5} required bind:value={values.bathrooms} label="No. of Bathrooms" />
-  <NumberField name="sqft" bind:value={values.sqft} label="Unit Square Footage" />
+  </Input>
+  <Input type="number" required step={1} name="bedrooms" bind:value={values.bedrooms} label="No. of Bedrooms" />
+  <Input type="number" name="bathrooms" step={0.5} required bind:value={values.bathrooms} label="No. of Bathrooms" />
+  <Input type="number" name="sqft" bind:value={values.sqft} label="Unit Square Footage" />
   <DatePicker name="dateOfValue" required bind:value={values.dateOfValue} label="Date of Value" />
   <Select
     name="unitLayout"
@@ -56,7 +55,9 @@
   />
 
   <footer>
-    <Button class="submit-button" variant="raised" disabled={invalid} type="submit">Save Rent Comp</Button>
+    <Button class="submit-button" variant="raised" disabled={invalid || $fetchingStatus.isLoading} type="submit"
+      >Save Rent Comp</Button
+    >
   </footer>
 </form>
 

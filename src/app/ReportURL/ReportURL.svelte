@@ -1,101 +1,80 @@
 <script>
-  import { onMount } from "svelte";
-  import get from "lodash/get";
-  import noop from "lodash/noop";
-  import { targetReport } from "./../stores.js";
-  import { fly } from "svelte/transition";
-  import LinearProgress from "@smui/linear-progress";
-  import Textfield from "../components/TextField.svelte";
-  import HelperText from "@smui/textfield/helper-text/index";
-  import Checkbox from "@smui/checkbox";
-  import FormField from "@smui/form-field";
-  import Select from "../components/Select.svelte";
+  import { onMount } from 'svelte'
+  import get from 'lodash/get'
+  import noop from 'lodash/noop'
+  import { fly } from 'svelte/transition'
 
-  export let getLastVisitedReports = noop;
-  export let fetchReport = noop;
-  export let normalizeReportUrl = noop;
+  import LinearProgress from '@smui/linear-progress'
+  import HelperText from '@smui/textfield/helper-text/index'
+  import Checkbox from '@smui/checkbox'
+  import FormField from '@smui/form-field'
 
-  let checked = false;
-  let lastReports = [];
-  let error = null;
+  import { targetReport, fetchingStatus } from './../stores.js'
+  import Input from '../components/Input.svelte'
+  import Select from '../components/Select.svelte'
+
+  export let getLastVisitedReports = noop
+  export let fetchReport = noop
+  export let normalizeReportUrl = noop
+
+  let checked = false
+  let lastReports = []
+  let success = false
 
   $: if (checked) {
-    targetReport.set(get(lastReports, "0", {}));
+    targetReport.set(get(lastReports, '0', {}))
   }
 
   onMount(async () => {
-    lastReports = (await getLastVisitedReports()) || [];
-  });
+    lastReports = (await getLastVisitedReports()) || []
+  })
 
   $: report = (() => {
-    error = false
+    fetchingStatus.set({ isLoading: true, error: null })
+    success = false
+
     return fetchReport($targetReport.value)
       .then((result) => {
-        error = false
+        if (result) {
+          success = true
+        }
+
+        fetchingStatus.set({ isLoading: false, error: null })
+
         return result
       })
       .catch((err) => {
         console.error('Error fetching report', err)
-        error = err
-      });
-  })();
+        fetchingStatus.set({ isLoading: false, error: err.message || err })
+      })
+  })()
 </script>
-
-<style>
-  section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 30px;
-  }
-  .last-report-used {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex: 1;
-    height: 78px;
-  }
-
-  .error {
-    color: #d34141;
-    padding: 0 16px;
-    font-family: Nunito Sans;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.4px;
-  }
-
-  .progress-bar {
-    width: 300px;
-    margin-top: 8px;
-  }
-
- .report-url :global(.use-last-report-checkbox) {
-    margin-left: -8px;
-  }
-
-  .report-url :global(.use-last-report-checkbox) :global(label) {
-    padding-left: 0;
-  }
-
-
-</style>
 
 <section class="report-url" transition:fly={{ y: -800, duration: 500 }}>
   <div>
-    <Textfield disabled={checked} bind:value={$targetReport.value} label="Report URL" required invalid={error}>
+    <Input
+      type="text"
+      disabled={checked}
+      bind:value={$targetReport.value}
+      label="Report URL"
+      forceInvalid={!!$fetchingStatus.error}
+    >
       <div slot="helperText">
         {#await report}
           <div class="progress-bar">
             <LinearProgress indeterminate />
           </div>
         {/await}
-        {#if error}
-          <div class="error">Report data cannot be found.</div>
+        {#if $fetchingStatus.error}
+          <div class="helper-text helper-text--error">
+            {$fetchingStatus.error} The Comp will only be saved to the CompPlex database.
+          </div>
+        {/if}
+        {#if !$fetchingStatus.error && !success}
+          <div class="helper-text">Please provide a valid Report URL to add Comp to the report.</div>
         {/if}
       </div>
-    </Textfield>
+    </Input>
     <FormField class="use-last-report-checkbox">
       <Checkbox bind:checked />
       <span slot="label">Use last report</span>
@@ -130,3 +109,45 @@
     {/if}
   </div>
 </section>
+
+<style>
+  section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 30px;
+  }
+  .last-report-used {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    height: 78px;
+  }
+
+  .helper-text {
+    padding: 0 16px;
+    font-family: Nunito Sans;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.4px;
+  }
+
+  .helper-text--error {
+    color: #d34141;
+  }
+
+  .progress-bar {
+    width: 300px;
+    margin-top: 8px;
+  }
+
+  .report-url :global(.use-last-report-checkbox) {
+    margin-left: -8px;
+  }
+
+  .report-url :global(.use-last-report-checkbox) :global(label) {
+    padding-left: 0;
+  }
+</style>

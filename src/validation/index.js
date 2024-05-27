@@ -10,7 +10,6 @@ const rentCompValidationSchema = joi.object({
   rent: joi.number().required(),
   unitNumber: joi.string().required(),
   dateOfValue: joi.date().required(),
-  report: joi.string().required().not(''),
 })
 
 export default function validateRentComp(data) {

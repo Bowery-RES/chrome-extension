@@ -3,28 +3,31 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-       include:
-         - APP_ENV: production
-           BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
-           COMPPLEX_DOMAIN: https://compplex-server.bowery-prod.systems/graphql
-         - APP_ENV: development
-           BOWERY_APP_DOMAIN: https://webapp.bowery-dev.systems
-           COMPPLEX_DOMAIN: https://compplex-server.bowery-dev.systems/graphql
+        include:
+          - APP_ENV: production
+            BOWERY_APP_DOMAIN: https://app.boweryvaluation.com
+            COMPPLEX_DOMAIN: https://compplex-server.bowery-prod.systems/graphql
+          - APP_ENV: development
+            BOWERY_APP_DOMAIN: https://webapp.bowery-dev.systems
+            COMPPLEX_DOMAIN: https://compplex-server.bowery-dev.systems/graphql
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 12.x
-      - name: Install
-        run: npm install -s
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Build
         run: npm run build
         env:
@@ -34,6 +37,7 @@ jobs:
           COMPPLEX_DOMAIN: ${{matrix.COMPPLEX_DOMAIN}}
           GOOGLE_API_KEY: ${{secrets.GOOGLE_API_KEY}}
           AMPLITUDE_API_KEY: ${{secrets[format('{0}_AMPLITUDE_KEY', matrix.APP_ENV)]}}
+
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
