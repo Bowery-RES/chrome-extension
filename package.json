@@ -37,7 +37,7 @@
     "svelte-loader": "^2.13.4",
     "svelte-material-ui": "^1.1.0",
     "svelte-select": "^3.17.0",
-    "webpack": "4.33.0",
+    "webpack": "^4.47.0",
     "webpack-dev-server": "3.7.1",
     "write-file-webpack-plugin": "4.5.0"
   },
